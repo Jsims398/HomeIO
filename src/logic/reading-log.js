@@ -1,7 +1,7 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html' };
 
 class Component extends DCLogic {
   state = { car: null, picked: null, opened: null, phase: 'pick', choice: null, won: null, round: 1,
@@ -9,7 +9,8 @@ class Component extends DCLogic {
             topic, theta: 0.35, logits: [2.2, 1.1, -0.4], temp: 1, n: 12, samples: null,
             s1: 1.5, s2: 0.8, rho: 0.6, ptx: 1.7, pty: 1.1, cloud: null,
             deg: 3, nTrain: 12, noise: 0.28, sets: topic === 4 ? this.makeSets(12, 0.28) : null,
-            cm: { tp: '40', fn: '10', fp: '15', tn: '35' }, rocD: null, rocT: null };
+            cm: { tp: '40', fn: '10', fp: '15', tn: '35' }, rocD: null, rocT: null,
+            klD: 2.5, klW: 0.5, klS: 0.8, qm: 1.5, qs: 1, klMode: null };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
@@ -96,6 +97,121 @@ class Component extends DCLogic {
     if (p > 1 - lo) { const q = Math.sqrt(-2 * Math.log(1 - p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
     const q = p - 0.5, r = q * q;
     return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  }
+
+  // p = w·N(−d, s²) + (1−w)·N(d, s²) on a fixed grid, kept in log space
+  klGrid() {
+    const s = this.state, n = 501, lo = -10, dx = 20 / (n - 1);
+    const lnN = (x, m, sd) => -0.5 * ((x - m) / sd) ** 2 - Math.log(sd) - 0.9189385;
+    const xs = [], logp = [];
+    for (let i = 0; i < n; i++) {
+      const x = lo + i * dx;
+      const a = Math.log(s.klW) + lnN(x, -s.klD, s.klS), b = Math.log(1 - s.klW) + lnN(x, s.klD, s.klS);
+      const mx = Math.max(a, b);
+      xs.push(x); logp.push(mx + Math.log(Math.exp(a - mx) + Math.exp(b - mx)));
+    }
+    return { xs, logp, dx, lnN };
+  }
+
+  // pointwise integrands of KL(p‖q) and KL(q‖p) for q = N(m, sd²)
+  klTerms(G, m, sd) {
+    const fwd = [], rev = [];
+    G.xs.forEach((x, i) => {
+      const lq = G.lnN(x, m, sd), lp = G.logp[i];
+      fwd.push(Math.exp(lp) * (lp - lq));
+      rev.push(Math.exp(lq) * (lq - lp));
+    });
+    return { fwd, rev };
+  }
+
+  klValue(G, mode, m, sd) {
+    return this.klTerms(G, m, sd)[mode].reduce((a, v) => a + v, 0) * G.dx;
+  }
+
+  // gradient descent on (μ, log σ); μ step scaled by σ² so a narrow q doesn't oscillate
+  klFit(mode) {
+    clearInterval(this.klTimer);
+    const G = this.klGrid(), h = 1e-3, lr = 0.15;
+    const f = (m, l) => this.klValue(G, mode, m, Math.exp(l));
+    let iter = 0;
+    this.setState({ klMode: mode });
+    this.klTimer = setInterval(() => {
+      let m = this.state.qm, ls = Math.log(this.state.qs), moved = 0;
+      for (let k = 0; k < 2; k++, iter++) {
+        const gm = (f(m + h, ls) - f(m - h, ls)) / (2 * h);
+        const gl = (f(m, ls + h) - f(m, ls - h)) / (2 * h);
+        const dm = Math.max(-0.3, Math.min(0.3, lr * Math.exp(2 * ls) * gm));
+        const dl = Math.max(-0.2, Math.min(0.2, lr * gl));
+        m = Math.max(-6, Math.min(6, m - dm));
+        ls = Math.max(Math.log(0.15), Math.min(Math.log(5), ls - dl));
+        moved = Math.abs(dm) + Math.abs(dl);
+      }
+      this.setState({ qm: m, qs: Math.exp(ls) });
+      if (moved < 1e-4 || iter > 1500) clearInterval(this.klTimer);
+    }, 30);
+  }
+
+  componentWillUnmount() { clearInterval(this.klTimer); }
+
+  t6() {
+    const s = this.state, on = s.topic === 6;
+    const nav = {
+      showT6: on,
+      goT6: () => this.goTopic(6),
+      t6Bg: on ? 'var(--color-accent)' : 'transparent',
+      t6Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+
+    const G = this.klGrid(), T = this.klTerms(G, s.qm, s.qs);
+    const fwdKL = T.fwd.reduce((a, v) => a + v, 0) * G.dx;
+    const revKL = T.rev.reduce((a, v) => a + v, 0) * G.dx;
+
+    // draw only x in [-7, 7], every other grid point
+    const idx = G.xs.map((x, i) => i).filter(i => G.xs[i] >= -7 && G.xs[i] <= 7 && i % 2 === 0);
+    const X = x => 10 + ((x + 7) / 14) * 320;
+    const pd = idx.map(i => Math.exp(G.logp[i])), qd = idx.map(i => Math.exp(G.lnN(G.xs[i], s.qm, s.qs)));
+    const yMax = Math.max(...pd, ...qd) * 1.1;
+    const DY = v => 160 - (v / yMax) * 145;
+    const line = arr => arr.map((v, k) => (k ? 'L ' : 'M ') + X(G.xs[idx[k]]).toFixed(1) + ' ' + DY(v).toFixed(1)).join(' ');
+    const area = arr => line(arr) + ' L ' + X(7) + ' 160 L ' + X(-7) + ' 160 Z';
+
+    // integrand panels: zero line at y = 55, each auto-scaled
+    const band = arr => {
+      const vals = idx.map(i => arr[i]);
+      const amp = Math.max(1e-6, ...vals.map(Math.abs));
+      const Y = v => 55 - (v / amp) * 45;
+      return 'M ' + X(-7) + ' 55 ' + vals.map((v, k) => 'L ' + X(G.xs[idx[k]]).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ') + ' L ' + X(7) + ' 55 Z';
+    };
+
+    // best forward-KL Gaussian = moment matching
+    const w = s.klW, d = s.klD;
+    const mmMean = (1 - 2 * w) * d;
+    const mmSd = Math.sqrt(s.klS * s.klS + 4 * w * (1 - w) * d * d);
+
+    const note = s.klMode === 'fwd'
+      ? 'Forward fit: q stretches to cover both bumps, so its peak sits in the gap where p has little mass. The gap costs nothing in KL(p‖q) because the integrand is weighted by p. Leaving a bump uncovered would cost a lot.'
+      : s.klMode === 'rev'
+        ? 'Reverse fit: q settles on one bump and ignores the other. Ignoring it is free in KL(q‖p) because the integrand is weighted by q, and q ≈ 0 there. Spreading into the gap would cost a lot. Move μ to the other side and fit again — you land on the other bump. Start q wide and centred instead and it can get stuck as a blur over both: a worse local minimum.'
+        : 'Drag μ and σ yourself, or press a fit button to run gradient descent from where q is now.';
+
+    const stop = () => clearInterval(this.klTimer);
+    const slide = k => e => { stop(); this.setState({ [k]: parseFloat(e.target.value), klMode: null }); };
+
+    return {
+      ...nav,
+      klD: s.klD, klW: s.klW, klS: s.klS, qm: s.qm, qs: s.qs,
+      klDLabel: s.klD.toFixed(1), klWLabel: s.klW.toFixed(2), klSLabel: s.klS.toFixed(2),
+      qmLabel: s.qm.toFixed(2), qsLabel: s.qs.toFixed(2),
+      onKlD: slide('klD'), onKlW: slide('klW'), onKlS: slide('klS'), onQm: slide('qm'), onQs: slide('qs'),
+      onFitFwd: () => this.klFit('fwd'), onFitRev: () => this.klFit('rev'),
+      onQReset: () => { stop(); this.setState({ qm: 1.5, qs: 1, klMode: null }); },
+      pLine: line(pd), pArea: area(pd), qLine: line(qd), qArea: area(qd),
+      fwdBand: band(T.fwd), revBand: band(T.rev),
+      fwdLabel: fwdKL.toFixed(3), revLabel: revKL.toFixed(3),
+      mmLabel: 'μ = ' + mmMean.toFixed(2) + ', σ = ' + mmSd.toFixed(2),
+      klNote: note
+    };
   }
 
   t5() {
@@ -478,7 +594,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,
