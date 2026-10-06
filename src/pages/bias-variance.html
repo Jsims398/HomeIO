@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bias &amp; variance · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+    </nav>
+
+
+    <sc-if value="{{ showT4 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s35" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">3.5 &nbsp;Mixture models</a>
+        <a href="#s476" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">4.7.6 &nbsp;Bias–variance lab</a>
+        <a href="#s476b" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Curve &nbsp;The U-shape</a>
+      </nav>
+    </sc-if>
+
+
+
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+
+
+
+
+    <sc-if value="{{ showT4 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic4" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 4</span>
+        <span class="tag tag-accent-2">Murphy, PML — §3.5, §4.7.6</span>
+        <span class="tag tag-outline">Model complexity</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">How wrong, and how jumpy</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">Both readings are secretly about the same knob. A mixture model asks how many components K; a polynomial fit asks what degree. Turn either one up and the model can express more — but it also starts chasing the particular noise in the particular data you happened to collect. That tension has a name and, better, an exact decomposition.</p>
+    </header>
+
+    <section id="s35" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">3.5</span>
+        <h2 style="margin:0">Mixture models — complexity you choose</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Take a hidden label z ∈ {1…K} drawn from a categorical with weights π, then draw x from whichever component z picked. Marginalize the label away and you get a convex combination of simple distributions that, together, can be arbitrarily flexible.</p>
+
+      <div style="margin-top:20px;padding:24px 26px;border-radius:44px;background:var(--color-neutral-900);color:var(--color-neutral-100);text-align:center">
+        <div style="font-family:var(--font-heading);font-size:clamp(18px,2.9vw,27px);line-height:1.4">p(x | θ) &nbsp;=&nbsp; Σ<sub>k=1</sub><sup>K</sup> π<sub>k</sub>   p<sub>k</sub>(x | θ<sub>k</sub>)</div>
+        <p style="margin:12px 0 0;font-size:13.5px;opacity:.8">π<sub>k</sub> ≥ 0, Σ<sub>k</sub> π<sub>k</sub> = 1 — the weights are themselves a categorical, straight out of §2.5.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:18px">
+        <div class="card elev-sm">
+          <div class="card-kicker">GMM</div>
+          <div class="card-title">p<sub>k</sub> = N(x | μ<sub>k</sub>, Σ<sub>k</sub>)</div>
+          <p class="card-body">K Gaussian blobs, each with its own centre and its own ellipse — the same Σ from Topic 3. The workhorse for clustering continuous data.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">Mixture of Bernoullis</div>
+          <div class="card-title">binary features</div>
+          <p class="card-body">Each component is a product of Bernoullis with its own θ<sub>k</sub>. Murphy's example is binarized MNIST: each component learns a prototype digit.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">Responsibility</div>
+          <div class="card-title">r<sub>nk</sub> = π<sub>k</sub> p<sub>k</sub>(x<sub>n</sub>) ⁄ Σ<sub>j</sub> π<sub>j</sub> p<sub>j</sub>(x<sub>n</sub>)</div>
+          <p class="card-body">Bayes' rule again, posterior over the hidden label. Soft clustering: a point can be 70% component 2 and 30% component 5.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;margin-top:20px;padding:18px 22px;border-radius:32px;background:var(--color-accent-2-100);border:1px solid var(--color-accent-2-300)">
+        <div style="flex:none;width:28px;height:28px;border-radius:999px;background:var(--color-accent-2-600);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:15px">K</div>
+        <div>
+          <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px">This is where the two readings meet</div>
+          <p style="margin:0;font-size:13.5px;line-height:1.6;color:var(--color-accent-2-900)">K = 1 can only ever draw one blob — badly wrong, but it says the same thing no matter which sample you hand it. K = N puts a component on every data point — perfectly faithful to this sample, useless on the next one. Everything below is that trade-off, made precise.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s476" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">4.7.6</span>
+        <h2 style="margin:0">The bias–variance lab</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Here's the experiment you can't run in real life: draw <em>many</em> training sets from the same truth, fit the same model to each, and look at the family of fits. The sage curve is the true function; each faint terracotta curve is a model fit to one sample; the bold curve is their average.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 320px;min-width:0">
+            <svg sc-camel-view-box="0 0 340 200" style="width:100%;height:auto">
+              <rect x="0" y="0" width="340" height="200" rx="24" fill="var(--color-neutral-100)"></rect>
+              <sc-for list="{{ fitPaths }}" as="f" hint-placeholder-count="10">
+                <path d="{{ f.d }}" fill="none" stroke="var(--color-accent)" stroke-width="1.25" opacity="0.32"></path>
+              </sc-for>
+              <path d="{{ truePath }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="3.5"></path>
+              <path d="{{ avgPath }}" fill="none" stroke="var(--color-accent-800)" stroke-width="3.5" stroke-dasharray="7 5"></path>
+              <sc-for list="{{ shownPts }}" as="p" hint-placeholder-count="14">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="3.2" fill="var(--color-neutral-800)" opacity="0.65"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:16px;margin:12px 4px 0;font-size:12.5px;color:var(--color-neutral-700)">
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent-2-600);border-radius:2px"></span>truth</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent-800);border-radius:2px"></span>average fit</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent);opacity:.45;border-radius:2px"></span>individual fits</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 230px;min-width:0;display:flex;flex-direction:column;gap:16px">
+            <div>
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-accent-700);margin-bottom:6px"><span>polynomial degree</span><span>{{ degLabel }}</span></label>
+              <input type="range" min="0" max="9" step="1" value="{{ deg }}" sc-camel-on-change="{{ onDeg }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+              <p style="margin:8px 0 0;font-size:12.5px;line-height:1.55;color:var(--color-neutral-700)">{{ degNote }}</p>
+            </div>
+            <div>
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px"><span>points per training set</span><span>{{ nTrain }}</span></label>
+              <input type="range" min="6" max="40" step="1" value="{{ nTrain }}" sc-camel-on-change="{{ onN4 }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <div>
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px"><span>noise σ</span><span>{{ noiseLabel }}</span></label>
+              <input type="range" min="0" max="0.6" step="0.02" value="{{ noise }}" sc-camel-on-change="{{ onNoise }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <button class="btn btn-secondary" sc-camel-on-click="{{ onNewSets }}">Redraw the {{ nSets }} training sets</button>
+
+            <div style="border-top:1px solid var(--color-divider);padding-top:16px;display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="font-family:var(--font-heading)">bias²</span><span style="color:var(--color-neutral-700)">{{ biasLabel }}</span></div>
+                <div style="height:18px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="height:100%;border-radius:999px;background:var(--color-accent-2-600);transition:width .2s ease;width:{{ biasPct }}%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="font-family:var(--font-heading)">variance</span><span style="color:var(--color-neutral-700)">{{ varLabel }}</span></div>
+                <div style="height:18px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="height:100%;border-radius:999px;background:var(--color-accent);transition:width .2s ease;width:{{ varPct }}%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="font-family:var(--font-heading)">noise σ²</span><span style="color:var(--color-neutral-700)">{{ noiseSqLabel }}</span></div>
+                <div style="height:18px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="height:100%;border-radius:999px;background:var(--color-neutral-600);transition:width .2s ease;width:{{ noisePct }}%"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13.5px;padding-top:6px">
+                <span style="font-family:var(--font-heading)">expected test error</span>
+                <span style="font-family:var(--font-heading);color:var(--color-accent-700)">{{ totalLabel }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;padding:24px 26px;border-radius:44px;background:var(--color-neutral-900);color:var(--color-neutral-100);text-align:center">
+        <div style="font-family:var(--font-heading);font-size:clamp(16px,2.6vw,24px);line-height:1.5">E[(y − f̂(x))²] &nbsp;=&nbsp; (f̄(x) − f(x))² &nbsp;+&nbsp; E[(f̂(x) − f̄(x))²] &nbsp;+&nbsp; σ²</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:720px;margin:16px auto 0">
+          <div style="padding:12px;border-radius:24px;background:rgba(255,255,255,.07)"><div style="font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--color-accent-300)">bias²</div><div style="font-size:13px;margin-top:5px;opacity:.85">average fit vs truth</div></div>
+          <div style="padding:12px;border-radius:24px;background:rgba(255,255,255,.07)"><div style="font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--color-accent-300)">variance</div><div style="font-size:13px;margin-top:5px;opacity:.85">spread of the fits</div></div>
+          <div style="padding:12px;border-radius:24px;background:rgba(255,255,255,.07)"><div style="font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--color-accent-300)">noise</div><div style="font-size:13px;margin-top:5px;opacity:.85">irreducible — no model fixes it</div></div>
+        </div>
+      </div>
+
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Read the two error terms straight off the picture. <strong>Bias²</strong> is the gap between the dashed average fit and the sage truth — at degree 0 or 1 the average is nowhere near the curve, and no amount of data will fix that. <strong>Variance</strong> is how widely the faint curves fan out — at degree 8 or 9 each one wiggles off after its own handful of points, and the average can still look fine while every individual fit is bad. The third term is the noise floor: even the true function scores σ² on fresh data.</p>
+    </section>
+
+    <section id="s476b">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">The curve</span>
+        <h2 style="margin:0">Why test error is U-shaped</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Sweep the degree and plot all three terms. Bias falls monotonically, variance climbs, and the sum — the thing you actually pay — dips somewhere in the middle. That dip is the model you want, and it moves right as you collect more data.</p>
+
+      <div style="margin-top:24px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <svg sc-camel-view-box="0 0 340 190" style="width:100%;height:auto">
+          <rect x="0" y="0" width="340" height="165" rx="22" fill="var(--color-neutral-100)"></rect>
+          <line x1="{{ markX }}" y1="10" x2="{{ markX }}" y2="155" stroke="var(--color-accent-700)" stroke-width="1.5" stroke-dasharray="4 5"></line>
+          <path d="{{ biasCurve }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="2.5"></path>
+          <path d="{{ varCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5"></path>
+          <path d="{{ totalCurve }}" fill="none" stroke="var(--color-neutral-900)" stroke-width="3.5"></path>
+          <circle cx="{{ bestX }}" cy="{{ bestY }}" r="6" fill="var(--color-accent-700)" stroke="var(--color-surface)" stroke-width="3"></circle>
+          <line x1="14" y1="155" x2="330" y2="155" stroke="var(--color-neutral-400)" stroke-width="1.5"></line>
+          <text x="14" y="182" font-size="11.5" fill="var(--color-neutral-700)" font-family="var(--font-body)">degree 0</text>
+          <text x="300" y="182" font-size="11.5" fill="var(--color-neutral-700)" font-family="var(--font-body)">9</text>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:12.5px;color:var(--color-neutral-700)">
+          <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent-2-600);border-radius:2px"></span>bias²</span>
+          <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent);border-radius:2px"></span>variance</span>
+          <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-neutral-900);border-radius:2px"></span>total (bias² + variance + σ²)</span>
+          <span style="display:flex;align-items:center;gap:7px"><span style="width:11px;height:11px;border-radius:999px;background:var(--color-accent-700)"></span>best degree: {{ bestDeg }}</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:20px">
+        <div class="card elev-sm">
+          <div class="card-kicker">Try it</div>
+          <div class="card-title">More data moves the dip</div>
+          <p class="card-body">Push points-per-set to 40. Variance collapses — each fit has enough evidence to stop guessing — so the optimum shifts toward higher degree. Complexity you can afford is a function of sample size.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">Try it</div>
+          <div class="card-title">Set σ to zero</div>
+          <p class="card-body">The noise floor vanishes and so does most of the variance: with clean data, overfitting has nothing to overfit to. The trade-off is driven by noise, not by flexibility alone.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">The catch</div>
+          <div class="card-title">You only get one sample</div>
+          <p class="card-body">Bias and variance are expectations over training sets you'll never see. That's why the practical version is a validation set or cross-validation — estimating the black curve without being able to draw the faint ones.</p>
+        </div>
+      </div>
+
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: decision rules — the confusion matrix and ROC curves.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 4);
+</script>
+</body></html>

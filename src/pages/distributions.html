@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distributions · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+    </nav>
+
+
+
+
+
+    <sc-if value="{{ showT2 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s24" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.4 &nbsp;Bernoulli &amp; binomial</a>
+        <a href="#s25" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">2.5 &nbsp;Categorical &amp; softmax</a>
+        <a href="#s264" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.6.4 &nbsp;Why the Gaussian</a>
+        <a href="#s276" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.7.6 &nbsp;Empirical distribution</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+
+
+    <sc-if value="{{ showT2 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic2" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 2</span>
+        <span class="tag tag-accent-2">Murphy, PML — §2.4, 2.5, 2.6.4, 2.7.6</span>
+        <span class="tag tag-outline">Softmax</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:22ch;text-wrap:pretty">The four distributions you'll keep meeting</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">Bernoulli for a coin, categorical for a die, Gaussian for anything that got averaged, and the empirical distribution for "I have no model, only data." Plus the softmax — the little function that turns any pile of numbers into a categorical distribution, which is the entire output layer of every classifier we're going to build.</p>
+    </header>
+
+    <section id="s24" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.4</span>
+        <h2 style="margin:0">Bernoulli &amp; binomial</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">One parameter, one coin flip. Y ∈ {0, 1} with p(Y = 1) = θ, written compactly as p(y | θ) = θ<sup>y</sup>(1 − θ)<sup>1−y</sup> — the exponents are just a switch that selects the right factor. Flip N times and count the successes and you get the binomial, which is the same θ with a <span style="white-space:nowrap">( <sup>N</sup>⁄<sub>s</sub> )</span> out front to count the orderings.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center">
+          <div style="flex:1 1 220px;min-width:0">
+            <h3 style="margin:0 0 6px">Move θ</h3>
+            <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">Two bars, and they always sum to one. That constraint is why a Bernoulli has one parameter and not two.</p>
+            <label style="display:block;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px">θ = {{ thetaLabel }}</label>
+            <input type="range" min="0" max="1" step="0.01" value="{{ theta }}" sc-camel-on-change="{{ onTheta }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            <p style="margin:14px 0 0;font-size:13px;line-height:1.6;color:var(--color-neutral-700)">Mean θ = {{ thetaLabel }} &nbsp;·&nbsp; variance θ(1−θ) = {{ bernVar }} — maximal at θ = 0.5, zero at either end, which is just "a rigged coin isn't random."</p>
+          </div>
+          <div style="flex:1 1 240px;min-width:0;display:flex;gap:22px;align-items:flex-end;height:200px;padding:0 6px">
+            <sc-for list="{{ bernBars }}" as="b" hint-placeholder-count="2">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end">
+                <span style="font-family:var(--font-heading);font-size:15px">{{ b.val }}</span>
+                <div style="width:100%;border-radius:999px 999px 14px 14px;background:{{ b.color }};transition:height .18s ease;height:{{ b.h }}px"></div>
+                <span style="font-size:12px;color:var(--color-neutral-700)">y = {{ b.y }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s25" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.5</span>
+        <h2 style="margin:0">Categorical, and the softmax</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">The categorical is the Bernoulli with more than two faces: C probabilities, non-negative, summing to one. The awkward part is that a model doesn't naturally produce numbers like that — a neural net hands you arbitrary real-valued <strong>logits</strong>. The softmax fixes that in two moves: exponentiate (now everything is positive) and divide by the total (now it sums to one).</p>
+
+      <div style="margin-top:22px;padding:24px 26px;border-radius:44px;background:var(--color-neutral-900);color:var(--color-neutral-100);text-align:center">
+        <div style="font-family:var(--font-heading);font-size:clamp(19px,3vw,28px);line-height:1.4">p<sub>c</sub> &nbsp;=&nbsp; e<sup>z<sub>c</sub> / T</sup> &nbsp;⁄&nbsp; Σ<sub>c′</sub> e<sup>z<sub>c′</sub> / T</sup></div>
+        <p style="margin:12px 0 0;font-size:13.5px;opacity:.8">T is the temperature. It doesn't change the ranking — only how strongly the winner is favoured.</p>
+      </div>
+
+      <div style="margin-top:24px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px">
+          <h3 style="margin:0">Softmax playground</h3>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ onSoftReset }}">reset</button>
+        </div>
+        <p style="margin:6px 0 22px;font-size:14px;line-height:1.6;max-width:60ch;color:var(--color-neutral-800)">Drag the logits and the temperature. Watch two things: adding a constant to every logit changes nothing, and T → 0 collapses onto a single winner while large T flattens toward uniform.</p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 230px;min-width:0;display:flex;flex-direction:column;gap:16px">
+            <sc-for list="{{ logitCtrls }}" as="l" hint-placeholder-count="3">
+              <div>
+                <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px">
+                  <span>logit z — {{ l.label }}</span><span>{{ l.val }}</span>
+                </label>
+                <input type="range" min="-4" max="6" step="0.1" value="{{ l.z }}" sc-camel-on-change="{{ l.onChange }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+              </div>
+            </sc-for>
+            <div style="border-top:1px solid var(--color-divider);padding-top:16px">
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-accent-700);margin-bottom:6px">
+                <span>temperature T</span><span>{{ tempLabel }}</span>
+              </label>
+              <input type="range" min="0.1" max="5" step="0.05" value="{{ temp }}" sc-camel-on-change="{{ onTemp }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+              <p style="margin:10px 0 0;font-size:12.5px;line-height:1.55;color:var(--color-neutral-700)">{{ tempNote }}</p>
+            </div>
+          </div>
+
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:12px;justify-content:center">
+            <sc-for list="{{ softBars }}" as="s" hint-placeholder-count="3">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+                  <span style="font-family:var(--font-heading)">{{ s.label }}</span>
+                  <span style="color:var(--color-neutral-700)">{{ s.pctLabel }}</span>
+                </div>
+                <div style="height:22px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden">
+                  <div style="height:100%;border-radius:999px;background:{{ s.color }};transition:width .18s ease;width:{{ s.pct }}%"></div>
+                </div>
+              </div>
+            </sc-for>
+            <p style="margin:6px 0 0;font-size:12.5px;color:var(--color-neutral-700)">Sums to {{ softSum }} — by construction, always.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:20px">
+        <div class="card elev-sm">
+          <div class="card-kicker">Shift invariance</div>
+          <div class="card-title">softmax(z + c) = softmax(z)</div>
+          <p class="card-body">The constant cancels top and bottom. That's why implementations subtract max(z) first — same answer, no overflow.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">T → 0</div>
+          <div class="card-title">argmax, hard</div>
+          <p class="card-body">All the mass moves to the largest logit. This is the "greedy decoding" end of the dial.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">T → ∞</div>
+          <div class="card-title">uniform, 1/C</div>
+          <p class="card-body">The logits stop mattering. Sampling here is maximally random — the "creative but incoherent" end.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s264" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.6.4</span>
+        <h2 style="margin:0">Why the Gaussian is everywhere</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Murphy gives four honest reasons, and none of them is "nature is Gaussian." It has just two interpretable parameters; the central limit theorem makes sums of anything drift toward it; it makes the fewest assumptions of any distribution with a given mean and variance (maximum entropy); and it's mathematically the path of least resistance. It's the default because it's cheap and defensible, not because it's true.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md);display:flex;flex-wrap:wrap;gap:26px;align-items:center">
+        <div style="flex:1 1 210px;min-width:0">
+          <h3 style="margin:0 0 12px">μ and σ, that's it</h3>
+          <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px"><span>mean μ</span><span>{{ muLabel }}</span></label>
+          <input type="range" min="-3" max="3" step="0.1" value="{{ mu }}" sc-camel-on-change="{{ onMu }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer;margin-bottom:16px">
+          <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px"><span>std. dev. σ</span><span>{{ sigmaLabel }}</span></label>
+          <input type="range" min="0.4" max="2.5" step="0.05" value="{{ sigma }}" sc-camel-on-change="{{ onSigma }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+          <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:var(--color-neutral-700)">Shaded band is μ ± σ — about 68% of the mass, wherever you put it. The curve moves and widens; the shape never changes.</p>
+        </div>
+        <div style="flex:1 1 280px;min-width:0">
+          <svg sc-camel-view-box="0 0 340 190" style="width:100%;height:auto;overflow:visible" sc-camel-preserve-aspect-ratio="none">
+            <rect x="0" y="0" width="340" height="160" rx="18" fill="var(--color-neutral-100)"></rect>
+            <path d="{{ bandPath }}" fill="var(--color-accent-2-300)" opacity="0.55"></path>
+            <path d="{{ gaussPath }}" fill="none" stroke="var(--color-accent)" stroke-width="3" stroke-linejoin="round"></path>
+            <line x1="{{ muX }}" y1="18" x2="{{ muX }}" y2="160" stroke="var(--color-accent-700)" stroke-width="1.5" stroke-dasharray="5 5"></line>
+            <line x1="0" y1="160" x2="340" y2="160" stroke="var(--color-neutral-400)" stroke-width="1.5"></line>
+            <text x="{{ muX }}" y="180" text-anchor="middle" font-size="12" fill="var(--color-accent-700)" font-family="var(--font-body)">μ = {{ muLabel }}</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="s276">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.7.6</span>
+        <h2 style="margin:0">The empirical distribution</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">The most honest distribution there is: put a spike of mass 1/N on each data point you actually observed, and zero everywhere else. No parameters, no assumptions, no smoothing. Its cdf is a staircase that jumps 1/N at every sample — and as N grows it presses in on the true cdf, which is the whole reason bootstrapping works.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px">
+          <h3 style="margin:0">Draw N samples from the Gaussian above</h3>
+          <span style="font-size:12px;color:var(--color-neutral-700)">N = {{ nLabel }}</span>
+        </div>
+        <p style="margin:0 0 18px;font-size:14px;line-height:1.6;max-width:60ch;color:var(--color-neutral-800)">Terracotta staircase is the empirical cdf; the sage curve behind it is the true one. Push N up and the gap closes.</p>
+        <svg sc-camel-view-box="0 0 340 175" style="width:100%;height:auto;overflow:visible" sc-camel-preserve-aspect-ratio="none">
+          <rect x="0" y="0" width="340" height="140" rx="18" fill="var(--color-neutral-100)"></rect>
+          <path d="{{ trueCdfPath }}" fill="none" stroke="var(--color-accent-2-500)" stroke-width="3"></path>
+          <path d="{{ empCdfPath }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linejoin="miter"></path>
+          <sc-for list="{{ sampleTicks }}" as="s" hint-placeholder-count="12">
+            <line x1="{{ s.x }}" y1="140" x2="{{ s.x }}" y2="152" stroke="var(--color-accent-700)" stroke-width="2"></line>
+          </sc-for>
+          <line x1="0" y1="140" x2="340" y2="140" stroke="var(--color-neutral-400)" stroke-width="1.5"></line>
+          <text x="4" y="170" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">each tick is one observed sample, worth 1/N</text>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px">
+          <button class="btn btn-primary" sc-camel-on-click="{{ onResample }}">Redraw samples</button>
+          <button class="btn btn-secondary" sc-camel-on-click="{{ onMoreN }}">More data (N × 2)</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ onFewN }}">Fewer</button>
+        </div>
+      </div>
+
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: two variables at once — covariance, and a distance that respects it.</p>
+    </section>
+    </sc-if>
+
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 2);
+</script>
+</body></html>

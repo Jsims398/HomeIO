@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Probability · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+    </nav>
+
+
+
+
+    <sc-if value="{{ showT1 }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s21" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.1 &nbsp;Basics of probability</a>
+        <a href="#s22" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.2 &nbsp;Random variables</a>
+        <a href="#s223" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.2.3 &nbsp;Joint &amp; independence</a>
+        <a href="#s23" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">2.3 &nbsp;Bayes' rule</a>
+        <a href="#monty" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">The three-door problem</a>
+      </nav>
+    </sc-if>
+
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+
+    <sc-if value="{{ showT1 }}" hint-placeholder-val="{{ true }}">
+    <header id="topic1" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 1</span>
+        <span class="tag tag-accent-2">Murphy, PML — §2.1–2.3</span>
+        <span class="tag tag-outline">Monty Hall</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:20ch;text-wrap:pretty">Probability, and why you should always switch doors</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">This week was the probability crash course: what a probability actually <em>is</em>, how random variables package up uncertainty, what happens when you have two of them at once, and Bayes' rule — the one tool that turns "here's what I saw" into "here's what I now believe." Then I put the last one to work on the game show.</p>
+    </header>
+
+    <section id="s21" style="margin-bottom:52px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.1</span>
+        <h2 style="margin:0">Basics of probability</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Two readings of the same number, and Murphy says pick whichever helps. The <strong>frequentist</strong> one: a probability is the long-run fraction of times something happens if you repeat the experiment forever. The <strong>Bayesian</strong> one: it's a degree of belief about something that may only happen once. Coin flips work fine under either; "will it rain tomorrow" only works under the second, and that's the reading the rest of the chapter runs on.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px">
+        <div class="card elev-sm">
+          <div class="card-kicker">Union</div>
+          <div class="card-title">P(A ∨ B) = P(A) + P(B) − P(A ∧ B)</div>
+          <p class="card-body">Add them, then subtract the overlap you just double-counted. If A and B can't both happen, the overlap is 0 and it's plain addition.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">Joint &amp; conditional</div>
+          <div class="card-title">P(A ∧ B) = P(A | B) P(B)</div>
+          <p class="card-body">The product rule. Read it as: first B happens, then A happens <em>given</em> that. Rearranged, P(A | B) = P(A ∧ B) / P(B).</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">The move that matters</div>
+          <div class="card-title">Conditioning shrinks the world</div>
+          <p class="card-body">P(A | B) isn't a new kind of quantity — it's the same probability measured inside a smaller sample space, the one where B is already true. Every surprise in this chapter comes from forgetting to shrink.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s22" style="margin-bottom:52px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.2 – 2.2.2.2</span>
+        <h2 style="margin:0">Random variables</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">A random variable is just a labelled outcome: a function from the sample space to numbers. The useful split is <strong>discrete</strong> vs <strong>continuous</strong>, because it changes what object you're allowed to write down.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:20px">
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Discrete</div>
+          <div class="card-title">pmf: p(x) = P(X = x)</div>
+          <p class="card-body">Finite or countable values. Each one gets real mass, the masses are between 0 and 1, and they sum to 1. Asking "what's the chance X is exactly 3?" is a fair question.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Continuous</div>
+          <div class="card-title">cdf P(X ≤ x), pdf p(x) = <span style="font-family:var(--font-heading)">d</span>/<span style="font-family:var(--font-heading)">dx</span> P(X ≤ x)</div>
+          <p class="card-body">Any single value has probability zero, so the honest object is the cdf; the pdf is its derivative and can exceed 1. Probability lives in <em>intervals</em> — areas under the curve, not heights.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:14.5px;line-height:1.65;margin-top:18px;color:var(--color-neutral-700)">The thing I keep having to re-learn: a density is not a probability. p(x) = 4 is legal. P(X = x) = 4 is not.</p>
+    </section>
+
+    <section id="s223" style="margin-bottom:52px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.2.3 – 2.2.4</span>
+        <h2 style="margin:0">Joint distributions &amp; independence</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">With two variables, the joint p(x, y) is the whole story — every other quantity is something you squeeze out of it. Sum a row or column away and you get a <strong>marginal</strong>. Fix a row and renormalize it and you get a <strong>conditional</strong>.</p>
+      <div class="card elev-sm" style="margin-top:20px;gap:var(--space-3)">
+        <div class="card-kicker">Independence</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--space-4)">
+          <div>
+            <div class="card-title" style="margin-bottom:6px">X ⊥ Y &nbsp;⇔&nbsp; p(x, y) = p(x) p(y)</div>
+            <p class="card-body">Unconditional. Knowing Y tells you nothing about X, and the joint table is exactly the outer product of its own margins.</p>
+          </div>
+          <div>
+            <div class="card-title" style="margin-bottom:6px">X ⊥ Y | Z &nbsp;⇔&nbsp; p(x, y | z) = p(x | z) p(y | z)</div>
+            <p class="card-body">Conditional. Once you know Z, the dependence dissolves — this is the assumption every graphical model in the rest of the course is built out of.</p>
+          </div>
+        </div>
+        <p class="card-body" style="margin-top:4px">Neither one implies the other, in either direction. Two variables can be dependent overall and independent given Z, or independent overall and dependent given Z.</p>
+      </div>
+    </section>
+
+    <section id="s23" style="margin-bottom:64px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">2.3</span>
+        <h2 style="margin:0">Bayes' rule</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">One line of algebra from the product rule, and the engine of the whole book: it flips a conditional you know into the one you want.</p>
+
+      <div style="margin-top:22px;padding:30px 26px;border-radius:44px;background:var(--color-neutral-900);color:var(--color-neutral-100);display:flex;flex-direction:column;align-items:center;gap:18px">
+        <div style="font-family:var(--font-heading);font-size:clamp(22px,3.4vw,34px);text-align:center;line-height:1.35">p(H | E) &nbsp;=&nbsp; p(H) · p(E | H) &nbsp;⁄&nbsp; p(E)</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;width:100%;max-width:720px">
+          <div style="text-align:center;padding:12px;border-radius:24px;background:rgba(255,255,255,.07)">
+            <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-300)">Posterior</div>
+            <div style="font-size:13px;margin-top:5px;opacity:.85">belief after seeing E</div>
+          </div>
+          <div style="text-align:center;padding:12px;border-radius:24px;background:rgba(255,255,255,.07)">
+            <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-300)">Prior</div>
+            <div style="font-size:13px;margin-top:5px;opacity:.85">belief before</div>
+          </div>
+          <div style="text-align:center;padding:12px;border-radius:24px;background:rgba(255,255,255,.07)">
+            <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-300)">Likelihood</div>
+            <div style="font-size:13px;margin-top:5px;opacity:.85">how well H predicts E</div>
+          </div>
+          <div style="text-align:center;padding:12px;border-radius:24px;background:rgba(255,255,255,.07)">
+            <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-300)">Evidence</div>
+            <div style="font-size:13px;margin-top:5px;opacity:.85">Σ<sub>h</sub> p(h) p(E | h)</div>
+          </div>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:14.5px;line-height:1.65;margin-top:20px;color:var(--color-neutral-700)">The denominator is the part people skip and then get wrong. It's not a mystery constant — it's the sum of the numerator over every hypothesis, which is exactly what makes the posterior add up to 1. And in the door problem below, it's the entire ballgame.</p>
+    </section>
+
+    <section id="monty">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">Visualization</span>
+        <h2 style="margin:0">Three doors, one car</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">You pick a door. The host — who knows where the car is — opens a different door and shows you a goat. Now: stay or switch? Your gut says it's 50/50 between the two closed doors. Your gut is conditioning on the wrong thing.</p>
+
+      <sc-if value="{{ showHostRule }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:14px;align-items:flex-start;margin-top:20px;padding:18px 22px;border-radius:32px;background:var(--color-accent-2-100);border:1px solid var(--color-accent-2-300)">
+          <div style="flex:none;width:28px;height:28px;border-radius:999px;background:var(--color-accent-2-600);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:15px">!</div>
+          <div>
+            <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px">The host's rules are the whole puzzle</div>
+            <p style="margin:0;font-size:13.5px;line-height:1.6;color:var(--color-accent-2-900)">He always opens a door, never yours, and never the car. Those three constraints are what make the reveal informative. Change any one of them — a host who opens at random, say — and switching stops helping.</p>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="margin-top:28px;padding:clamp(20px,3vw,34px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px">
+          <h3 style="margin:0">Play it yourself</h3>
+          <span style="font-size:12px;color:var(--color-neutral-700)">round {{ round }}</span>
+        </div>
+        <p style="margin:0 0 22px;font-size:15px;min-height:2.6em;line-height:1.5;max-width:58ch">{{ status }}</p>
+
+        <div style="display:flex;gap:clamp(10px,2vw,20px)">
+          <sc-for list="{{ doors }}" as="d" hint-placeholder-count="3">
+            <button sc-camel-on-click="{{ d.onClick }}" disabled="{{ d.disabled }}" style="flex:1 1 0;min-width:0;aspect-ratio:3/4;border-radius:36px;border:3px solid var(--color-neutral-400);border-color:{{ d.border }};background:{{ d.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px;cursor:{{ d.cursor }};transition:transform .16s ease, box-shadow .16s ease" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md)">
+              <span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">Door {{ d.num }}</span>
+              <span style="font-family:var(--font-heading);font-size:clamp(22px,4vw,34px);line-height:1;color:{{ d.faceColor }}">{{ d.face }}</span>
+              <span style="font-size:12px;font-weight:600;text-align:center;color:{{ d.noteColor }};min-height:1.2em">{{ d.note }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;align-items:center">
+          <sc-if value="{{ deciding }}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-secondary" sc-camel-on-click="{{ onStay }}">Stay with door {{ pickedNum }}</button>
+          </sc-if>
+          <sc-if value="{{ deciding }}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-primary" sc-camel-on-click="{{ onSwitch }}">Switch to door {{ otherNum }}</button>
+          </sc-if>
+          <sc-if value="{{ finished }}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-primary" sc-camel-on-click="{{ onReset }}">Play again</button>
+          </sc-if>
+          <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onClear }}">Reset tally</button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ showTally }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:26px;padding-top:24px;border-top:1px solid var(--color-divider);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+                <span style="font-family:var(--font-heading);font-size:15px">Stayed</span>
+                <span style="font-size:13px;color:var(--color-neutral-700)">{{ stayLabel }}</span>
+              </div>
+              <div style="height:16px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden">
+                <div style="height:100%;border-radius:999px;background:var(--color-neutral-600);transition:width .4s ease;width:{{ stayPct }}%"></div>
+              </div>
+              <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">theory: 1/3 ≈ 33.3%</div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+                <span style="font-family:var(--font-heading);font-size:15px">Switched</span>
+                <span style="font-size:13px;color:var(--color-neutral-700)">{{ switchLabel }}</span>
+              </div>
+              <div style="height:16px;border-radius:999px;background:var(--color-accent-200);overflow:hidden">
+                <div style="height:100%;border-radius:999px;background:var(--color-accent);transition:width .4s ease;width:{{ switchPct }}%"></div>
+              </div>
+              <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">theory: 2/3 ≈ 66.7%</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <h3 style="margin:52px 0 8px">Every case, on one page</h3>
+      <p style="max-width:64ch;font-size:15px;line-height:1.65;margin-bottom:26px">Say you picked <strong>door 1</strong> — by symmetry it doesn't matter which. The car is equally likely to be behind any door, so three branches at 1/3. The only branch where the host has a <em>choice</em> is the one where he'd be revealing your own winning pick, and that choice splits its 1/3 in half.</p>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:minmax(0,1.1fr) 16px minmax(0,1fr) 16px minmax(0,.55fr) minmax(0,1.05fr);align-items:center;gap:8px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);padding:0 4px">
+          <span>Car is behind</span><span></span><span>Host opens</span><span></span><span>Path prob.</span><span>Switching gets you</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1.1fr) 16px minmax(0,1fr) 16px minmax(0,.55fr) minmax(0,1.05fr);align-items:center;gap:8px;padding:14px 4px;border-radius:32px;background:var(--color-neutral-200)">
+          <div style="padding:12px 16px;border-radius:999px;background:var(--color-neutral-100);font-size:13.5px;font-weight:600">Door 1 <span style="opacity:.6;font-weight:400">(yours)</span> · 1/3</div>
+          <div style="height:2px;background:var(--color-neutral-400)"></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="padding:8px 14px;border-radius:999px;background:var(--color-neutral-100);font-size:12.5px">Door 2 &nbsp;<span style="opacity:.6">× 1/2</span></div>
+            <div style="padding:8px 14px;border-radius:999px;background:var(--color-neutral-100);font-size:12.5px">Door 3 &nbsp;<span style="opacity:.6">× 1/2</span></div>
+          </div>
+          <div style="height:2px;background:var(--color-neutral-400)"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-heading);font-size:14px">
+            <span>1/6</span><span>1/6</span>
+          </div>
+          <div><span class="tag tag-neutral" style="font-size:12px">a goat — you lose</span></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1.1fr) 16px minmax(0,1fr) 16px minmax(0,.55fr) minmax(0,1.05fr);align-items:center;gap:8px;padding:14px 4px;border-radius:32px;background:var(--color-accent-100)">
+          <div style="padding:12px 16px;border-radius:999px;background:#fff;font-size:13.5px;font-weight:600">Door 2 · 1/3</div>
+          <div style="height:2px;background:var(--color-accent-300)"></div>
+          <div style="padding:8px 14px;border-radius:999px;background:#fff;font-size:12.5px">Door 3 &nbsp;<span style="opacity:.6">forced</span></div>
+          <div style="height:2px;background:var(--color-accent-300)"></div>
+          <div style="font-family:var(--font-heading);font-size:14px">1/3</div>
+          <div><span class="tag tag-accent" style="font-size:12px;font-weight:600">the car — you win</span></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1.1fr) 16px minmax(0,1fr) 16px minmax(0,.55fr) minmax(0,1.05fr);align-items:center;gap:8px;padding:14px 4px;border-radius:32px;background:var(--color-accent-100)">
+          <div style="padding:12px 16px;border-radius:999px;background:#fff;font-size:13.5px;font-weight:600">Door 3 · 1/3</div>
+          <div style="height:2px;background:var(--color-accent-300)"></div>
+          <div style="padding:8px 14px;border-radius:999px;background:#fff;font-size:12.5px">Door 2 &nbsp;<span style="opacity:.6">forced</span></div>
+          <div style="height:2px;background:var(--color-accent-300)"></div>
+          <div style="font-family:var(--font-heading);font-size:14px">1/3</div>
+          <div><span class="tag tag-accent" style="font-size:12px;font-weight:600">the car — you win</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:22px">
+        <div style="padding:20px 22px;border-radius:32px;background:var(--color-neutral-200)">
+          <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">Stay wins</div>
+          <div style="font-family:var(--font-heading);font-size:30px;margin-top:4px">1/3</div>
+          <div style="font-size:12.5px;color:var(--color-neutral-700);margin-top:2px">1/6 + 1/6 — the top row only</div>
+        </div>
+        <div style="padding:20px 22px;border-radius:32px;background:var(--color-accent);color:var(--color-bg)">
+          <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.85">Switch wins</div>
+          <div style="font-family:var(--font-heading);font-size:30px;margin-top:4px">2/3</div>
+          <div style="font-size:12.5px;opacity:.9;margin-top:2px">1/3 + 1/3 — the other two rows</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showBayes }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:44px;padding:clamp(22px,3vw,34px);border-radius:52px;background:var(--color-surface)">
+          <h3 style="margin:0 0 8px">The same answer, out of §2.3</h3>
+          <p style="margin:0 0 22px;font-size:15px;line-height:1.65;max-width:62ch">Let C be the car's door and H the door the host opens. You picked door 1; he opened door 3. We want p(C = 2 | H = 3).</p>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:16px 20px;border-radius:28px;background:var(--color-neutral-100)">
+              <span style="flex:none;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700);width:82px">Prior</span>
+              <span style="font-size:14.5px">p(C = 1) = p(C = 2) = p(C = 3) = <strong>1/3</strong> — nothing seen yet, so all three are on equal footing.</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;padding:16px 20px;border-radius:28px;background:var(--color-neutral-100)">
+              <span style="flex:none;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700);width:82px">Likelihood</span>
+              <span style="font-size:14.5px;line-height:1.7">p(H = 3 | C = 1) = <strong>1/2</strong> &nbsp;— both goats are open to him, he picks one.<br>p(H = 3 | C = 2) = <strong>1</strong> &nbsp;— door 1 is yours, door 2 hides the car; he has no choice.<br>p(H = 3 | C = 3) = <strong>0</strong> &nbsp;— he never opens the car.</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:16px 20px;border-radius:28px;background:var(--color-neutral-100)">
+              <span style="flex:none;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700);width:82px">Evidence</span>
+              <span style="font-size:14.5px">p(H = 3) = 1/3·1/2 + 1/3·1 + 1/3·0 = <strong>1/2</strong></span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;padding:18px 20px;border-radius:28px;background:var(--color-accent);color:var(--color-bg)">
+              <span style="flex:none;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85;width:82px">Posterior</span>
+              <span style="font-size:15px;line-height:1.7">p(C = 2 | H = 3) = (1/3 · 1) ⁄ (1/2) = <strong style="font-family:var(--font-heading);font-size:19px">2/3</strong><br>p(C = 1 | H = 3) = (1/3 · 1/2) ⁄ (1/2) = <strong style="font-family:var(--font-heading);font-size:19px">1/3</strong></span>
+            </div>
+          </div>
+
+          <p style="margin:22px 0 0;font-size:14.5px;line-height:1.65;max-width:62ch;color:var(--color-neutral-800)">The prior was uniform, so the whole result is carried by the likelihood: the host's reveal was <em>twice as likely</em> in the world where the car sits behind door 2. Your own door never got new evidence — it's still 1/3 — and all of the freed-up belief piles onto the one remaining door.</p>
+        </div>
+      </sc-if>
+
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: the named distributions — and a softmax you can push around. Same shape: notes, then one thing you can actually poke at.</p>
+    </section>
+    </sc-if>
+
+
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 1);
+</script>
+</body></html>

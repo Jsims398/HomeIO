@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROC curves · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT5 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s5131" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">5.1.3.1 &nbsp;Four rates</a>
+        <a href="#s513" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">5.1.3 &nbsp;ROC lab</a>
+      </nav>
+    </sc-if>
+
+
+
+
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+
+
+
+
+      <sc-if value="{{ showT5 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic5" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 5</span>
+        <span class="tag tag-accent-2">Murphy, PML — §5.1.3</span>
+        <span class="tag tag-outline">ROC curves</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">Four rates, one threshold, one curve</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">A classifier that outputs a score still has to draw a line somewhere: above it, say "positive." Every choice of line produces a different 2×2 table of hits and mistakes. The ROC curve is what you get when you stop picking one line and plot all of them at once.</p>
+    </header>
+
+    <section id="s5131" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">5.1.3.1</span>
+        <h2 style="margin:0">The confusion matrix and its four rates</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Rows are what's true, columns are what the classifier said. The four rates all come from dividing a cell by its <strong>row</strong> total — that is, conditioning on the true label. So they pair up: TPR + FNR = 1 across the top row, FPR + TNR = 1 across the bottom. Two numbers, TPR and FPR, carry everything.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:22px">
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Sensitivity, recall</div>
+          <div class="card-title">TPR = TP ⁄ (TP + FN)</div>
+          <p class="card-body">Of the real positives, how many did we catch? The y-axis of the ROC curve.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">Miss rate</div>
+          <div class="card-title">FNR = FN ⁄ (TP + FN)</div>
+          <p class="card-body">Of the real positives, how many slipped through. Always 1 − TPR.</p>
+        </div>
+        <div class="card elev-sm">
+          <div class="card-kicker">False-alarm rate</div>
+          <div class="card-title">FPR = FP ⁄ (FP + TN)</div>
+          <p class="card-body">Of the real negatives, how many did we wrongly flag? The x-axis of the ROC curve.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Specificity</div>
+          <div class="card-title">TNR = TN ⁄ (FP + TN)</div>
+          <p class="card-body">Of the real negatives, how many we correctly left alone. Always 1 − FPR.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s513" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">5.1.3</span>
+        <h2 style="margin:0">ROC lab: type a table, watch the curve</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Enter any counts. The rates update, and your table becomes one point on the ROC plot. One point alone isn't a curve — so the lab assumes the classic textbook model, where the scores of negatives and positives are two unit-variance Gaussians a distance d′ apart. Your point pins down d′, which pins down the whole curve. Then slide the threshold to move along it.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px">
+          <h3 style="margin:0">Your confusion matrix</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ presets }}" as="p" hint-placeholder-count="5">
+              <button class="btn btn-ghost" sc-camel-on-click="{{ p.onClick }}" style="font-size:13px">{{ p.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 300px;min-width:0">
+            <div style="display:grid;grid-template-columns:minmax(52px,auto) minmax(0,1fr) minmax(0,1fr) minmax(48px,auto);gap:8px">
+              <div></div>
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);text-align:center;align-self:end;padding-bottom:4px">Predicted +</div>
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);text-align:center;align-self:end;padding-bottom:4px">Predicted −</div>
+              <div></div>
+
+              <div style="font-family:var(--font-heading);font-size:15px;align-self:center;text-align:right;padding-right:4px">Actual +</div>
+          <div style="min-width:0;padding:12px 8px;border-radius:26px;background:var(--color-accent-100);border:2px solid var(--color-accent-400);display:flex;flex-direction:column;align-items:center;gap:6px">
+            <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800);text-align:center">TP · hit</span>
+            <input type="number" min="0" step="1" aria-label="hit count" value="{{ tpVal }}" sc-camel-on-change="{{ onTP }}" style="width:100%;max-width:100px;text-align:center;font-family:var(--font-heading);font-size:24px;padding:6px 4px;border-radius:999px;border:1px solid var(--color-divider);background:var(--color-neutral-100);color:var(--color-text)">
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary" aria-label="decrease hit" sc-camel-on-click="{{ tpDec }}" style="width:34px;height:30px;padding:0">−</button>
+              <button class="btn btn-secondary" aria-label="increase hit" sc-camel-on-click="{{ tpInc }}" style="width:34px;height:30px;padding:0">+</button>
+            </div>
+          </div>
+          <div style="min-width:0;padding:12px 8px;border-radius:26px;background:var(--color-neutral-200);border:2px solid var(--color-neutral-400);display:flex;flex-direction:column;align-items:center;gap:6px">
+            <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-800);text-align:center">FN · miss</span>
+            <input type="number" min="0" step="1" aria-label="miss count" value="{{ fnVal }}" sc-camel-on-change="{{ onFN }}" style="width:100%;max-width:100px;text-align:center;font-family:var(--font-heading);font-size:24px;padding:6px 4px;border-radius:999px;border:1px solid var(--color-divider);background:var(--color-neutral-100);color:var(--color-text)">
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary" aria-label="decrease miss" sc-camel-on-click="{{ fnDec }}" style="width:34px;height:30px;padding:0">−</button>
+              <button class="btn btn-secondary" aria-label="increase miss" sc-camel-on-click="{{ fnInc }}" style="width:34px;height:30px;padding:0">+</button>
+            </div>
+          </div>
+              <div style="font-size:12.5px;color:var(--color-neutral-700);align-self:center">P = {{ pTot }}</div>
+
+              <div style="font-family:var(--font-heading);font-size:15px;align-self:center;text-align:right;padding-right:4px">Actual −</div>
+          <div style="min-width:0;padding:12px 8px;border-radius:26px;background:var(--color-neutral-200);border:2px solid var(--color-neutral-400);display:flex;flex-direction:column;align-items:center;gap:6px">
+            <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-800);text-align:center">FP · false alarm</span>
+            <input type="number" min="0" step="1" aria-label="false alarm count" value="{{ fpVal }}" sc-camel-on-change="{{ onFP }}" style="width:100%;max-width:100px;text-align:center;font-family:var(--font-heading);font-size:24px;padding:6px 4px;border-radius:999px;border:1px solid var(--color-divider);background:var(--color-neutral-100);color:var(--color-text)">
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary" aria-label="decrease false alarm" sc-camel-on-click="{{ fpDec }}" style="width:34px;height:30px;padding:0">−</button>
+              <button class="btn btn-secondary" aria-label="increase false alarm" sc-camel-on-click="{{ fpInc }}" style="width:34px;height:30px;padding:0">+</button>
+            </div>
+          </div>
+          <div style="min-width:0;padding:12px 8px;border-radius:26px;background:var(--color-accent-2-100);border:2px solid var(--color-accent-2-400);display:flex;flex-direction:column;align-items:center;gap:6px">
+            <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800);text-align:center">TN · correct reject</span>
+            <input type="number" min="0" step="1" aria-label="correct reject count" value="{{ tnVal }}" sc-camel-on-change="{{ onTN }}" style="width:100%;max-width:100px;text-align:center;font-family:var(--font-heading);font-size:24px;padding:6px 4px;border-radius:999px;border:1px solid var(--color-divider);background:var(--color-neutral-100);color:var(--color-text)">
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary" aria-label="decrease correct reject" sc-camel-on-click="{{ tnDec }}" style="width:34px;height:30px;padding:0">−</button>
+              <button class="btn btn-secondary" aria-label="increase correct reject" sc-camel-on-click="{{ tnInc }}" style="width:34px;height:30px;padding:0">+</button>
+            </div>
+          </div>
+              <div style="font-size:12.5px;color:var(--color-neutral-700);align-self:center">N = {{ nTot }}</div>
+
+              <div></div>
+              <div style="font-size:12.5px;color:var(--color-neutral-700);align-self:center;text-align:center">{{ predPos }} said +</div>
+              <div style="font-size:12.5px;color:var(--color-neutral-700);align-self:center;text-align:center">{{ predNeg }} said −</div>
+              <div></div>
+            </div>
+          </div>
+
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:14px;justify-content:center">
+            <sc-for list="{{ rateBars }}" as="r" hint-placeholder-count="4">
+              <div>
+                <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:5px">
+                  <span><span style="font-family:var(--font-heading)">{{ r.name }}</span> <span style="color:var(--color-neutral-700)">{{ r.alias }}</span></span>
+                  <span style="color:var(--color-neutral-700);white-space:nowrap">{{ r.frac }} = <strong style="color:var(--color-text)">{{ r.val }}</strong></span>
+                </div>
+                <div style="height:18px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden">
+                  <div style="height:100%;border-radius:999px;background:{{ r.color }};transition:width .2s ease;width:{{ r.pct }}%"></div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+              <span class="tag tag-neutral">accuracy&nbsp;{{ accLabel }}</span>
+              <span class="tag tag-neutral">precision&nbsp;{{ precLabel }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:26px;padding-top:24px;border-top:1px solid var(--color-divider);display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 280px;min-width:0">
+            <svg sc-camel-view-box="0 0 290 290" style="width:100%;height:auto;max-width:420px" role="img" aria-label="ROC curve">
+              <rect x="46" y="18" width="228" height="228" rx="14" fill="var(--color-neutral-100)"></rect>
+              <path d="{{ aucArea }}" fill="var(--color-accent-200)" opacity="0.55"></path>
+              <line x1="46" y1="246" x2="274" y2="18" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-dasharray="5 5"></line>
+              <line x1="46" y1="18" x2="274" y2="246" stroke="var(--color-accent-2-400)" stroke-width="1" stroke-dasharray="2 5"></line>
+              <sc-if value="{{ showPt }}" hint-placeholder-val="{{ true }}">
+                <path d="{{ polyPath }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="1.5" stroke-dasharray="3 4"></path>
+              </sc-if>
+              <path d="{{ rocCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="3" stroke-linejoin="round"></path>
+              <circle cx="{{ eerX }}" cy="{{ eerY }}" r="5" fill="var(--color-neutral-100)" stroke="var(--color-accent-2-700)" stroke-width="2"></circle>
+              <sc-if value="{{ showPt }}" hint-placeholder-val="{{ true }}">
+                <line x1="{{ ptX }}" y1="{{ ptY }}" x2="{{ ptX }}" y2="246" stroke="var(--color-accent-700)" stroke-width="1" stroke-dasharray="3 3"></line>
+              </sc-if>
+              <sc-if value="{{ showPt }}" hint-placeholder-val="{{ true }}">
+                <line x1="46" y1="{{ ptY }}" x2="{{ ptX }}" y2="{{ ptY }}" stroke="var(--color-accent-700)" stroke-width="1" stroke-dasharray="3 3"></line>
+              </sc-if>
+              <sc-if value="{{ showPt }}" hint-placeholder-val="{{ true }}">
+                <circle cx="{{ ptX }}" cy="{{ ptY }}" r="8" fill="var(--color-accent-700)" stroke="var(--color-surface)" stroke-width="3"></circle>
+              </sc-if>
+              <text x="46" y="262" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">0</text>
+              <text x="160" y="262" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">0.5</text>
+              <text x="274" y="262" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">1</text>
+              <text x="38" y="250" text-anchor="end" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">0</text>
+              <text x="38" y="136" text-anchor="end" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">0.5</text>
+              <text x="38" y="22" text-anchor="end" font-size="11" fill="var(--color-neutral-700)" font-family="var(--font-body)">1</text>
+              <text x="160" y="282" text-anchor="middle" font-size="12" fill="var(--color-text)" font-family="var(--font-body)">FPR (false-alarm rate)</text>
+              <text x="12" y="132" text-anchor="middle" font-size="12" fill="var(--color-text)" font-family="var(--font-body)" transform="rotate(-90 12 132)">TPR (recall)</text>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin:10px 4px 0;font-size:12.5px;color:var(--color-neutral-700)">
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:11px;height:11px;border-radius:999px;background:var(--color-accent-700)"></span>your table</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent);border-radius:2px"></span>fitted curve</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:10px;height:10px;border-radius:999px;border:2px solid var(--color-accent-2-700)"></span>equal error point</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;border-top:2px dashed var(--color-neutral-400)"></span>chance</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:16px">
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ verdict }}</p>
+
+            <div>
+              <svg sc-camel-view-box="0 0 340 150" style="width:100%;height:auto" role="img" aria-label="Score distributions with threshold">
+                <rect x="0" y="0" width="340" height="150" rx="18" fill="var(--color-neutral-100)"></rect>
+                <path d="{{ negTail }}" fill="var(--color-neutral-500)" opacity="0.45"></path>
+                <path d="{{ posTail }}" fill="var(--color-accent-300)" opacity="0.65"></path>
+                <path d="{{ negLine }}" fill="none" stroke="var(--color-neutral-700)" stroke-width="2.5"></path>
+                <path d="{{ posLine }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5"></path>
+                <line x1="{{ thrX }}" y1="10" x2="{{ thrX }}" y2="138" stroke="var(--color-accent-800)" stroke-width="2" stroke-dasharray="5 4"></line>
+                <line x1="0" y1="132" x2="340" y2="132" stroke="var(--color-neutral-400)" stroke-width="1.5"></line>
+              </svg>
+              <div style="display:flex;flex-wrap:wrap;gap:14px;margin:8px 4px 0;font-size:12px;color:var(--color-neutral-700)">
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-neutral-700);border-radius:2px"></span>negatives' scores</span>
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent);border-radius:2px"></span>positives' scores</span>
+                <span>shaded = right of threshold = said "+"</span>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-accent-700);margin-bottom:6px"><span>threshold — slide to move along the curve</span><span>{{ thrLabel }}</span></label>
+              <input type="range" min="{{ thrMin }}" max="{{ thrMax }}" step="0.05" value="{{ thr }}" sc-camel-on-change="{{ onThr }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+              <p style="margin:8px 0 0;font-size:12.5px;line-height:1.55;color:var(--color-neutral-700)">{{ lockNote }}</p>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">AUC</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ aucLabel }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Separation d′</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ dLabel }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">Equal error rate</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ eerLabel }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">One-point AUC</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ pAucLabel }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 6.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 5);
+</script>
+</body></html>
