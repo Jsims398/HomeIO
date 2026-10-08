@@ -1,7 +1,7 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html' };
 
 class Component extends DCLogic {
   state = { car: null, picked: null, opened: null, phase: 'pick', choice: null, won: null, round: 1,
@@ -10,11 +10,12 @@ class Component extends DCLogic {
             s1: 1.5, s2: 0.8, rho: 0.6, ptx: 1.7, pty: 1.1, cloud: null,
             deg: 3, nTrain: 12, noise: 0.28, sets: topic === 4 ? this.makeSets(12, 0.28) : null,
             cm: { tp: '40', fn: '10', fp: '15', tn: '35' }, rocD: null, rocT: null,
-            klD: 2.5, klW: 0.5, klS: 0.8, qm: 1.5, qs: 1, klMode: null };
+            klD: 2.5, klW: 0.5, klS: 0.8, qm: 1.5, qs: 1, klMode: null,
+            miCase: 'noisy', scShape: 'linear', scBase: null };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
-  componentDidMount() { this.draw(12); this.cloud(); }
+  componentDidMount() { this.draw(12); this.cloud(); this.scResample(); }
 
   cloud() {
     const pts = [];
@@ -152,6 +153,107 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() { clearInterval(this.klTimer); }
+
+  // entropy in bits, with 0 log 0 = 0
+  ent(ps) { return ps.reduce((a, p) => (p > 0 ? a - p * Math.log2(p) : a), 0); }
+
+  // fixed random draws, so the noise slider moves points instead of reshuffling them
+  scResample() {
+    const base = [];
+    for (let i = 0; i < 500; i++) base.push([Math.random(), this.gauss(0, 1), this.gauss(0, 1), this.gauss(0, 1)]);
+    this.setState({ scBase: base });
+  }
+
+  scPoints(shape, s) {
+    return (this.state.scBase || []).map(([u, g, e1, e2]) => {
+      const x = 2 * u - 1, t = 2 * Math.PI * u;
+      if (shape === 'linear') return [g, g + s * e1];
+      if (shape === 'circle') return [Math.cos(t) + 0.25 * s * e1, Math.sin(t) + 0.25 * s * e2];
+      if (shape === 'parabola') return [x, 2 * x * x - 1 + 0.5 * s * e1];
+      return [x, (e2 > 0 ? x : -x) + 0.5 * s * e1];
+    });
+  }
+
+  pearson(pts) {
+    const n = pts.length || 1;
+    const mx = pts.reduce((a, p) => a + p[0], 0) / n, my = pts.reduce((a, p) => a + p[1], 0) / n;
+    let sxy = 0, sxx = 0, syy = 0;
+    pts.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; });
+    return sxx > 0 && syy > 0 ? sxy / Math.sqrt(sxx * syy) : 0;
+  }
+
+  // plug-in MI on a B×B grid of equal-count bins, minus the Miller–Madow bias term
+  miBinned(pts, B) {
+    const N = pts.length;
+    if (N < B * B) return 0;
+    const bin = k => {
+      const r = new Array(N);
+      pts.map((p, i) => i).sort((a, b) => pts[a][k] - pts[b][k]).forEach((i, j) => { r[i] = Math.floor((j * B) / N); });
+      return r;
+    };
+    const bx = bin(0), by = bin(1), C = new Array(B * B).fill(0), cx = new Array(B).fill(0), cy = new Array(B).fill(0);
+    for (let i = 0; i < N; i++) { C[bx[i] * B + by[i]]++; cx[bx[i]]++; cy[by[i]]++; }
+    const H = arr => this.ent(arr.map(c => c / N));
+    return Math.max(0, H(cx) + H(cy) - H(C) - ((B - 1) * (B - 1)) / (2 * N * Math.LN2));
+  }
+
+  t7() {
+    const s = this.state, on = s.topic === 7;
+    const nav = {
+      showT7: on,
+      goT7: () => this.goTopic(7),
+      t7Bg: on ? 'var(--color-accent)' : 'transparent',
+      t7Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+    const pill = active => ({ bg: active ? 'var(--color-accent)' : 'transparent', fg: active ? 'var(--color-bg)' : 'var(--color-text)' });
+
+    // 6.3.1: 2×2 joint table. Cell order: (x0,y0) (x0,y1) (x1,y0) (x1,y1)
+    const cases = {
+      independent: { label: 'Independent', p: [0.48, 0.12, 0.32, 0.08], note: 'The two tables match, so seeing Y tells you nothing about X. MI is exactly 0.' },
+      noisy: { label: 'Noisy copy', p: [0.4, 0.1, 0.1, 0.4], note: 'Y usually equals X. Seeing Y removes some, but not all, of your 1 bit of uncertainty about X.' },
+      copy: { label: 'Exact copy', p: [0.5, 0, 0, 0.5], note: 'Y always equals X. Seeing Y removes all uncertainty, so MI equals the full H(X) = 1 bit.' },
+      opposite: { label: 'Always opposite', p: [0, 0.5, 0.5, 0], note: 'Y is always the opposite of X. Still 1 bit: MI cares that Y predicts X, not in which direction.' }
+    };
+    const cur = cases[s.miCase] || cases.noisy;
+    const p = cur.p;
+    const px = [p[0] + p[1], p[2] + p[3]], py = [p[0] + p[2], p[1] + p[3]];
+    const prod = [px[0] * py[0], px[0] * py[1], px[1] * py[0], px[1] * py[1]];
+    const I = p.reduce((a, v, i) => (v > 0 ? a + v * Math.log2(v / prod[i]) : a), 0);
+    const names = ['x=0 · y=0', 'x=0 · y=1', 'x=1 · y=0', 'x=1 · y=1'];
+    const pMax = Math.max(...p, ...prod);
+    const cell = (v, i) => {
+      const pct = Math.round((v / pMax) * 85);
+      return { name: names[i], val: v.toFixed(2), pct, fg: pct > 50 ? 'var(--color-bg)' : 'var(--color-text)' };
+    };
+
+    // 6.3.5: correlation vs MI on a few shapes, fixed noise
+    const shapes = {
+      linear: { label: 'Straight line', note: 'A straight line: both measures agree. This is the one case where correlation tells the whole story.' },
+      circle: { label: 'Circle', note: 'A circle: correlation ≈ 0, yet knowing x narrows y to two values. MI catches it.' },
+      parabola: { label: 'Parabola', note: 'A U-shape: the falling and rising halves cancel, so correlation ≈ 0. But y is nearly a function of x.' },
+      cross: { label: 'X shape', note: 'Two crossing lines: opposite slopes cancel, so correlation ≈ 0. MI still sees the pattern.' }
+    };
+    const shape = shapes[s.scShape] ? s.scShape : 'linear';
+    const pts = this.scPoints(shape, 0.3);
+    const rho = Math.abs(this.pearson(pts)), rInfo = Math.sqrt(1 - Math.pow(2, -2 * this.miBinned(pts, 8)));
+    const span = arr => { const lo = Math.min(...arr), hi = Math.max(...arr), pad = (hi - lo) * 0.06 || 1; return [lo - pad, hi + pad]; };
+    const [xl, xh] = pts.length ? span(pts.map(q => q[0])) : [-1, 1];
+    const [yl, yh] = pts.length ? span(pts.map(q => q[1])) : [-1, 1];
+    const SX = v => 12 + ((v - xl) / (xh - xl)) * 276, SY = v => 288 - ((v - yl) / (yh - yl)) * 276;
+
+    return {
+      ...nav,
+      miPresets: Object.keys(cases).map(k => ({ label: cases[k].label, ...pill(cases[k] === cur), onClick: () => this.setState({ miCase: k }) })),
+      jointCells: p.map(cell), prodCells: prod.map(cell),
+      miLabel: I.toFixed(2), miNote: cur.note,
+      shapeBtns: Object.keys(shapes).map(k => ({ label: shapes[k].label, ...pill(k === shape), onClick: () => this.setState({ scShape: k }) })),
+      scDots: pts.map(([x, y]) => 'M ' + SX(x).toFixed(1) + ' ' + SY(y).toFixed(1) + ' h0').join(' '),
+      absRhoLabel: rho.toFixed(2), absRhoPct: (rho * 100).toFixed(1),
+      rInfoLabel: rInfo.toFixed(2), rInfoPct: (rInfo * 100).toFixed(1),
+      shapeNote: shapes[shape].note
+    };
+  }
 
   t6() {
     const s = this.state, on = s.topic === 6;
@@ -594,7 +696,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,

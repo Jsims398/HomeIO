@@ -44,6 +44,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
         <span style="font-size:11px;opacity:.85">§6.2.6</span>
       </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT6 }}" hint-placeholder-val="{{ false }}">
@@ -186,7 +190,7 @@
         </div>
       </div>
 
-      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 7.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: mutual information — how much one variable tells you about another.</p>
     </section>
     </sc-if>
   </main>
