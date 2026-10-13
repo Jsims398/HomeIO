@@ -1,7 +1,10 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html' };
+const EM_COLORS = ['#c67139', '#7a8a5e', '#4f6d8a'];
+const EM_TOL = 1e-3;
+const SUB = ['₁', '₂', '₃'];
 
 class Component extends DCLogic {
   state = { car: null, picked: null, opened: null, phase: 'pick', choice: null, won: null, round: 1,
@@ -11,7 +14,9 @@ class Component extends DCLogic {
             deg: 3, nTrain: 12, noise: 0.28, sets: topic === 4 ? this.makeSets(12, 0.28) : null,
             cm: { tp: '40', fn: '10', fp: '15', tn: '35' }, rocD: null, rocT: null,
             klD: 2.5, klW: 0.5, klS: 0.8, qm: 1.5, qs: 1, klMode: null,
-            miCase: 'noisy', scShape: 'linear', scBase: null };
+            miCase: 'noisy', scShape: 'linear', scBase: null,
+            ...(topic === 8 ? this.emFresh(2) : {}), emAuto: false,
+            bdXs: topic === 8 ? window.EMMath.sample(2, window.EMMath.rng(473)) : null, bdT: -0.5, bdQ: null, bdPrev: null, bdIter: 0 };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
@@ -152,7 +157,7 @@ class Component extends DCLogic {
     }, 30);
   }
 
-  componentWillUnmount() { clearInterval(this.klTimer); }
+  componentWillUnmount() { clearInterval(this.klTimer); clearInterval(this.emTimer); }
 
   // entropy in bits, with 0 log 0 = 0
   ent(ps) { return ps.reduce((a, p) => (p > 0 ? a - p * Math.log2(p) : a), 0); }
@@ -195,6 +200,203 @@ class Component extends DCLogic {
     for (let i = 0; i < N; i++) { C[bx[i] * B + by[i]]++; cx[bx[i]]++; cy[by[i]]++; }
     const H = arr => this.ent(arr.map(c => c / N));
     return Math.max(0, H(cx) + H(cy) - H(C) - ((B - 1) * (B - 1)) / (2 * N * Math.LN2));
+  }
+
+  // ---- Topic 8: EM. Pure math is in em-math.js, which only em.html loads ----
+
+  // fresh GMM run; pass xs to keep the data and only re-draw the starting guess
+  emFresh(K, xs) {
+    const M = window.EMMath, data = xs || M.sample(K, Math.random), th = M.init(data, K, Math.random);
+    return { emK: K, emXs: data, emTh: th, emPrev: null, emR: null, emNk: null, emPhase: 'init',
+             emHist: [M.logLik(data, th)], emPt: Math.floor(data.length / 2), emDone: false };
+  }
+
+  emReset(K, xs) { this.emStop(); this.setState(this.emFresh(K, xs)); }
+
+  emStop() {
+    clearInterval(this.emTimer);
+    if (this.state.emAuto) this.setState({ emAuto: false });
+  }
+
+  emToggleAuto() {
+    if (this.state.emAuto) return this.emStop();
+    this.setState({ emAuto: true });
+    this.emTimer = setInterval(() => this.emNext(), 650);
+  }
+
+  // alternate E and M. E only fills in responsibilities; M moves θ and logs ℓ
+  emNext() {
+    const M = window.EMMath, s = this.state;
+    if (s.emDone) return this.emStop();
+    if (s.emPhase !== 'E') return this.setState({ emR: M.eStep(s.emXs, s.emTh), emPhase: 'E' });
+    const { Nk, theta } = M.mStep(s.emXs, s.emR, s.emTh);
+    const ll = M.logLik(s.emXs, theta), done = ll - s.emHist[s.emHist.length - 1] < EM_TOL;
+    this.setState({ emPrev: s.emTh, emTh: theta, emNk: Nk, emPhase: 'M', emHist: [...s.emHist, ll], emDone: done });
+    if (done) this.emStop();
+  }
+
+  // bound lab: two-component mixture where only θ = μ₂ is free
+  bdTheta(t) { return { pi: [0.45, 0.55], mu: [-1.8, t], sd: [0.7, 0.9] }; }
+
+  bdNext() {
+    const s = this.state, M = window.EMMath;
+    if (s.bdQ !== s.bdT) return this.setState({ bdQ: s.bdT, bdPrev: null });
+    const R = M.eStep(s.bdXs, this.bdTheta(s.bdQ));
+    const w = R.reduce((a, r) => a + r[1], 0);
+    const next = s.bdXs.reduce((a, x, i) => a + R[i][1] * x, 0) / w;
+    this.setState({ bdPrev: s.bdT, bdT: next, bdIter: s.bdIter + 1 });
+  }
+
+  emMix(r) {
+    const rgb = r.reduce((acc, w, k) => {
+      const h = EM_COLORS[k];
+      return acc.map((c, j) => c + w * parseInt(h.slice(1 + 2 * j, 3 + 2 * j), 16));
+    }, [0, 0, 0]);
+    return 'rgb(' + rgb.map(Math.round).join(',') + ')';
+  }
+
+  emNum(v) { return v >= 1e-3 ? v.toFixed(4) : v.toExponential(2); }
+
+  t8Bound() {
+    const s = this.state, M = window.EMMath, xs = s.bdXs;
+    const grid = [];
+    for (let i = 0; i <= 160; i++) grid.push(-4 + i * 0.05);
+    const ell = grid.map(t => M.logLik(xs, this.bdTheta(t)));
+    const hi = Math.max(...ell), lo = Math.min(...ell), span = hi - lo + 4;
+    const X = t => 16 + ((t + 4) / 8) * 308, Y = v => 188 - ((v - lo) / span) * 168;
+    // break the path wherever the curve leaves the bottom of the frame
+    const path = vals => {
+      let d = '', pen = false;
+      vals.forEach((v, i) => {
+        if (v < lo) { pen = false; return; }
+        d += (pen ? ' L ' : ' M ') + X(grid[i]).toFixed(1) + ' ' + Y(v).toFixed(1);
+        pen = true;
+      });
+      return d.trim();
+    };
+
+    const ellT = M.logLik(xs, this.bdTheta(s.bdT));
+    const showBound = s.bdQ !== null;
+    const Q = showBound ? M.eStep(xs, this.bdTheta(s.bdQ)) : null;
+    const L = t => M.bound(xs, this.bdTheta(t), Q);
+    const peak = showBound ? xs.reduce((a, x, i) => a + Q[i][1] * x, 0) / Q.reduce((a, r) => a + r[1], 0) : 0;
+    const jumped = s.bdPrev !== null;
+    const stuck = jumped && Math.abs(s.bdT - s.bdPrev) < 1e-3;
+
+    let note = 'Drag θ₀ to pick a starting point, then press the button. The dark curve is the true log-likelihood ℓ(θ): we can evaluate it, but setting its derivative to zero has no closed form.';
+    if (showBound && !jumped) note = 'E step: we built the lower bound Ł(θ; qₜ) at θₜ. It sits under ℓ everywhere and touches it exactly at θₜ. Unlike ℓ, it\'s a parabola in θ, so its peak has a closed form.';
+    if (jumped) note = 'M step: θ jumped to the peak of the bound. Since ℓ ≥ Ł everywhere, ℓ(θₜ₊₁) ≥ Ł(θₜ₊₁) ≥ Ł(θₜ) = ℓ(θₜ). The likelihood can only go up. Next E step re-touches the bound at the new point.';
+    if (stuck) note = 'Converged: the bound\'s peak is where we already stand, so θ stops moving. This is a stationary point of ℓ.';
+
+    const ellPrev = jumped ? M.logLik(xs, this.bdTheta(s.bdPrev)) : 0;
+    return {
+      bdT: s.bdT, bdTLabel: s.bdT.toFixed(2), bdIterLabel: s.bdIter,
+      onBdT: e => this.setState({ bdT: parseFloat(e.target.value), bdQ: null, bdPrev: null, bdIter: 0 }),
+      onBdNext: () => this.bdNext(),
+      bdBtnLabel: s.bdQ !== s.bdT ? 'E step: build bound at θₜ' : 'M step: jump to the bound\'s peak',
+      bdEll: path(ell), bdBound: showBound ? path(grid.map(L)) : '',
+      showBdBound: showBound,
+      bdTx: X(s.bdT).toFixed(1), bdTy: Y(ellT).toFixed(1),
+      bdQx: showBound ? X(s.bdQ).toFixed(1) : 0, bdQy: showBound ? Y(M.logLik(xs, this.bdTheta(s.bdQ))).toFixed(1) : 0,
+      bdPx: showBound ? X(peak).toFixed(1) : 0, bdPy: showBound ? Y(Math.max(lo, L(peak))).toFixed(1) : 0,
+      showBdJump: jumped,
+      bdEllLabel: ellT.toFixed(2),
+      bdChain: jumped ? 'ℓ(θₜ) = ' + ellPrev.toFixed(2) + '  ≤  Ł(θₜ₊₁; qₜ) = ' + L(s.bdT).toFixed(2) + '  ≤  ℓ(θₜ₊₁) = ' + ellT.toFixed(2) : '',
+      bdPeakLabel: showBound ? peak.toFixed(2) : '–',
+      bdNote: note
+    };
+  }
+
+  t8Gmm() {
+    const s = this.state, M = window.EMMath, xs = s.emXs, th = s.emTh, K = th.pi.length, N = xs.length;
+    const lo = xs[0] - 1.2, hi = xs[N - 1] + 1.2;
+    const X = x => 12 + ((x - lo) / (hi - lo)) * 316;
+    const grid = [];
+    for (let i = 0; i <= 160; i++) grid.push(lo + (i / 160) * (hi - lo));
+    const comp = th.pi.map((p, k) => grid.map(x => p * M.normal(x, th.mu[k], th.sd[k])));
+    const mix = grid.map((x, i) => comp.reduce((a, c) => a + c[i], 0));
+    const yMax = Math.max(...mix) * 1.12, Y = v => 150 - (v / yMax) * 132;
+    const line = arr => arr.map((v, i) => (i ? 'L ' : 'M ') + X(grid[i]).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    const area = arr => line(arr) + ' L ' + X(hi).toFixed(1) + ' 150 L ' + X(lo).toFixed(1) + ' 150 Z';
+
+    const hasR = s.emPhase !== 'init' && s.emR;
+    const pt = Math.min(s.emPt, N - 1), xn = xs[pt];
+    const dots = xs.map((x, i) => ({
+      x: X(x).toFixed(1), y: 166 + (i % 4) * 8,
+      fill: hasR ? this.emMix(s.emR[i]) : 'var(--color-neutral-500)',
+      onClick: () => this.setState({ emPt: i })
+    }));
+
+    // E-step panel: numbers for the inspected point
+    const terms = th.pi.map((p, k) => p * M.normal(xn, th.mu[k], th.sd[k]));
+    const tot = terms.reduce((a, v) => a + v, 0);
+    const eRows = terms.map((t, k) => ({
+      color: EM_COLORS[k], name: 'k = ' + (k + 1),
+      calc: 'π' + SUB[k] + ' · N(x | μ' + SUB[k] + ', σ' + SUB[k] + '²) = ' + th.pi[k].toFixed(2) + ' × ' + this.emNum(t / th.pi[k]) + ' = ' + this.emNum(t),
+      r: (t / tot).toFixed(3), pct: ((t / tot) * 100).toFixed(1)
+    }));
+
+    // M-step panel: old → new for each component
+    const prev = s.emPrev || th;
+    const arrow = (a, b, d) => a.toFixed(d) + ' → ' + b.toFixed(d);
+    const mRows = th.pi.map((p, k) => ({
+      color: EM_COLORS[k], name: 'k = ' + (k + 1),
+      nk: s.emNk ? s.emNk[k].toFixed(2) : '–',
+      pi: arrow(prev.pi[k], p, 2), mu: arrow(prev.mu[k], th.mu[k], 2), sd: arrow(prev.sd[k], th.sd[k], 2)
+    }));
+
+    const h = s.emHist, iter = h.length - 1, n = Math.max(h.length - 1, 6);
+    const hLo = Math.min(...h), hHi = Math.max(...h), hSpan = hHi - hLo || 1;
+    const LX = i => 18 + (i / n) * 304, LY = v => 92 - ((v - hLo) / hSpan) * 74;
+    const llNow = h[h.length - 1], llPrev = h.length > 1 ? h[h.length - 2] : llNow;
+
+    let note = 'θ⁰ is a guess: K random data points as means, equal weights, one pooled σ. Points are grey because nobody has asked yet which component each one belongs to.';
+    if (s.emPhase === 'E') note = 'E step done. Each point split its one unit of membership across the components, and the colour shows the split. θ hasn\'t moved, so ℓ is the same, but the bound now touches it.';
+    if (s.emPhase === 'M') note = 'M step done. Each component was refit as a weighted Gaussian using those soft counts. ℓ went from ' + llPrev.toFixed(2) + ' to ' + llNow.toFixed(2) + '.';
+    if (s.emDone) note = 'Converged: ℓ rose by less than ' + EM_TOL + ' on the last iteration. EM stops at a local maximum, so a different start can end somewhere else. Try "New start".';
+
+    return {
+      emKBtns: [2, 3].map(k => ({
+        label: 'K = ' + k, bg: k === K ? 'var(--color-accent)' : 'transparent', fg: k === K ? 'var(--color-bg)' : 'var(--color-text)',
+        onClick: () => this.emReset(k)
+      })),
+      onEmNext: () => { this.emStop(); this.emNext(); },
+      onEmAuto: () => this.emToggleAuto(),
+      onEmRestart: () => this.emReset(K, xs),
+      onEmNewData: () => this.emReset(K),
+      emBtnLabel: s.emDone ? 'Converged' : s.emPhase === 'E' ? 'Run M step' : 'Run E step',
+      emAutoLabel: s.emAuto ? 'Pause' : 'Auto-run',
+      emStepLabel: s.emDone ? 'done' : s.emPhase === 'E' ? 'next: M step' : 'next: E step',
+      emIterLabel: iter,
+      emCompAreas: comp.map((c, k) => ({ d: area(c), color: EM_COLORS[k] })),
+      emCompLines: comp.map((c, k) => ({ d: line(c), color: EM_COLORS[k] })),
+      emMeans: th.mu.map((m, k) => ({ x: X(m).toFixed(1), color: EM_COLORS[k] })),
+      emMixLine: line(mix),
+      emDots: dots,
+      emPtX: X(xn).toFixed(1), emPtY: 166 + (pt % 4) * 8,
+      emPt: pt, emPtMax: N - 1, emPtLabel: 'n = ' + (pt + 1) + ',  x = ' + xn.toFixed(2),
+      onEmPt: e => this.setState({ emPt: parseInt(e.target.value, 10) }),
+      showEmInit: s.emPhase === 'init', showEmE: s.emPhase === 'E', showEmM: s.emPhase === 'M',
+      emInitRows: th.pi.map((p, k) => ({ color: EM_COLORS[k], name: 'k = ' + (k + 1), text: 'π = ' + p.toFixed(2) + '   μ = ' + th.mu[k].toFixed(2) + '   σ = ' + th.sd[k].toFixed(2) })),
+      emERows: eRows, emSumLabel: this.emNum(tot),
+      emMRows: mRows, emN: N,
+      emLLPath: h.map((v, i) => (i ? 'L ' : 'M ') + LX(i).toFixed(1) + ' ' + LY(v).toFixed(1)).join(' '),
+      emLLDots: h.map((v, i) => ({ x: LX(i).toFixed(1), y: LY(v).toFixed(1) })),
+      emLLLabel: llNow.toFixed(2),
+      emNote: note
+    };
+  }
+
+  t8() {
+    const s = this.state, on = s.topic === 8;
+    const nav = {
+      showT8: on,
+      goT8: () => this.goTopic(8),
+      t8Bg: on ? 'var(--color-accent)' : 'transparent',
+      t8Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+    return { ...nav, ...this.t8Bound(), ...this.t8Gmm() };
   }
 
   t7() {
@@ -696,7 +898,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,

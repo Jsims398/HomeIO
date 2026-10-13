@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EM algorithm · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/em-math.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT8 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s87" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">8.7 &nbsp;Key points</a>
+        <a href="#s871" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">8.7.1 &nbsp;Bound lab</a>
+        <a href="#s872" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">8.7.2 &nbsp;The EM bound</a>
+        <a href="#s873" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">8.7.3 &nbsp;EM for a GMM</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT8 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic8" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 8</span>
+        <span class="tag tag-accent-2">Murphy, PML — §8.7</span>
+        <span class="tag tag-outline">Bound optimization · EM</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">Climb a hill you can't solve by climbing ones you can</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">EM maximizes a likelihood with hidden variables by repeating two easy steps: guess the hidden parts, then refit as if the guess were true. Each round is guaranteed not to make the fit worse.</p>
+    </header>
+
+    <section id="s87" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">8.7</span>
+        <h2 style="margin:0">Key points</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">The problem</div>
+          <div class="card-title">ℓ(θ) = Σ<sub>n</sub> log Σ<sub>z</sub> p(x<sub>n</sub>, z | θ)</div>
+          <p class="card-body">The hidden z puts a sum <em>inside</em> the log, so setting the gradient to zero has no closed form. If z were observed, the log would reach the Gaussian directly and the MLE would be easy.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Bound optimization (MM)</div>
+          <div class="card-title">Q(θ, θ<sub>t</sub>) ≤ ℓ(θ), equal at θ<sub>t</sub></div>
+          <p class="card-body">Build a simpler surrogate that sits below ℓ and touches it at the current point. Maximize the surrogate. Repeat. ℓ can never go down.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">EM = MM for hidden variables</div>
+          <div class="card-title">E: fill in z softly · M: refit</div>
+          <p class="card-body">The E step builds the surrogate by computing p(z | x, θ<sub>t</sub>). The M step maximizes it, which is just a weighted version of the easy, fully observed MLE.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s871" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">8.7.1</span>
+        <h2 style="margin:0">The general algorithm: ride a bound uphill</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">A two-bump mixture where everything is fixed except one mean, θ = μ<sub>2</sub>. That makes ℓ(θ) a curve you can see. Each E step draws the real EM lower bound under it; each M step jumps to the bound's peak.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px">
+          <h3 style="margin:0">ℓ(θ) and its lower bound</h3>
+          <button class="btn btn-primary" sc-camel-on-click="{{ onBdNext }}" style="font-size:13px">{{ bdBtnLabel }}</button>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 340px;min-width:0">
+            <svg sc-camel-view-box="0 0 340 200" style="width:100%;height:auto" role="img" aria-label="Log-likelihood curve with the EM lower bound">
+              <rect x="0" y="0" width="340" height="200" rx="18" fill="var(--color-neutral-100)"></rect>
+              <path d="{{ bdEll }}" fill="none" stroke="var(--color-neutral-800)" stroke-width="3"></path>
+              <sc-if value="{{ showBdBound }}" hint-placeholder-val="{{ false }}">
+                <path d="{{ bdBound }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="2.5" stroke-dasharray="6 4"></path>
+                <circle cx="{{ bdQx }}" cy="{{ bdQy }}" r="5" fill="var(--color-accent-2-600)"></circle>
+                <line x1="{{ bdPx }}" y1="{{ bdPy }}" x2="{{ bdPx }}" y2="14" stroke="var(--color-accent-2-600)" stroke-width="1.25" stroke-dasharray="3 4"></line>
+                <circle cx="{{ bdPx }}" cy="{{ bdPy }}" r="5" fill="var(--color-surface)" stroke="var(--color-accent-2-700)" stroke-width="2.5"></circle>
+              </sc-if>
+              <circle cx="{{ bdTx }}" cy="{{ bdTy }}" r="8" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="3"></circle>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin:8px 4px 0;font-size:12.5px;color:var(--color-neutral-700)">
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-neutral-800);border-radius:2px"></span>ℓ(θ), the true log-likelihood</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent-2-600);border-radius:2px"></span>Ł(θ; q<sub>t</sub>), the bound</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:10px;height:10px;background:var(--color-accent);border-radius:50%"></span>current θ<sub>t</sub></span>
+            </div>
+            <div style="margin-top:16px">
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-accent-700);margin-bottom:6px"><span>starting point θ₀ (resets)</span><span>{{ bdTLabel }}</span></label>
+              <input type="range" min="-4" max="4" step="0.05" value="{{ bdT }}" sc-camel-on-change="{{ onBdT }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+          </div>
+
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:14px">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">θ<sub>t</sub> · step {{ bdIterLabel }}</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ bdTLabel }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">ℓ(θ<sub>t</sub>)</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ bdEllLabel }}</div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100);font-size:13px;line-height:1.55">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800);margin-bottom:2px">Bound's peak (closed form)</div>
+              θ* = Σ<sub>n</sub> r<sub>n2</sub> x<sub>n</sub> ⁄ Σ<sub>n</sub> r<sub>n2</sub> = <strong>{{ bdPeakLabel }}</strong>
+            </div>
+            <sc-if value="{{ showBdJump }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200);font-size:12.5px;line-height:1.6">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:2px">Why ℓ can't go down</div>
+                {{ bdChain }}
+              </div>
+            </sc-if>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ bdNote }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s872" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">8.7.2</span>
+        <h2 style="margin:0">Where the bound comes from</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">The green curve above isn't hand-drawn. It's built from any distribution q<sub>n</sub>(z) over each point's hidden label, then tightened by the E step.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">8.7.2.1 · Lower bound (Jensen)</div>
+          <div class="card-title">ℓ(θ) ≥ Σ<sub>n</sub> Σ<sub>z</sub> q<sub>n</sub>(z) log [ p(x<sub>n</sub>, z | θ) ⁄ q<sub>n</sub>(z) ] = Ł(θ, q)</div>
+          <p class="card-body">Multiply and divide by q inside the log, then log is concave so log E[·] ≥ E[log ·]. The gap is exactly Σ<sub>n</sub> KL(q<sub>n</sub> ‖ p(z | x<sub>n</sub>, θ)), which is never negative.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">8.7.2.2 · E step</div>
+          <div class="card-title">q<sub>n</sub>(z) = p(z | x<sub>n</sub>, θ<sub>t</sub>)</div>
+          <p class="card-body">Choose q to be the posterior over the hidden label. The KL gap drops to 0, so Ł(θ<sub>t</sub>, q<sub>t</sub>) = ℓ(θ<sub>t</sub>): the bound touches the curve at the current point.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">8.7.2.3 · M step</div>
+          <div class="card-title">θ<sub>t+1</sub> = argmax<sub>θ</sub> Σ<sub>n</sub> E<sub>q<sub>n</sub></sub>[ log p(x<sub>n</sub>, z<sub>n</sub> | θ) ]</div>
+          <p class="card-body">The entropy part of Ł doesn't depend on θ, so we only maximize the expected complete-data log-likelihood Q(θ, θ<sub>t</sub>). Then ℓ(θ<sub>t+1</sub>) ≥ Ł(θ<sub>t+1</sub>, q<sub>t</sub>) ≥ Ł(θ<sub>t</sub>, q<sub>t</sub>) = ℓ(θ<sub>t</sub>).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s873" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">8.7.3</span>
+        <h2 style="margin:0">EM for a Gaussian mixture, one step at a time</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Now every parameter is free: weights π<sub>k</sub>, means μ<sub>k</sub>, spreads σ<sub>k</sub>. The hidden variable z<sub>n</sub> is which component made point x<sub>n</sub>.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px">
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">8.7.3.1 · E step: responsibilities</div>
+          <div class="card-title">r<sub>nk</sub> = π<sub>k</sub> N(x<sub>n</sub> | μ<sub>k</sub>, σ<sub>k</sub>²) ⁄ Σ<sub>j</sub> π<sub>j</sub> N(x<sub>n</sub> | μ<sub>j</sub>, σ<sub>j</sub>²)</div>
+          <p class="card-body">Bayes' rule for each point: how much of x<sub>n</sub> does component k explain? Each row of r sums to 1.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">8.7.3.2 · M step: weighted MLE</div>
+          <div class="card-title">N<sub>k</sub> = Σ<sub>n</sub> r<sub>nk</sub> &nbsp;·&nbsp; π<sub>k</sub> = N<sub>k</sub> ⁄ N</div>
+          <p class="card-body">μ<sub>k</sub> = Σ<sub>n</sub> r<sub>nk</sub> x<sub>n</sub> ⁄ N<sub>k</sub> &nbsp;and&nbsp; σ<sub>k</sub>² = Σ<sub>n</sub> r<sub>nk</sub> (x<sub>n</sub> − μ<sub>k</sub>)² ⁄ N<sub>k</sub>. The usual mean and variance, but each point counts r<sub>nk</sub> times.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px">
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ emKBtns }}" as="b" hint-placeholder-count="2">
+              <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button class="btn btn-primary" sc-camel-on-click="{{ onEmNext }}" style="font-size:13px">{{ emBtnLabel }}</button>
+            <button class="btn btn-secondary" sc-camel-on-click="{{ onEmAuto }}" style="font-size:13px">{{ emAutoLabel }}</button>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onEmRestart }}" style="font-size:13px">New start</button>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onEmNewData }}" style="font-size:13px">New data</button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 340px;min-width:0">
+            <svg sc-camel-view-box="0 0 340 200" style="width:100%;height:auto" role="img" aria-label="Data points coloured by responsibility, with the fitted mixture components">
+              <rect x="0" y="0" width="340" height="200" rx="18" fill="var(--color-neutral-100)"></rect>
+              <sc-for list="{{ emCompAreas }}" as="c" hint-placeholder-count="2">
+                <path d="{{ c.d }}" fill="{{ c.color }}" opacity="0.18"></path>
+              </sc-for>
+              <sc-for list="{{ emMeans }}" as="m" hint-placeholder-count="2">
+                <line x1="{{ m.x }}" y1="18" x2="{{ m.x }}" y2="150" stroke="{{ m.color }}" stroke-width="1.25" stroke-dasharray="3 4"></line>
+              </sc-for>
+              <sc-for list="{{ emCompLines }}" as="c" hint-placeholder-count="2">
+                <path d="{{ c.d }}" fill="none" stroke="{{ c.color }}" stroke-width="2.5"></path>
+              </sc-for>
+              <path d="{{ emMixLine }}" fill="none" stroke="var(--color-neutral-800)" stroke-width="1.75" stroke-dasharray="5 4"></path>
+              <line x1="12" y1="150" x2="328" y2="150" stroke="var(--color-neutral-400)" stroke-width="1.5"></line>
+              <line x1="{{ emPtX }}" y1="18" x2="{{ emPtX }}" y2="194" stroke="var(--color-neutral-700)" stroke-width="1" opacity="0.6"></line>
+              <sc-for list="{{ emDots }}" as="p" hint-placeholder-count="40">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4" fill="{{ p.fill }}" stroke="var(--color-surface)" stroke-width="1" sc-camel-on-click="{{ p.onClick }}" style="cursor:pointer"></circle>
+              </sc-for>
+              <circle cx="{{ emPtX }}" cy="{{ emPtY }}" r="7.5" fill="none" stroke="var(--color-neutral-900)" stroke-width="2"></circle>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin:8px 4px 0;font-size:12.5px;color:var(--color-neutral-700)">
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-neutral-800);border-radius:2px"></span>mixture p(x | θ)</span>
+              <span>solid curves: π<sub>k</sub> N(x | μ<sub>k</sub>, σ<sub>k</sub>²) &nbsp;·&nbsp; dot colour: r<sub>nk</sub> blend</span>
+            </div>
+
+            <div style="margin-top:16px">
+              <label style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:6px"><span>inspect point (or click a dot)</span><span>{{ emPtLabel }}</span></label>
+              <input type="range" min="0" max="{{ emPtMax }}" step="1" value="{{ emPt }}" sc-camel-on-change="{{ onEmPt }}" style="width:100%;accent-color:var(--color-neutral-700);cursor:pointer">
+            </div>
+
+            <div style="margin-top:20px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:4px"><span>log-likelihood ℓ(θ<sub>t</sub>) after each M step</span><strong>{{ emLLLabel }}</strong></div>
+              <svg sc-camel-view-box="0 0 340 110" style="width:100%;height:auto" role="img" aria-label="Log-likelihood by iteration">
+                <rect x="0" y="0" width="340" height="110" rx="16" fill="var(--color-neutral-100)"></rect>
+                <path d="{{ emLLPath }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5"></path>
+                <sc-for list="{{ emLLDots }}" as="d" hint-placeholder-count="6">
+                  <circle cx="{{ d.x }}" cy="{{ d.y }}" r="3.5" fill="var(--color-accent-700)"></circle>
+                </sc-for>
+              </svg>
+            </div>
+          </div>
+
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:14px">
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Iteration {{ emIterLabel }} · {{ emStepLabel }}</div>
+              <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">ℓ = {{ emLLLabel }}</div>
+            </div>
+
+            <sc-if value="{{ showEmInit }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:14px 16px;border-radius:24px;background:var(--color-neutral-200);display:flex;flex-direction:column;gap:8px">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Initial guess θ⁰</div>
+                <sc-for list="{{ emInitRows }}" as="r" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                    <span style="width:10px;height:10px;border-radius:50%;flex:none;background:{{ r.color }}"></span>
+                    <strong>{{ r.name }}</strong><span style="white-space:pre">{{ r.text }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ showEmE }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:14px 16px;border-radius:24px;background:var(--color-accent-2-100);display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">E step for the ringed point · {{ emPtLabel }}</div>
+                <sc-for list="{{ emERows }}" as="r" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-size:12.5px;line-height:1.5"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:{{ r.color }}"></span>{{ r.calc }}</div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="flex:1;height:12px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden">
+                        <div style="height:100%;border-radius:999px;background:{{ r.color }};width:{{ r.pct }}%"></div>
+                      </div>
+                      <span style="font-size:12.5px;min-width:72px;text-align:right">r = <strong>{{ r.r }}</strong></span>
+                    </div>
+                  </div>
+                </sc-for>
+                <div style="font-size:12.5px;color:var(--color-neutral-800)">Denominator Σ<sub>j</sub> π<sub>j</sub> N(x | μ<sub>j</sub>, σ<sub>j</sub>²) = {{ emSumLabel }}. Each term divided by it gives r.</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ showEmM }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:14px 16px;border-radius:24px;background:var(--color-accent-100);display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800)">M step · old → new (N = {{ emN }})</div>
+                <sc-for list="{{ emMRows }}" as="r" hint-placeholder-count="2">
+                  <div style="font-size:12.5px;line-height:1.6">
+                    <div><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:{{ r.color }}"></span><strong>{{ r.name }}</strong> &nbsp;N<sub>k</sub> = Σ<sub>n</sub> r<sub>nk</sub> = {{ r.nk }}</div>
+                    <div style="padding-left:16px">π: {{ r.pi }} &nbsp;·&nbsp; μ: {{ r.mu }} &nbsp;·&nbsp; σ: {{ r.sd }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ emNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 9.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 8);
+</script>
+</body></html>
