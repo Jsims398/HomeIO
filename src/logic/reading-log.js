@@ -1,7 +1,9 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html' };
+const NB_SIZES = [4, 8, 16, 32, 64, 128, 256, 512];
+const NB_CYCLE = { yes: 'no', no: 'unk', unk: 'yes' };
 const EM_COLORS = ['#c67139', '#7a8a5e', '#4f6d8a'];
 const EM_TOL = 1e-3;
 const SUB = ['₁', '₂', '₃'];
@@ -16,11 +18,12 @@ class Component extends DCLogic {
             klD: 2.5, klW: 0.5, klS: 0.8, qm: 1.5, qs: 1, klMode: null,
             miCase: 'noisy', scShape: 'linear', scBase: null,
             ...(topic === 8 ? this.emFresh(2) : {}), emAuto: false,
-            bdXs: topic === 8 ? window.EMMath.sample(2, window.EMMath.rng(473)) : null, bdT: -0.5, bdQ: null, bdPrev: null, bdIter: 0 };
+            bdXs: topic === 8 ? window.EMMath.sample(2, window.EMMath.rng(473)) : null, bdT: -0.5, bdQ: null, bdPrev: null, bdIter: 0,
+            nbStates: ['yes', 'no', 'no', 'yes', 'no'], nbSmooth: true, nbCase: 'indep', nbRace: {} };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
-  componentDidMount() { this.draw(12); this.cloud(); this.scResample(); }
+  componentDidMount() { this.draw(12); this.cloud(); this.scResample(); if (topic === 9) this.nbPickCase('indep'); }
 
   cloud() {
     const pts = [];
@@ -385,6 +388,108 @@ class Component extends DCLogic {
       emLLLabel: llNow.toFixed(2),
       emNote: note
     };
+  }
+
+  // ---- Topic 9: Naive Bayes. Pure math is in nb-math.js, which only naive-bayes.html loads ----
+
+  // the race is ~1 s of number crunching, so run it once per case after the button repaints
+  nbPickCase(k) {
+    this.setState({ nbCase: k });
+    if (this.state.nbRace[k]) return;
+    setTimeout(() => {
+      const M = window.NBMath, r = M.race(NB_SIZES, 30, k === 'copies' ? M.COPIES : 0, 473);
+      this.setState({ nbRace: { ...this.state.nbRace, [k]: r } });
+    }, 30);
+  }
+
+  nbNum(v) { return v === 0 || v >= 1e-3 ? v.toFixed(v >= 0.1 || v === 0 ? 2 : 4) : v.toExponential(2); }
+
+  t9Lab() {
+    const s = this.state, M = window.NBMath, sm = s.nbSmooth, c = M.classify(s.nbStates, sm);
+    const { nSpam, nHam } = M.TRAIN;
+    const frac = (k, n) => (sm ? '(' + k + '+1)/(' + n + '+2)' : k + '/' + n);
+    const PUSH_MAX = 3;
+    const pushOf = (fs, fh) => (fs === 0 && fh === 0 ? 0 : Math.log(fs / fh));
+    const bar = (label, push, sub) => {
+      const w = Math.min(1, Math.abs(push) / PUSH_MAX) * 100;
+      const val = !isFinite(push) ? (push > 0 ? '+∞' : '−∞') : (push >= 0 ? '+' : '−') + Math.abs(push).toFixed(2);
+      return { label, sub, val, spamPct: push > 0 ? w.toFixed(1) : 0, hamPct: push < 0 ? w.toFixed(1) : 0 };
+    };
+    const used = c.factors.filter(f => f.st !== 'unk');
+    const pushes = [bar('prior', Math.log(c.prior / (1 - c.prior)), '8 vs 12 emails')]
+      .concat(c.factors.map(f => (f.st === 'unk' ? { label: f.word, sub: 'unknown: skipped', val: '0', spamPct: 0, hamPct: 0 }
+        : bar(f.word, pushOf(f.fs, f.fh), f.st === 'yes' ? 'in email' : 'not in email'))));
+    const chain = (prior, key) => prior.toFixed(2) + used.map(f => ' × ' + this.nbNum(f[key])).join('');
+
+    const broken = isNaN(c.post), certain = !broken && (c.post === 0 || c.post === 1);
+    let note = 'Each word multiplies in a factor for each label. The bigger product wins, and dividing by the sum turns the two scores into a probability.';
+    if (certain) note = 'One word with a zero count forced the answer to exactly ' + (c.post ? '100%' : '0%') + ', no matter what the other words say. A single unseen word should never have veto power. Turn smoothing on.';
+    if (broken) note = 'Both labels scored exactly 0: one word never appeared in spam and another never appeared in normal mail. 0 ÷ 0 has no answer, so the filter breaks. Turn smoothing on.';
+    if (sm && c.factors.some(f => f.st === 'unk')) note += ' Words marked ? are just left out of both products. That is §9.4.3: a generative model handles missing clues for free.';
+
+    return {
+      nbChips: c.factors.map((f, d) => ({
+        label: f.word + (f.st === 'yes' ? ' ✓' : f.st === 'no' ? ' ✗' : ' ?'),
+        bg: f.st === 'yes' ? 'var(--color-accent)' : f.st === 'no' ? 'var(--color-neutral-300)' : 'transparent',
+        fg: f.st === 'yes' ? 'var(--color-bg)' : 'var(--color-text)',
+        border: f.st === 'unk' ? 'var(--color-neutral-600)' : 'transparent',
+        onClick: () => this.setState({ nbStates: s.nbStates.map((v, i) => (i === d ? NB_CYCLE[v] : v)) })
+      })),
+      nbRows: c.factors.map(f => ({
+        word: f.word, spamCalc: frac(f.spam, nSpam) + ' = ' + f.ts.toFixed(2), hamCalc: frac(f.ham, nHam) + ' = ' + f.th.toFixed(2),
+        spamZero: f.ts === 0 ? 'var(--color-accent-700)' : 'inherit', hamZero: f.th === 0 ? 'var(--color-accent-700)' : 'inherit'
+      })),
+      nbSmoothLabel: sm ? 'Smoothing: on (+1 to every count)' : 'Smoothing: off (raw counts)',
+      nbSmoothBg: sm ? 'var(--color-accent-2-600)' : 'transparent', nbSmoothFg: sm ? 'var(--color-bg)' : 'var(--color-text)',
+      onNbSmooth: () => this.setState({ nbSmooth: !sm }),
+      onNbReset: () => this.setState({ nbStates: ['yes', 'no', 'no', 'yes', 'no'], nbSmooth: true }),
+      nbSpamChain: chain(c.prior, 'fs') + ' = ' + this.nbNum(c.spam),
+      nbHamChain: chain(1 - c.prior, 'fh') + ' = ' + this.nbNum(c.ham),
+      nbPostLabel: broken ? '0 ÷ 0' : (c.post * 100).toFixed(1) + '%',
+      nbVerdict: broken ? 'undefined' : c.post > 0.5 ? 'spam' : 'not spam',
+      nbPostPct: broken ? 0 : (c.post * 100).toFixed(1),
+      nbPushes: pushes,
+      nbNote: note
+    };
+  }
+
+  t9Race() {
+    const s = this.state, r = s.nbRace[s.nbCase];
+    const pill = active => ({ bg: active ? 'var(--color-accent)' : 'transparent', fg: active ? 'var(--color-bg)' : 'var(--color-text)' });
+    const cases = {
+      indep: { label: 'Clues really independent', note: 'The naive assumption is true here, so Naive Bayes is the right model. It learns faster from a handful of emails and ties logistic regression once data is plentiful.' },
+      copies: { label: 'One clue copied 4×', note: 'Now the first clue has 4 near-copies. Naive Bayes counts that one piece of evidence 5 times and trusts it too much. It still wins with few emails (counting is stable), but with lots of data logistic regression learns to down-weight the copies and pulls ahead.' }
+    };
+    const LO = 0.55, HI = 0.76;
+    const X = i => 46 + (i / (NB_SIZES.length - 1)) * 278, Y = a => 168 - ((a - LO) / (HI - LO)) * 150;
+    const line = arr => arr.map((a, i) => (i ? 'L ' : 'M ') + X(i).toFixed(1) + ' ' + Y(a).toFixed(1)).join(' ');
+    const dots = arr => arr.map((a, i) => ({ x: X(i).toFixed(1), y: Y(a).toFixed(1) }));
+    const pct = a => (a * 100).toFixed(1) + '%';
+    const last = NB_SIZES.length - 1;
+    return {
+      nbCaseBtns: Object.keys(cases).map(k => ({ label: cases[k].label, ...pill(k === s.nbCase), onClick: () => this.nbPickCase(k) })),
+      nbRaceReady: !!r, nbRaceLoading: !r,
+      nbXTicks: NB_SIZES.map((n, i) => ({ x: X(i).toFixed(1), label: n })),
+      nbYTicks: [0.6, 0.65, 0.7, 0.75].map(a => ({ y: Y(a).toFixed(1), ty: (Y(a) + 4).toFixed(1), label: Math.round(a * 100) + '%' })),
+      nbLineNB: r ? line(r.nb) : '', nbLineLR: r ? line(r.lr) : '',
+      nbDotsNB: r ? dots(r.nb) : [], nbDotsLR: r ? dots(r.lr) : [],
+      nbSmallNB: r ? pct(r.nb[1]) : '–', nbSmallLR: r ? pct(r.lr[1]) : '–',
+      nbBigNB: r ? pct(r.nb[last]) : '–', nbBigLR: r ? pct(r.lr[last]) : '–',
+      nbSmallN: NB_SIZES[1], nbBigN: NB_SIZES[last],
+      nbRaceNote: cases[s.nbCase].note
+    };
+  }
+
+  t9() {
+    const s = this.state, on = s.topic === 9;
+    const nav = {
+      showT9: on,
+      goT9: () => this.goTopic(9),
+      t9Bg: on ? 'var(--color-accent)' : 'transparent',
+      t9Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+    return { ...nav, ...this.t9Lab(), ...this.t9Race() };
   }
 
   t8() {
@@ -898,7 +1003,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,

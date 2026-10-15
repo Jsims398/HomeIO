@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naive Bayes · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/nb-math.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT9 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s93" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">9.3 &nbsp;Three steps</a>
+        <a href="#s93lab" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">9.3 &nbsp;Spam filter lab</a>
+        <a href="#s94" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">9.4 &nbsp;Two kinds of model</a>
+        <a href="#s94race" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">9.4 &nbsp;The race</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT9 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic9" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 9</span>
+        <span class="tag tag-accent-2">Murphy, PML — §9.3 – 9.4</span>
+        <span class="tag tag-outline">Naive Bayes · Generative vs discriminative</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">Classify by multiplying simple clues</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">Is this email spam? Naive Bayes answers by asking two things: how common is spam in general, and how well does "spam" explain each word I see? One bold shortcut turns the whole thing into counting.</p>
+    </header>
+
+    <section id="s93" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">9.3</span>
+        <h2 style="margin:0">Naive Bayes in three steps</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Step 1 · Flip the question</div>
+          <div class="card-title">p(spam | email) ∝ p(spam) × p(email | spam)</div>
+          <p class="card-body">"Is this spam?" is hard to answer directly. Bayes' rule flips it: <em>if</em> it were spam, how likely is an email like this? Do the same for normal mail, then compare the two scores.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Step 2 · The "naive" shortcut</div>
+          <div class="card-title">p(email | spam) ≈ p(w<sub>1</sub> | spam) × p(w<sub>2</sub> | spam) × …</div>
+          <p class="card-body">Pretend each word shows up on its own once you know the label. Not really true ("free" and "money" travel together), but with 20 words it shrinks 1,048,576 word combos down to 20 numbers per label.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Step 3 · Fitting = counting</div>
+          <div class="card-title">θ = (# spam emails with "free") ⁄ (# spam emails)</div>
+          <p class="card-body">The best-fit value (the MLE, §9.3.2) is just a fraction from the training data. No calculus, no iterations. Add 1 to every count (smoothing, §9.3.3) so no word ever gets probability exactly 0.</p>
+        </div>
+      </div>
+      <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>Why it matters:</strong> it trains in one pass, works with tiny datasets and thousands of features, and is still a go-to first model for text: spam filters, sentiment, topic tagging.</p>
+    </section>
+
+    <section id="s93lab" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">9.3</span>
+        <h2 style="margin:0">Spam filter lab</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Training set: 8 spam and 12 normal emails. Click a word to cycle it: <strong>✓</strong> in the email, <strong>✗</strong> not in it, <strong>?</strong> unknown. Then turn smoothing off and try ✓ on both "winner" and "meeting".</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px">
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ nbChips }}" as="c" hint-placeholder-count="5">
+              <button class="btn" sc-camel-on-click="{{ c.onClick }}" style="font-size:13.5px;background:{{ c.bg }};color:{{ c.fg }};border:1.5px dashed {{ c.border }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button class="btn btn-secondary" sc-camel-on-click="{{ onNbSmooth }}" style="font-size:13px;background:{{ nbSmoothBg }};color:{{ nbSmoothFg }}">{{ nbSmoothLabel }}</button>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onNbReset }}" style="font-size:13px">Reset</button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:18px">
+            <div style="overflow-x:auto">
+              <table class="table" style="font-size:13px">
+                <thead><tr><th>word</th><th>θ<sub>spam</sub> = p(word | spam)</th><th>θ<sub>normal</sub> = p(word | normal)</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ nbRows }}" as="r" hint-placeholder-count="5">
+                    <tr><td><strong>{{ r.word }}</strong></td><td style="color:{{ r.spamZero }}">{{ r.spamCalc }}</td><td style="color:{{ r.hamZero }}">{{ r.hamCalc }}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-neutral-700);margin-bottom:8px">
+                <span>← pushes toward <strong style="color:var(--color-accent-2-700)">normal</strong></span>
+                <span>pushes toward <strong style="color:var(--color-accent-700)">spam</strong> →</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ nbPushes }}" as="p" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:78px 1fr 1fr 50px;align-items:center;gap:6px;font-size:12.5px">
+                    <div style="line-height:1.2"><strong>{{ p.label }}</strong><div style="font-size:10.5px;color:var(--color-neutral-600)">{{ p.sub }}</div></div>
+                    <div style="height:14px;border-radius:999px 0 0 999px;background:var(--color-neutral-200);display:flex;justify-content:flex-end;overflow:hidden">
+                      <div style="height:100%;background:var(--color-accent-2-600);width:{{ p.hamPct }}%"></div>
+                    </div>
+                    <div style="height:14px;border-radius:0 999px 999px 0;background:var(--color-neutral-200);overflow:hidden">
+                      <div style="height:100%;background:var(--color-accent);width:{{ p.spamPct }}%"></div>
+                    </div>
+                    <div style="text-align:right;font-variant-numeric:tabular-nums">{{ p.val }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <p style="margin:10px 0 0;font-size:12px;color:var(--color-neutral-700);line-height:1.5">Push = log( factor for spam ⁄ factor for normal ). Add up all the pushes and you get the log-odds of spam.</p>
+            </div>
+          </div>
+
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:14px">
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">p(spam | email) · {{ nbVerdict }}</div>
+              <div style="font-family:var(--font-heading);font-size:26px;margin-top:2px">{{ nbPostLabel }}</div>
+              <div style="margin-top:8px;height:8px;border-radius:999px;background:color-mix(in srgb, var(--color-bg) 30%, transparent);overflow:hidden">
+                <div style="height:100%;border-radius:999px;background:var(--color-bg);width:{{ nbPostPct }}%"></div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-100);font-size:12.5px;line-height:1.6">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800);margin-bottom:2px">Spam score = prior × each word</div>
+              {{ nbSpamChain }}
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100);font-size:12.5px;line-height:1.6">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800);margin-bottom:2px">Normal score = prior × each word</div>
+              {{ nbHamChain }}
+            </div>
+            <div style="font-size:12.5px;color:var(--color-neutral-800)">p(spam | email) = spam score ⁄ (spam score + normal score). A ✗ word uses 1 − θ.</div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ nbNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:22px;background:var(--color-neutral-200)">
+        <div class="card-kicker">9.3.4 · Hidden connection to logistic regression</div>
+        <div class="card-title">log-odds = bias + push<sub>1</sub> + push<sub>2</sub> + …</div>
+        <p class="card-body">Taking logs turns the products into a sum of one weight per word. That is exactly the shape of logistic regression, so Naive Bayes draws a straight-line boundary too. The only difference is how it gets the weights: by counting, instead of by searching for the best ones.</p>
+      </div>
+    </section>
+
+    <section id="s94" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">9.4</span>
+        <h2 style="margin:0">Two ways to build a classifier</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Generative · e.g. Naive Bayes</div>
+          <div class="card-title">Learn p(x | y) and p(y), then flip with Bayes</div>
+          <p class="card-body">Learn what each class <em>looks like</em>: a recipe that could write fake spam and fake normal mail. To classify, see which recipe better explains the email.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Discriminative · e.g. logistic regression</div>
+          <div class="card-title">Learn p(y | x) directly</div>
+          <p class="card-body">Skip describing the emails. Only learn the dividing line between the classes. Like telling cats from dogs by "pointy ears?" without ever learning to draw either.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;overflow-x:auto;padding:8px 18px;border-radius:32px;background:var(--color-surface)">
+        <table class="table" style="font-size:13.5px">
+          <thead><tr><th></th><th>Generative (Naive Bayes)</th><th>Discriminative (logistic regression)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Training</strong></td><td>Count once. Instant.</td><td>Iterative optimization.</td></tr>
+            <tr><td><strong>Little data</strong></td><td>Usually better (less to overfit)</td><td>Noisy weights</td></tr>
+            <tr><td><strong>Lots of data</strong></td><td>Stuck with its wrong assumptions</td><td>Usually more accurate</td></tr>
+            <tr><td><strong>Missing feature</strong> (§9.4.3)</td><td>Just skip its factor</td><td>No clean fix: every weight expects a value</td></tr>
+            <tr><td><strong>Add a new class</strong></td><td>Fit only that class</td><td>Retrain everything</td></tr>
+            <tr><td><strong>Fancy features</strong></td><td>Hard: must model how x is made</td><td>Easy: any transform of x works</td></tr>
+            <tr><td><strong>Probabilities</strong></td><td>Often overconfident</td><td>Usually better calibrated</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s94race" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">9.4</span>
+        <h2 style="margin:0">The race: who wins as data grows?</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65">Both models trained on the same fake emails with 6 yes/no clues, then scored on 2,000 new ones. Each point is an average over 30 training sets.</p>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">
+          <sc-for list="{{ nbCaseBtns }}" as="b" hint-placeholder-count="2">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 340px;min-width:0">
+            <svg sc-camel-view-box="0 0 340 200" style="width:100%;height:auto" role="img" aria-label="Test accuracy of Naive Bayes and logistic regression versus number of training emails">
+              <rect x="0" y="0" width="340" height="200" rx="18" fill="var(--color-neutral-100)"></rect>
+              <sc-for list="{{ nbYTicks }}" as="t" hint-placeholder-count="4">
+                <line x1="46" y1="{{ t.y }}" x2="326" y2="{{ t.y }}" stroke="var(--color-neutral-300)" stroke-width="1"></line>
+                <text x="40" y="{{ t.ty }}" text-anchor="end" font-size="10" fill="var(--color-neutral-700)">{{ t.label }}</text>
+              </sc-for>
+              <sc-for list="{{ nbXTicks }}" as="t" hint-placeholder-count="8">
+                <text x="{{ t.x }}" y="186" text-anchor="middle" font-size="10" fill="var(--color-neutral-700)">{{ t.label }}</text>
+              </sc-for>
+              <path d="{{ nbLineLR }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="2.5"></path>
+              <sc-for list="{{ nbDotsLR }}" as="d" hint-placeholder-count="8">
+                <circle cx="{{ d.x }}" cy="{{ d.y }}" r="3.5" fill="var(--color-accent-2-700)"></circle>
+              </sc-for>
+              <path d="{{ nbLineNB }}" fill="none" stroke="var(--color-accent)" stroke-width="2.5"></path>
+              <sc-for list="{{ nbDotsNB }}" as="d" hint-placeholder-count="8">
+                <circle cx="{{ d.x }}" cy="{{ d.y }}" r="3.5" fill="var(--color-accent-700)"></circle>
+              </sc-for>
+              <sc-if value="{{ nbRaceLoading }}" hint-placeholder-val="{{ false }}">
+                <text x="186" y="100" text-anchor="middle" font-size="12" fill="var(--color-neutral-700)">training 480 models…</text>
+              </sc-if>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin:8px 4px 0;font-size:12.5px;color:var(--color-neutral-700)">
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent);border-radius:2px"></span>Naive Bayes (generative)</span>
+              <span style="display:flex;align-items:center;gap:7px"><span style="width:18px;height:3px;background:var(--color-accent-2-600);border-radius:2px"></span>logistic regression (discriminative)</span>
+              <span>x axis: training emails · y axis: test accuracy</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:14px">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-100)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800)">{{ nbSmallN }} emails</div>
+                <div style="font-size:13px;margin-top:4px">NB <strong>{{ nbSmallNB }}</strong></div>
+                <div style="font-size:13px">LR <strong>{{ nbSmallLR }}</strong></div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">{{ nbBigN }} emails</div>
+                <div style="font-size:13px;margin-top:4px">NB <strong>{{ nbBigNB }}</strong></div>
+                <div style="font-size:13px">LR <strong>{{ nbBigLR }}</strong></div>
+              </div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ nbRaceNote }}</p>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200);font-size:13px;line-height:1.55">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:2px">Rule of thumb</div>
+              Little data, missing values, or need it fast → generative. Lots of data and you only care about the prediction → discriminative.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 10.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 9);
+</script>
+</body></html>

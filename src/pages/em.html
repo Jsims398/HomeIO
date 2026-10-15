@@ -53,6 +53,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
         <span style="font-size:11px;opacity:.85">§8.7</span>
       </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT8 }}" hint-placeholder-val="{{ false }}">
@@ -322,7 +326,7 @@
         </div>
       </div>
 
-      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 9.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: Naive Bayes — classifying by multiplying simple clues, and generative vs discriminative models.</p>
     </section>
     </sc-if>
   </main>
