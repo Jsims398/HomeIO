@@ -1,7 +1,7 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html', 10: 'metric-learning.html' };
 const NB_SIZES = [4, 8, 16, 32, 64, 128, 256, 512];
 const NB_CYCLE = { yes: 'no', no: 'unk', unk: 'yes' };
 const EM_COLORS = ['#c67139', '#7a8a5e', '#4f6d8a'];
@@ -19,7 +19,8 @@ class Component extends DCLogic {
             miCase: 'noisy', scShape: 'linear', scBase: null,
             ...(topic === 8 ? this.emFresh(2) : {}), emAuto: false,
             bdXs: topic === 8 ? window.EMMath.sample(2, window.EMMath.rng(473)) : null, bdT: -0.5, bdQ: null, bdPrev: null, bdIter: 0,
-            nbStates: ['yes', 'no', 'no', 'yes', 'no'], nbSmooth: true, nbCase: 'indep', nbRace: {} };
+            nbStates: ['yes', 'no', 'no', 'yes', 'no'], nbSmooth: true, nbCase: 'indep', nbRace: {},
+            ...(topic === 10 ? window.DMLView.initState() : {}) };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
@@ -160,7 +161,7 @@ class Component extends DCLogic {
     }, 30);
   }
 
-  componentWillUnmount() { clearInterval(this.klTimer); clearInterval(this.emTimer); }
+  componentWillUnmount() { clearInterval(this.klTimer); clearInterval(this.emTimer); clearInterval(this.dmlTimer); }
 
   // entropy in bits, with 0 log 0 = 0
   ent(ps) { return ps.reduce((a, p) => (p > 0 ? a - p * Math.log2(p) : a), 0); }
@@ -388,6 +389,20 @@ class Component extends DCLogic {
       emLLLabel: llNow.toFixed(2),
       emNote: note
     };
+  }
+
+  // ---- Topic 10: deep metric learning. View logic is in dml-view.js, math in dml-math.js ----
+
+  t10() {
+    const on = this.state.topic === 10;
+    const nav = {
+      showT10: on,
+      goT10: () => this.goTopic(10),
+      t10Bg: on ? 'var(--color-accent)' : 'transparent',
+      t10Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+    return { ...nav, ...window.DMLView.render(this) };
   }
 
   // ---- Topic 9: Naive Bayes. Pure math is in nb-math.js, which only naive-bayes.html loads ----
@@ -1003,7 +1018,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(), ...this.t10(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,
