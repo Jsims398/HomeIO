@@ -1,7 +1,7 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html', 10: 'metric-learning.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html', 10: 'metric-learning.html', 11: 'kde.html' };
 const NB_SIZES = [4, 8, 16, 32, 64, 128, 256, 512];
 const NB_CYCLE = { yes: 'no', no: 'unk', unk: 'yes' };
 const EM_COLORS = ['#c67139', '#7a8a5e', '#4f6d8a'];
@@ -20,7 +20,8 @@ class Component extends DCLogic {
             ...(topic === 8 ? this.emFresh(2) : {}), emAuto: false,
             bdXs: topic === 8 ? window.EMMath.sample(2, window.EMMath.rng(473)) : null, bdT: -0.5, bdQ: null, bdPrev: null, bdIter: 0,
             nbStates: ['yes', 'no', 'no', 'yes', 'no'], nbSmooth: true, nbCase: 'indep', nbRace: {},
-            ...(topic === 10 ? window.DMLView.initState() : {}) };
+            ...(topic === 10 ? window.DMLView.initState() : {}),
+            ...(topic === 11 ? window.KDEView.initState() : {}) };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
@@ -403,6 +404,20 @@ class Component extends DCLogic {
     };
     if (!on) return nav;
     return { ...nav, ...window.DMLView.render(this) };
+  }
+
+  // ---- Topic 11: kernel density estimation. View logic is in kde-view.js, math in kde-math.js ----
+
+  t11() {
+    const on = this.state.topic === 11;
+    const nav = {
+      showT11: on,
+      goT11: () => this.goTopic(11),
+      t11Bg: on ? 'var(--color-accent)' : 'transparent',
+      t11Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+    return { ...nav, ...window.KDEView.render(this) };
   }
 
   // ---- Topic 9: Naive Bayes. Pure math is in nb-math.js, which only naive-bayes.html loads ----
@@ -1018,7 +1033,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(), ...this.t10(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(), ...this.t10(), ...this.t11(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,

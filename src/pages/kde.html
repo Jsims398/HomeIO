@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kernel Density Estimation · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kde-math.js"></script>
+<script src="../logic/kde-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT11 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s1631" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">16.3.1 &nbsp;Density kernels</a>
+        <a href="#s1632" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">16.3.2 &nbsp;Parzen window</a>
+        <a href="#s1632lab" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">16.3.2 &nbsp;Make new data</a>
+        <a href="#s1633" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">16.3.3 &nbsp;Choosing h</a>
+        <a href="#s1634" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">16.3.4 &nbsp;KDE → KNN</a>
+        <a href="#s1635" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">16.3.5 &nbsp;Kernel regression</a>
+        <a href="#s163wrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT11 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic11" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 11</span>
+        <span class="tag tag-accent-2">Murphy, PML — §16.3</span>
+        <span class="tag tag-outline">Kernel density estimation · Kernel regression</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">Put a little hill on every data point</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">Say you measured 20 people's heights. What does the curve for <em>everyone's</em> height look like? Kernel density estimation (KDE) answers with one simple trick: put a small smooth bump on each measurement and add the bumps up. The result is a smooth curve that tells you which values are likely, and you can even use it to make brand-new, realistic data.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+        <a href="#s1631" class="tag tag-outline" style="text-decoration:none">① Build one bump</a>
+        <a href="#s1632" class="tag tag-outline" style="text-decoration:none">② Stack the bumps</a>
+        <a href="#s1633" class="tag tag-outline" style="text-decoration:none">③ Pick the width</a>
+        <a href="#s1634" class="tag tag-outline" style="text-decoration:none">④ Use it to classify</a>
+        <a href="#s1635" class="tag tag-outline" style="text-decoration:none">⑤ Use it to predict numbers</a>
+      </div>
+    </header>
+
+    <!-- ================= 16.3.1 ================= -->
+    <section id="s1631" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3.1</span>
+        <h2 style="margin:0">Density kernels: one little bump</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">A kernel is a tiny probability bump you can put anywhere</div>
+          <p class="card-body">It is the building block for everything on this page. It is centred on 0, the same on both sides, and the total area under it is exactly 1.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Picture it</div>
+          <div class="card-title">Exactly one cup of sand</div>
+          <p class="card-body">Pour one cup of sand on a table. You can make a tall, narrow pile or a low, wide one, but it is always one cup. The <strong>bandwidth h</strong> is how wide you spread it.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded</div>
+          <div class="card-title">K<sub>h</sub>(x) = <sup>1</sup>⁄<sub>h</sub> · K(x ⁄ h)</div>
+          <p class="card-body"><strong>x ⁄ h</strong> stretches the bump sideways by h. <strong><sup>1</sup>⁄<sub>h</sub></strong> squashes it down by the same amount, so the area stays 1. The rules: ∫K = 1 (one cup), K(−x) = K(x) (symmetric), K ≥ 0.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <sc-for list="{{ kShapeBtns }}" as="b" hint-placeholder-count="4">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:2 1 320px;min-width:0">
+            <svg sc-camel-view-box="0 0 560 220" style="width:100%;height:auto" role="img" aria-label="The selected kernel shape, with the other three shapes as faint outlines">
+              <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+              <sc-for list="{{ kEdges }}" as="t" hint-placeholder-count="2">
+                <line x1="{{ t.x }}" y1="14" x2="{{ t.x }}" y2="{{ kBase }}" stroke="var(--color-neutral-400)" stroke-dasharray="4 4"></line>
+                <text x="{{ t.x }}" y="26" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)">{{ t.label }}</text>
+              </sc-for>
+              <sc-for list="{{ kGhosts }}" as="g" hint-placeholder-count="3">
+                <path d="{{ g.d }}" fill="none" stroke="var(--color-neutral-400)" stroke-width="1.3" stroke-dasharray="3 3"></path>
+              </sc-for>
+              <path d="{{ kFill }}" fill="var(--color-accent)" opacity=".22"></path>
+              <path d="{{ kCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="2.6"></path>
+              <line x1="34" y1="{{ kBase }}" x2="546" y2="{{ kBase }}" stroke="var(--color-neutral-500)"></line>
+              <sc-for list="{{ kTicks }}" as="t" hint-placeholder-count="7">
+                <text x="{{ t.x }}" y="204" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)">{{ t.label }}</text>
+              </sc-for>
+            </svg>
+          </div>
+          <div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>bandwidth h</span><strong>{{ kHLabel }}</strong></div>
+              <input type="range" min="0.5" max="2" step="0.05" value="{{ kH }}" sc-camel-on-change="{{ onKH }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Total area</div>
+                <div style="font-family:var(--font-heading);font-size:24px;margin-top:2px">{{ kArea }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Peak height</div>
+                <div style="font-family:var(--font-heading);font-size:24px;margin-top:2px">{{ kPeak }}</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--color-neutral-700)">Touches zero: <strong>{{ kReach }}</strong></div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ kNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Drag h from smallest to largest. The peak drops as the bump widens, but <strong>Total area</strong> never changes. Why?</li>
+          <li>Switch between Gaussian and Boxcar at the same h. Which one actually touches the ground?</li>
+          <li>Look at the faint outlines: at the same h, all four shapes are roughly the same width. That is why the book says the choice of shape matters less than the choice of h.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why must the area be exactly 1?</summary>
+          <p style="margin:8px 0 0">A probability curve's total area is the chance that <em>something</em> happens, which must be 100%. If each bump has area 1 and we average N bumps, the result also has area 1, so it is a real probability distribution.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 16.3.2 ================= -->
+    <section id="s1632" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3.2</span>
+        <h2 style="margin:0">Parzen window: stack the bumps</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">Put one kernel on every data point, then average them</div>
+          <p class="card-body">No training, no formula for the shape. The data <em>is</em> the model. That is why the book calls KDE a <strong>non-parametric</strong> method: it keeps all N points instead of a few numbers like a mean and variance.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Picture it</div>
+          <div class="card-title">Each point pours 1 ⁄ N cup of sand</div>
+          <p class="card-body">Where points crowd together the piles overlap and build a hill. Where there are no points the table stays flat. The height of the sand at any spot is how likely a new value there is.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded</div>
+          <div class="card-title">p̂(x) = <sup>1</sup>⁄<sub>N</sub> Σ<sub>n</sub> K<sub>h</sub>(x − x<sub>n</sub>)</div>
+          <p class="card-body"><strong>x<sub>n</sub></strong> is data point number n. <strong>x − x<sub>n</sub></strong> is how far x is from it. <strong>K<sub>h</sub>(…)</strong> is that point's bump height at x. <strong>Σ</strong> adds every point's bump, and <strong><sup>1</sup>⁄<sub>N</sub></strong> gives each one an equal share.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s1632lab" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3.2</span>
+        <h2 style="margin:0">Lab: build the curve, then make new data</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">How to sample from p̂(x)</div>
+          <div class="card-title">Pick a point, then nudge it</div>
+          <p class="card-body"><strong>1.</strong> Choose one of the N data points at random (each has a 1 ⁄ N chance). <strong>2.</strong> Add a random nudge drawn from the kernel. That is all. It works because p̂ is just N equal bumps mixed together, so picking a bump and then drawing from it is the same as drawing from p̂.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Watch out</div>
+          <div class="card-title">Small h ⇒ near-copies</div>
+          <p class="card-body">The nudge is about h in size. If h is tiny, every "new" point is almost exactly an old one, so the model just memorizes its data. If h is huge, new points can land where real data never goes.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Click the number line to add a data point; click an existing point to remove it. Then press <strong>Generate 1</strong> a few times and read the steps, or <strong>Generate 100</strong> to fill a histogram.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ pzShapeBtns }}" as="b" hint-placeholder-count="4">
+              <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onPzReset }}" style="font-size:13px">Example data</button>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onPzClearPts }}" style="font-size:13px">Clear points</button>
+          </div>
+        </div>
+
+        <svg sc-camel-view-box="0 0 560 220" sc-camel-on-pointer-down="{{ onPzDown }}" style="width:100%;height:auto;cursor:crosshair;touch-action:none" role="img" aria-label="Data points on a number line with one kernel bump each and their sum">
+          <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+          <sc-for list="{{ pzHist }}" as="h" hint-placeholder-count="0">
+            <rect x="{{ h.x }}" y="{{ h.y }}" width="{{ h.w }}" height="{{ h.h }}" fill="var(--color-accent-2-500)" opacity=".35"></rect>
+          </sc-for>
+          <sc-for list="{{ pzPick }}" as="p" hint-placeholder-count="0">
+            <path d="{{ p.d }}" fill="var(--color-accent-2-500)" opacity=".45"></path>
+          </sc-for>
+          <path d="{{ pzFill }}" fill="var(--color-accent)" opacity=".14"></path>
+          <sc-for list="{{ pzBumps }}" as="b" hint-placeholder-count="7">
+            <path d="{{ b.d }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="1.2" opacity=".8"></path>
+          </sc-for>
+          <path d="{{ pzCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="2.8"></path>
+          <line x1="34" y1="{{ pzBase }}" x2="546" y2="{{ pzBase }}" stroke="var(--color-neutral-500)"></line>
+          <sc-for list="{{ pzArrow }}" as="a" hint-placeholder-count="0">
+            <line x1="{{ a.x1 }}" y1="{{ a.y1 }}" x2="{{ a.x2 }}" y2="{{ a.y2 }}" stroke="var(--color-text)" stroke-width="1.6" stroke-dasharray="3 3"></line>
+          </sc-for>
+          <sc-for list="{{ pzNewDots }}" as="p" hint-placeholder-count="0">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="2.6" fill="none" stroke="var(--color-accent-700)" stroke-width="1" opacity=".6"></circle>
+          </sc-for>
+          <sc-for list="{{ pzLastDot }}" as="p" hint-placeholder-count="0">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5.5" fill="var(--color-accent-700)" stroke="var(--color-surface)" stroke-width="1.5"></circle>
+          </sc-for>
+          <sc-for list="{{ pzDots }}" as="p" hint-placeholder-count="7">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5.5" fill="var(--color-accent)" stroke="{{ p.ring }}" stroke-width="2"></circle>
+          </sc-for>
+          <sc-for list="{{ pzTicks }}" as="t" hint-placeholder-count="11">
+            <text x="{{ t.x }}" y="214" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>real data · {{ pzCount }}</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;border:1.5px solid var(--color-accent-700)"></span>generated · {{ pzNewCount }} (row under the line)</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:3px;background:var(--color-accent)"></span>p̂(x)</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>bandwidth h</span><strong>{{ pzHLabel }}</strong></div>
+              <input type="range" min="0.05" max="2" step="0.05" value="{{ pzH }}" sc-camel-on-change="{{ onPzH }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <button class="btn btn-primary" sc-camel-on-click="{{ onPzGen1 }}" style="font-size:13px">Generate 1</button>
+              <button class="btn btn-secondary" sc-camel-on-click="{{ onPzGen100 }}" style="font-size:13px">Generate 100</button>
+              <button class="btn btn-ghost" sc-camel-on-click="{{ onPzClearNew }}" style="font-size:13px">Clear generated</button>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ pzNote }}</p>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:6px">Latest generated point</div>
+            <sc-for list="{{ pzSteps }}" as="st" hint-placeholder-count="3">
+              <p style="margin:0 0 6px;font-size:13.5px;line-height:1.55">{{ st.t }}</p>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Clear the points. Add three close together and one far away. Which hill is taller, and why?</li>
+          <li>Press <strong>Generate 1</strong> five times. The shaded bump shows where the new point was allowed to land.</li>
+          <li>Press <strong>Generate 100</strong> until you have 500+ points. Does the histogram match the thick curve?</li>
+          <li>Set h to 0.05 and generate again. Are the new points really "new"?</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why is the cluster taller?</summary>
+          <p style="margin:8px 0 0">Every point adds the same amount of sand. Three bumps overlapping in one spot pile up to about three times the height of a lone bump. Many data points nearby means that value is common, so it should be more likely.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 16.3.3 ================= -->
+    <section id="s1633" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3.3</span>
+        <h2 style="margin:0">How to choose the bandwidth h</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea · Goldilocks</div>
+          <div class="card-title">Too small is spiky, too big is blurry</div>
+          <p class="card-body">h is the one knob KDE has, like the focus ring on a camera. Small h shows every grain of noise; big h smears real features away. We want the setting that would best predict data we <em>haven't</em> seen.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Option 1 · rule of thumb</div>
+          <div class="card-title">h = σ̂ · (4 ⁄ 3N)<sup>1/5</sup></div>
+          <p class="card-body"><strong>σ̂</strong> is how spread out the data is (the book uses a robust version: 1.4826 × the median distance from the median). More spread ⇒ wider h. More data ⇒ smaller h, but slowly: 32× more data only halves h. It assumes one bell-shaped hump, so it oversmooths two-hump data.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Option 2 · cross-validation</div>
+          <div class="card-title">Hide a point, see if the curve expected it</div>
+          <p class="card-body">For each point: build p̂ from all the <em>other</em> points and check how high the curve is at the hidden one (we use the log). Average over all points. Pick the h with the best score. Hiding matters: without it, a tiny h would cheat by putting a spike exactly on every point.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:var(--color-neutral-800);max-width:70ch">The dashed curve is the true distribution (normally we never get to see it). We drew {{ bwN }} points from it, shown as ticks along the bottom. Move h and see how well the estimate recovers the truth.</p>
+        <svg sc-camel-view-box="0 0 560 220" style="width:100%;height:auto" role="img" aria-label="True density, sampled data and the kernel density estimate for the chosen bandwidth">
+          <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+          <path d="{{ bwTruth }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="2" stroke-dasharray="6 5"></path>
+          <path d="{{ bwCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="2.6"></path>
+          <line x1="34" y1="{{ bwBase }}" x2="546" y2="{{ bwBase }}" stroke="var(--color-neutral-500)"></line>
+          <sc-for list="{{ bwRug }}" as="r" hint-placeholder-count="20">
+            <line x1="{{ r.x }}" y1="{{ r.y1 }}" x2="{{ r.x }}" y2="{{ r.y2 }}" stroke="var(--color-accent-2-600)" stroke-width="1.2" opacity=".7"></line>
+          </sc-for>
+          <sc-for list="{{ bwTicks }}" as="t" hint-placeholder-count="10">
+            <text x="{{ t.x }}" y="214" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:0;border-top:2px dashed var(--color-neutral-600)"></span>true density</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:3px;background:var(--color-accent)"></span>KDE estimate p̂(x)</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:2px;height:10px;background:var(--color-accent-2-600)"></span>data</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>bandwidth h (log scale)</span><strong>{{ bwHLabel }}</strong></div>
+              <input type="range" min="0" max="100" step="0.5" value="{{ bwSlider }}" sc-camel-on-change="{{ onBwH }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <button class="btn btn-secondary" sc-camel-on-click="{{ onBwSil }}" style="font-size:13px">Rule of thumb · {{ bwSilLabel }}</button>
+              <button class="btn btn-primary" sc-camel-on-click="{{ onBwBest }}" style="font-size:13px">Best by cross-validation · {{ bwBestLabel }}</button>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>sample size N</span><strong>{{ bwN }}</strong></div>
+              <input type="range" min="20" max="400" step="10" value="{{ bwN }}" sc-camel-on-change="{{ onBwN }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ onBwNew }}" style="font-size:13px;align-self:flex-start">Draw a new sample</button>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:{{ bwVerdictBg }}">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Verdict</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ bwVerdict }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Hide-one-out score</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ bwScore }}</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11.5px;color:var(--color-neutral-700);margin:0 0 2px 6px">Hide-one-out score vs h (higher is better) · ● now · ◯ best</div>
+              <svg sc-camel-view-box="0 0 300 120" style="width:100%;height:auto" role="img" aria-label="Leave-one-out log likelihood as a function of bandwidth">
+                <rect x="0" y="0" width="300" height="120" rx="14" fill="var(--color-neutral-100)"></rect>
+                <line x1="30" y1="104" x2="290" y2="104" stroke="var(--color-neutral-400)"></line>
+                <text x="30" y="116" text-anchor="middle" font-size="9.5" fill="var(--color-neutral-700)">small h</text>
+                <text x="290" y="116" text-anchor="end" font-size="9.5" fill="var(--color-neutral-700)">big h</text>
+                <path d="{{ bwLooPath }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="2"></path>
+                <circle cx="{{ bwLooBest.x }}" cy="{{ bwLooBest.y }}" r="7" fill="none" stroke="var(--color-accent-2-700)" stroke-width="2"></circle>
+                <circle cx="{{ bwLooNow.x }}" cy="{{ bwLooNow.y }}" r="4.5" fill="var(--color-accent)"></circle>
+              </svg>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ bwNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>It starts spiky. Drag h all the way left: a spike per point, and the score plummets.</li>
+          <li>Drag h all the way right: one wide blob. The two humps are gone.</li>
+          <li>Press both buttons. Which one keeps the narrow left hump sharper? (Hint: the rule of thumb assumes there is only one hump.)</li>
+          <li>Raise N to 400 and press the cross-validation button again. Does the best h get bigger or smaller?</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why does more data allow a smaller h?</summary>
+          <p style="margin:8px 0 0">With more points, neighbours are closer together, so even narrow bumps overlap into a smooth curve. Narrower bumps can then show finer detail without becoming spiky.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 16.3.4 ================= -->
+    <section id="s1634" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3.4</span>
+        <h2 style="margin:0">From KDE to KNN classification</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">Don't fix the window size. Grow a balloon until it holds K points</div>
+          <p class="card-body">KDE with a fixed window can come up empty in sparse areas. Flip it around: fix how many points you want (K) and let the radius stretch. The colours inside the balloon tell you the class. That's K-nearest neighbours (§16.1), rebuilt from density estimation.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Picture it</div>
+          <div class="card-title">Polling your neighbours</div>
+          <p class="card-body">You want to guess which team a neighbourhood supports, so you ask the 5 nearest people. Downtown you only walk half a block to find 5; in the countryside you might walk a mile. Same number of answers, different distances.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded</div>
+          <div class="card-title">p(y = c | x) = N<sub>c</sub>(x) ⁄ K</div>
+          <p class="card-body">Density ≈ K ⁄ (N·V), where V is the balloon's area. For class c: p(x | c) ≈ N<sub>c</sub>(x) ⁄ (N<sub>c</sub>·V) and p(c) = N<sub>c</sub> ⁄ N. Put them in Bayes' rule and V cancels: the answer is just <strong>the fraction of the balloon that is colour c</strong>.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
+          <sc-for list="{{ nnModeBtns }}" as="b" hint-placeholder-count="2">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:28px">
+          <div style="flex:1 1 280px;min-width:0">
+            <svg sc-camel-view-box="0 0 300 300" sc-camel-on-pointer-down="{{ onNnDown }}" sc-camel-on-pointer-move="{{ onNnMove }}" style="width:100%;height:auto;cursor:grab;touch-action:none" role="img" aria-label="Two classes of points with a query point and its balloon or window">
+              <rect x="0" y="0" width="300" height="300" rx="22" fill="var(--color-neutral-100)"></rect>
+              <sc-for list="{{ nnMap }}" as="m" hint-placeholder-count="0">
+                <rect x="{{ m.x }}" y="{{ m.y }}" width="{{ m.w }}" height="{{ m.w }}" fill="{{ m.fill }}" opacity=".16" shape-rendering="crispEdges"></rect>
+              </sc-for>
+              <circle cx="{{ nnQx }}" cy="{{ nnQy }}" r="{{ nnRpx }}" fill="var(--color-accent-200)" fill-opacity=".35" stroke="var(--color-text)" stroke-width="1.5" stroke-dasharray="5 4"></circle>
+              <sc-for list="{{ nnDots }}" as="p" hint-placeholder-count="20">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="{{ p.fill }}" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}"></circle>
+              </sc-for>
+              <circle cx="{{ nnQx }}" cy="{{ nnQy }}" r="7" fill="var(--color-text)" stroke="var(--color-surface)" stroke-width="2"></circle>
+            </svg>
+            <div style="font-size:12.5px;color:var(--color-neutral-700);margin:6px 0 0 6px">Drag anywhere to move the query (black dot). Background tint = what the classifier would guess at each spot; grey = no answer.</div>
+          </div>
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ nnSliderName }}</span><strong>{{ nnSliderLabel }}</strong></div>
+              <input type="range" min="{{ nnMin }}" max="{{ nnMax }}" step="{{ nnStep }}" value="{{ nnVal }}" sc-camel-on-change="{{ onNnSlider }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <sc-for list="{{ nnBars }}" as="b" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:96px 1fr 50px;align-items:center;gap:8px;font-size:12.5px">
+                  <div style="line-height:1.2"><strong style="color:{{ b.fill }}">{{ b.label }}</strong><div style="font-size:10.5px;color:var(--color-neutral-600)">{{ b.sub }}</div></div>
+                  <div style="height:14px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden"><div style="height:100%;background:{{ b.fill }};width:{{ b.pct }}%"></div></div>
+                  <div style="text-align:right;font-variant-numeric:tabular-nums">{{ b.pctLabel }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Guess</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ nnWinner }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Radius · inside</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ nnRadius }} · {{ nnInside }}</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--color-neutral-700)">Density estimate p̂(x) = points inside ⁄ (N · πr²) = <strong>{{ nnDensity }}</strong></div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ nnNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Switch to <strong>Fixed window</strong>, set h to 0.3, and drag the query into an empty corner. Then switch back to <strong>Balloon</strong>.</li>
+          <li>In balloon mode, move between the crowded middle and the edges. Watch the radius change while K stays the same.</li>
+          <li>Set K = 1, then K = 25. Which map is jumpier? Which one forgets the small green pocket in the bottom-left?</li>
+          <li>Find a spot where the vote is close to 50 / 50. You are standing on the decision boundary.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">So which K is best?</summary>
+          <p style="margin:8px 0 0">Same Goldilocks story as h in 16.3.3. Small K overfits (follows every single point), big K underfits (washes out small groups). In practice you pick K with cross-validation too.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 16.3.5 ================= -->
+    <section id="s1635" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3.5</span>
+        <h2 style="margin:0">Kernel regression: predicting numbers</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea · 16.3.5.1</div>
+          <div class="card-title">Predict y with a weighted average of nearby y's</div>
+          <p class="card-body">Closer points get bigger weights, and the kernel decides how much bigger. Picture guessing the temperature at your house from nearby weather stations: you trust the closest stations the most.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded · Nadaraya–Watson</div>
+          <div class="card-title">ŷ(x) = Σ<sub>n</sub> w<sub>n</sub>(x) · y<sub>n</sub></div>
+          <p class="card-body">w<sub>n</sub>(x) = K<sub>h</sub>(x − x<sub>n</sub>) ⁄ Σ<sub>n′</sub> K<sub>h</sub>(x − x<sub>n′</sub>). Each weight is a bump height, divided by the total so all the weights add up to 1, like percentages. It falls out of KDE: build a KDE of the (x, y) pairs and ask "what's the average y at this x?"</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">How sure are we? · 16.3.5.2</div>
+          <div class="card-title">𝕍[y | x] = σ² + Σ<sub>n</sub> w<sub>n</sub> y<sub>n</sub>² − ŷ²</div>
+          <p class="card-body">The second part is the weighted spread of the neighbours' heights: big when nearby points disagree. σ² is the width of each point's bump in the y direction. The shaded band in the lab is ŷ ± 2 standard deviations.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Upgrade · 16.3.5.3</div>
+          <div class="card-title">Locally weighted regression: fit a tiny line</div>
+          <p class="card-body">Instead of averaging the nearby heights (a flat guess), fit a straight line through the nearby points, with closer points counting more, and read the line at x. It fixes the <strong>edge problem</strong>: at the end of the data all neighbours sit on one side, and a line can follow the trend where an average can't.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ rgModeBtns }}" as="b" hint-placeholder-count="2">
+              <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+            </sc-for>
+          </div>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ onRgNew }}" style="font-size:13px">New data</button>
+        </div>
+
+        <svg sc-camel-view-box="0 0 560 220" sc-camel-on-pointer-down="{{ onRgDown }}" sc-camel-on-pointer-move="{{ onRgMove }}" style="width:100%;height:auto;cursor:ew-resize;touch-action:none" role="img" aria-label="Noisy data, the true curve, and the kernel regression fit with a draggable query line">
+          <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+          <path d="{{ rgBand }}" fill="var(--color-accent-2-500)" opacity=".18"></path>
+          <path d="{{ rgTruth }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="1.8" stroke-dasharray="6 5"></path>
+          <path d="{{ rgCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="2.6"></path>
+          <line x1="{{ rgQx }}" y1="{{ rgTop }}" x2="{{ rgQx }}" y2="{{ rgBase }}" stroke="var(--color-text)" stroke-width="1.3" stroke-dasharray="4 3"></line>
+          <sc-for list="{{ rgDots }}" as="p" hint-placeholder-count="20">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="var(--color-accent-2-600)" opacity="{{ p.op }}"></circle>
+          </sc-for>
+          <sc-for list="{{ rgLocal }}" as="l" hint-placeholder-count="0">
+            <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="var(--color-text)" stroke-width="3" stroke-linecap="round"></line>
+          </sc-for>
+          <circle cx="{{ rgQx }}" cy="{{ rgPy }}" r="7" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="2"></circle>
+          <sc-for list="{{ rgTicks }}" as="t" hint-placeholder-count="7">
+            <text x="{{ t.x }}" y="208" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="font-size:11.5px;color:var(--color-neutral-700);margin:8px 0 2px 6px">Each dot's weight for the current query (tallest = {{ rgTopW }})</div>
+        <svg sc-camel-view-box="0 0 560 60" style="width:100%;height:auto" role="img" aria-label="Weight of each data point for the current query">
+          <rect x="0" y="0" width="560" height="60" rx="12" fill="var(--color-neutral-100)"></rect>
+          <sc-for list="{{ rgBars }}" as="b" hint-placeholder-count="20">
+            <rect x="{{ b.x }}" y="{{ b.y }}" width="6" height="{{ b.h }}" rx="2" fill="var(--color-accent-2-600)"></rect>
+          </sc-for>
+          <line x1="{{ rgQx }}" y1="4" x2="{{ rgQx }}" y2="56" stroke="var(--color-text)" stroke-width="1.3" stroke-dasharray="4 3"></line>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:0;border-top:2px dashed var(--color-neutral-600)"></span>true curve</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:3px;background:var(--color-accent)"></span>prediction ŷ(x)</span>
+          <span>Drag on the plot to move the query.</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>bandwidth h</span><strong>{{ rgHLabel }}</strong></div>
+              <input type="range" min="0.05" max="2.5" step="0.05" value="{{ rgH }}" sc-camel-on-change="{{ onRgH }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ rgNote }}</p>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start">
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Prediction ŷ</div>
+              <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rgPred }}</div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">True value</div>
+              <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rgTrue }}</div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-100)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800)">Miss by</div>
+              <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rgErr }}</div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">Band (2 sd)</div>
+              <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rgSd }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Drag the query left and right. The bars show who gets a vote, and the dots fade when their weight is small.</li>
+          <li>Set h = 0.05: the curve hops from dot to dot. Set h = 2.5: it flattens out. (Goldilocks again!)</li>
+          <li>With h ≈ 0.5, drag the query to x = 0 in <strong>Weighted average</strong> mode and read <strong>Miss by</strong>. Now switch to <strong>Local line</strong>.</li>
+          <li>Where is the shaded band widest? What do the dots look like there?</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why does the average miss at the edge?</summary>
+          <p style="margin:8px 0 0">At x = 0 there is no data to the left, so every neighbour is to the right. Here the curve is rising, so those neighbours are all higher than the true value, and their average comes out too high. A line through them knows the curve is rising and can follow it back down to x = 0.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="s163wrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">16.3</span>
+        <h2 style="margin:0">Recap: one trick, four uses</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Section</th><th>In one sentence</th><th>The knob</th></tr></thead>
+          <tbody>
+            <tr><td>16.3.1 Kernel</td><td>A bump with area 1, centred on 0, the same on both sides.</td><td>shape, width h</td></tr>
+            <tr><td>16.3.2 Parzen / KDE</td><td>Average one bump per data point to get a smooth density, and sample new data by "pick a point, then nudge it".</td><td>h</td></tr>
+            <tr><td>16.3.3 Bandwidth</td><td>Pick h with a rule of thumb or with hide-one-out cross-validation.</td><td>h (too small = spiky, too big = blurry)</td></tr>
+            <tr><td>16.3.4 KDE → KNN</td><td>Fix the number of points K instead of the window size; class probability = fraction of the balloon that is each colour.</td><td>K</td></tr>
+            <tr><td>16.3.5 Kernel regression</td><td>Predict y as a weighted average of nearby y's, or fit a local line to fix the edges.</td><td>h</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>The catch:</strong> all of these keep every training point and compare against all of them for each new prediction, so they get slow with huge datasets. They also struggle in many dimensions, where "nearby" points become rare (the curse of dimensionality from §16.1).</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 12.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 11);
+</script>
+</body></html>
