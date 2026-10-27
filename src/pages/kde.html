@@ -66,6 +66,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
         <span style="font-size:11px;opacity:.85">§16.3</span>
       </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT11 }}" hint-placeholder-val="{{ false }}">
@@ -641,7 +645,7 @@
         </table>
       </div>
       <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>The catch:</strong> all of these keep every training point and compare against all of them for each new prediction, so they get slow with huge datasets. They also struggle in many dimensions, where "nearby" points become rare (the curse of dimensionality from §16.1).</p>
-      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 12.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: Gaussian processes — kernels as similarity, and a probability distribution over whole functions.</p>
     </section>
     </sc-if>
   </main>

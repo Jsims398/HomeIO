@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gaussian Processes · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/gp-math.js"></script>
+<script src="../logic/gp-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT12 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#s1721" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">17.2.1 &nbsp;Slice the oval</a>
+        <a href="#s1721lab" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">17.2.1 &nbsp;Noise-free lab</a>
+        <a href="#s1722" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">17.2.2 &nbsp;Noisy lab</a>
+        <a href="#s172wrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT12 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic12" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 12</span>
+        <span class="tag tag-accent-2">Murphy, PML — §17.2.1 – 17.2.2</span>
+        <span class="tag tag-outline">Gaussian process regression</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">A bell curve over whole functions</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">A Gaussian process (GP) starts with a cloud of plausible curves and lets the data rule out the ones that don't fit. The setup: read any curve at two inputs and you get two numbers (f(x₁), f(x₂)). Across all plausible curves those pairs form an oval-shaped Gaussian, tilted more when x₁ and x₂ are close (the tilt is K(x₁, x₂), the kernel). Learning from data is then one move: <strong>slice that oval</strong>. 17.2.1 does it with exact observations, 17.2.2 with noisy ones.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+        <a href="#s1721" class="tag tag-outline" style="text-decoration:none">① Learning = slicing</a>
+        <a href="#s1721lab" class="tag tag-outline" style="text-decoration:none">② Exact data</a>
+        <a href="#s1722" class="tag tag-outline" style="text-decoration:none">③ Noisy data</a>
+      </div>
+    </header>
+
+    <!-- ================= 17.2.1 slice ================= -->
+    <section id="s1721" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">17.2.1</span>
+        <h2 style="margin:0">Noise-free observations: learning = slicing the oval</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">Observing f(x₁) means keeping only the curves that pass through it</div>
+          <p class="card-body">In the oval picture, "we saw f(x₁) = a" means: throw away every dot not on the vertical line f(x₁) = a. The dots left on that line tell you what f(x₂) can still be. That leftover slice is a smaller Gaussian, and it is the posterior. Nothing is "fit"; we just condition.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded · one point</div>
+          <div class="card-title">μ = K₁₂ ⁄ K₁₁ · a &nbsp; σ² = K₂₂ − K₁₂² ⁄ K₁₁</div>
+          <p class="card-body"><strong>K₁₂ ⁄ K₁₁</strong> is how strongly f(x₂) follows f(x₁): close to 1 if x₂ is near x₁, close to 0 if far. <strong>K₁₂² ⁄ K₁₁</strong> is how much uncertainty the observation removes. This is just the Gaussian conditioning rule (§3.2.3) with 2 variables.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Formula, decoded · the book's version</div>
+          <div class="card-title">μ<sub>*</sub> = K<sub>*,X</sub> K<sub>X,X</sub><sup>−1</sup> f<sub>X</sub> &nbsp; Σ<sub>*</sub> = K<sub>*,*</sub> − K<sub>*,X</sub> K<sub>X,X</sub><sup>−1</sup> K<sub>X,*</sub></div>
+          <p class="card-body">Same thing with many points. <strong>X</strong> = training inputs, <strong>*</strong> = test inputs. K<sub>X,X</sub><sup>−1</sup> plays the role of "÷ K₁₁". The mean is a blend of the observed values; the covariance is the prior's minus what the data explained.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Drag left–right on the oval (or use the slider) to change the observed value a. The coloured bell on the slice is the posterior of f(x₂). On the left, the bar at x₂ is <em>the same</em> bell, seen from the side. The whole band is that slice, repeated at every x₂.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:2 1 320px;min-width:0">
+            <div style="font-size:11.5px;color:var(--color-neutral-700);margin:0 0 2px 6px">Posterior after one observation: mean and ± 2 sd band</div>
+            <svg sc-camel-view-box="0 0 560 220" style="width:100%;height:auto" role="img" aria-label="Posterior mean and band given one observation, with the posterior at x2 highlighted">
+              <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+              <path d="{{ slBand }}" fill="var(--color-accent-2-500)" opacity=".2"></path>
+              <line x1="34" y1="{{ slZero }}" x2="546" y2="{{ slZero }}" stroke="var(--color-neutral-400)"></line>
+              <path d="{{ slMean }}" fill="none" stroke="var(--color-accent-2-700)" stroke-width="2.2"></path>
+              <line x1="{{ slX2px }}" y1="{{ slTop }}" x2="{{ slX2px }}" y2="{{ slBottom }}" stroke="var(--color-text)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+              <text x="{{ slX2px }}" y="{{ slTop }}" dy="10" dx="4" font-size="11" font-weight="600" fill="var(--color-text)">x₂</text>
+              <line x1="{{ slX2px }}" y1="{{ slSegY1 }}" x2="{{ slX2px }}" y2="{{ slSegY2 }}" stroke="var(--color-accent)" stroke-width="7" stroke-linecap="round" opacity=".75"></line>
+              <circle cx="{{ slX2px }}" cy="{{ slMeanY }}" r="5" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="1.5"></circle>
+              <circle cx="{{ slObsX }}" cy="{{ slObsY }}" r="6.5" fill="var(--color-text)" stroke="var(--color-surface)" stroke-width="2"></circle>
+              <sc-for list="{{ slYTicks }}" as="t" hint-placeholder-count="3">
+                <text x="26" y="{{ t.y }}" text-anchor="end" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+              </sc-for>
+              <sc-for list="{{ slTicks }}" as="t" hint-placeholder-count="6">
+                <text x="{{ t.x }}" y="204" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-text)"></span>observation (x₁, a)</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:3px;background:var(--color-accent-2-700)"></span>posterior mean</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:14px;border-radius:3px;background:var(--color-accent)"></span>posterior of f(x₂), ± 2 sd</span>
+            </div>
+          </div>
+          <div style="flex:1 1 200px;min-width:0;max-width:280px">
+            <div style="font-size:11.5px;color:var(--color-neutral-700);margin:0 0 2px 6px">The prior oval, sliced at f(x₁) = a</div>
+            <svg sc-camel-view-box="0 0 240 240" sc-camel-on-pointer-down="{{ slOnDown }}" sc-camel-on-pointer-move="{{ slOnMove }}" style="width:100%;height:auto;cursor:ew-resize;touch-action:none" role="img" aria-label="Joint Gaussian of the observation and f at x2, sliced at the observed value">
+              <rect x="0" y="0" width="240" height="240" rx="18" fill="var(--color-neutral-100)"></rect>
+              <line x1="12" y1="120" x2="228" y2="120" stroke="var(--color-neutral-400)"></line>
+              <line x1="120" y1="12" x2="120" y2="228" stroke="var(--color-neutral-400)"></line>
+              <sc-for list="{{ slEll }}" as="e" hint-placeholder-count="2">
+                <ellipse cx="120" cy="120" rx="{{ e.rx }}" ry="{{ e.ry }}" transform="{{ e.t }}" fill="var(--color-accent-2-500)" fill-opacity=".08" stroke="var(--color-accent-2-700)" stroke-width="1.4"></ellipse>
+              </sc-for>
+              <path d="{{ slBell }}" fill="var(--color-accent)" opacity=".3"></path>
+              <line x1="{{ slLineX }}" y1="8" x2="{{ slLineX }}" y2="232" stroke="var(--color-text)" stroke-width="1.4"></line>
+              <line x1="{{ slLineX }}" y1="{{ slScSeg1 }}" x2="{{ slLineX }}" y2="{{ slScSeg2 }}" stroke="var(--color-accent)" stroke-width="6" stroke-linecap="round" opacity=".75"></line>
+              <circle cx="{{ slLineX }}" cy="{{ slDotY }}" r="5" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="1.5"></circle>
+              <text x="226" y="134" text-anchor="end" font-size="11" fill="var(--color-neutral-700)">y₁ →</text>
+              <text x="126" y="22" font-size="11" fill="var(--color-neutral-700)">↑ f(x₂)</text>
+            </svg>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>observed value a = f(x₁)</span><strong>{{ slALabel }}</strong></div>
+              <input type="range" min="-2.5" max="2.5" step="0.05" value="{{ slA }}" sc-camel-on-change="{{ slOnA }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>observed at x₁</span><strong>{{ slX1Label }}</strong></div>
+              <input type="range" min="0" max="10" step="0.05" value="{{ slX1 }}" sc-camel-on-change="{{ slOnX1 }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>query x₂</span><strong>{{ slX2Label }}</strong></div>
+              <input type="range" min="0" max="10" step="0.05" value="{{ slX2 }}" sc-camel-on-change="{{ slOnX2 }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>length scale ℓ</span><strong>{{ slLLabel }}</strong></div>
+              <input type="range" min="0.3" max="4" step="0.05" value="{{ slL }}" sc-camel-on-change="{{ slOnL }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>noise σ<sub>y</sub> (leave at 0 until 17.2.2)</span><strong>{{ slNoiseLabel }}</strong></div>
+              <input type="range" min="0" max="1.5" step="0.05" value="{{ slNoise }}" sc-camel-on-change="{{ slOnNoise }}" style="width:100%;accent-color:var(--color-neutral-600);cursor:pointer">
+            </div>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.8;font-variant-numeric:tabular-nums">
+              <div>follow factor K₁₂ ⁄ K₁₁ = {{ slK12 }} ⁄ {{ slK11 }} = <strong>{{ slShrink }}</strong></div>
+              <div>posterior mean of f(x₂) = {{ slShrink }} × {{ slALabel }} = <strong>{{ slPostMean }}</strong></div>
+              <div>posterior sd of f(x₂) = <strong>{{ slPostSd }}</strong> &nbsp;<span style="color:var(--color-neutral-600)">(prior sd was 1.00)</span></div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ slNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Drag a left and right. The bell slides along the slice and the band on the left tilts with it. The bell's <em>width</em> never changes. Why not?</li>
+          <li>Move x₂ onto x₁. The oval becomes a line, the bell becomes a spike, and the bar on the left shrinks to a dot.</li>
+          <li>Move x₂ far away. The oval is a circle, so slicing it anywhere gives the same bell centred on 0: the observation tells you nothing there.</li>
+          <li>Now shrink ℓ. How close does x₂ have to be before the observation matters?</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why doesn't the uncertainty depend on a?</summary>
+          <p style="margin:8px 0 0">Look at σ² = K₂₂ − K₁₂² ⁄ K₁₁: there is no a in it. For a Gaussian, every slice of the oval has the same width; only its centre moves. So a GP's error bars depend on <em>where</em> you have data, never on <em>what values</em> you saw. (That is a real limitation, and one reason people tune the kernel to the data.)</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 17.2.1 lab ================= -->
+    <section id="s1721lab" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">17.2.1</span>
+        <h2 style="margin:0">Lab: exact data pins every curve down</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">What you're looking at</div>
+          <div class="card-title">Three posterior curves, a mean, and a band</div>
+          <p class="card-body">The thin curves are random draws from the posterior: functions the GP still believes after seeing the data. The thick curve is their average μ<sub>*</sub>, and the band is μ<sub>*</sub> ± 2 sd. Every draw must pass through every point, because noise-free means the point <em>is</em> the function.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">The book calls it</div>
+          <div class="card-title">An interpolator</div>
+          <p class="card-body">The mean goes exactly through the data and the variance is zero there. Between points, the uncertainty grows; far from all data it returns to the prior (mean 0, ± 2σ<sub>f</sub>). Useful when observations really are exact, like outputs of a slow but deterministic computer simulation.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Click anywhere to add a point; click a point to remove it. Start from <strong>Clear</strong> and add points one at a time.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <div></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ nfOnReset }}" style="font-size:13px">Example data</button>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ nfOnClear }}" style="font-size:13px">Clear</button>
+          </div>
+        </div>
+        <svg sc-camel-view-box="0 0 560 220" sc-camel-on-pointer-down="{{ nfOnDown }}" style="width:100%;height:auto;cursor:crosshair;touch-action:none" role="img" aria-label="Noise-free Gaussian process posterior: band, mean and sampled functions through the data points">
+          <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+          <path d="{{ nfBand }}" fill="var(--color-accent-2-500)" opacity=".2"></path>
+          <line x1="34" y1="{{ nfZero }}" x2="546" y2="{{ nfZero }}" stroke="var(--color-neutral-400)"></line>
+          <sc-for list="{{ nfSamples }}" as="f" hint-placeholder-count="3">
+            <path d="{{ f.d }}" fill="none" stroke="{{ f.color }}" stroke-width="1.3" opacity=".75"></path>
+          </sc-for>
+          <path d="{{ nfMean }}" fill="none" stroke="var(--color-accent)" stroke-width="2.8"></path>
+          <sc-for list="{{ nfDots }}" as="p" hint-placeholder-count="5">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="6" fill="var(--color-text)" stroke="var(--color-surface)" stroke-width="2"></circle>
+          </sc-for>
+          <sc-for list="{{ nfYTicks }}" as="t" hint-placeholder-count="3">
+            <text x="26" y="{{ t.y }}" text-anchor="end" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+          <sc-for list="{{ nfTicks }}" as="t" hint-placeholder-count="6">
+            <text x="{{ t.x }}" y="204" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-text)"></span>exact observations · {{ nfCount }}</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:3px;background:var(--color-accent)"></span>posterior mean μ<sub>*</sub></span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:2px;background:var(--color-accent-2-600)"></span>posterior draws</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:10px;border-radius:3px;background:var(--color-accent-2-500);opacity:.4"></span>± 2 sd</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>length scale ℓ</span><strong>{{ nfLLabel }}</strong></div>
+              <input type="range" min="0.2" max="4" step="0.05" value="{{ nfL }}" sc-camel-on-change="{{ nfOnL }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>signal size σ<sub>f</sub></span><strong>{{ nfSfLabel }}</strong></div>
+              <input type="range" min="0.3" max="2" step="0.05" value="{{ nfSf }}" sc-camel-on-change="{{ nfOnSf }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Largest sd at your data points</div>
+              <div style="font-family:var(--font-heading);font-size:24px;margin-top:2px">{{ nfAtData }}</div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ nfNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Press <strong>Clear</strong>: you see the prior. Add one point and watch all three curves get pinched through it. Add a second far away, then a third in between.</li>
+          <li>Change ℓ. Small ℓ: the band balloons open between points. Large ℓ: one point constrains a wide area.</li>
+          <li>Change σ<sub>f</sub>. Only the band far from the data changes size. At the points, the sd stays 0.00.</li>
+          <li>Add two points almost on top of each other at different heights. What does the noise-free GP have to do to pass through both?</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why does the mean always drift back to 0 far from data?</summary>
+          <p style="margin:8px 0 0">Far from every point, K<sub>*,X</sub> ≈ 0: the test input is not similar to anything we saw. Then μ<sub>*</sub> = K<sub>*,X</sub>(…) ≈ 0 = the prior mean, and Σ<sub>*</sub> ≈ K<sub>*,*</sub> = the prior variance. With no similar data, the GP falls back on what it believed before.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 17.2.2 ================= -->
+    <section id="s1722" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">17.2.2</span>
+        <h2 style="margin:0">Noisy observations: stop forcing the curve through the dots</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">We see y = f(x) + ε, not f(x) itself</div>
+          <p class="card-body">Real measurements wobble: ε ∼ 𝒩(0, σ<sub>y</sub>²). Two readings at nearly the same x can disagree, and a noise-free GP would twist itself into knots to hit both. With noise, the GP is allowed to miss each dot by about σ<sub>y</sub>, so it goes <em>between</em> them.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded · the only change</div>
+          <div class="card-title">K<sub>X,X</sub> → K<sub>σ</sub> = K<sub>X,X</sub> + σ<sub>y</sub>² I</div>
+          <p class="card-body">Noise is independent for each reading, so it only adds to the <strong>diagonal</strong> (each y's own variance), never to the cross terms. Then μ<sub>*</sub> = K<sub>*,X</sub> K<sub>σ</sub><sup>−1</sup> y and Σ<sub>*</sub> = K<sub>*,*</sub> − K<sub>*,X</sub> K<sub>σ</sub><sup>−1</sup> K<sub>X,*</sub>. In the oval picture, the oval gets stretched along the y axis, so slices get wider. (Go back to the slice demo and raise σ<sub>y</sub>.)</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">One test point · a weighted sum</div>
+          <div class="card-title">μ(x<sub>*</sub>) = Σ<sub>n</sub> w<sub>n</sub> y<sub>n</sub>, w = K<sub>σ</sub><sup>−1</sup> k<sub>*</sub></div>
+          <p class="card-body">Like Nadaraya–Watson in Topic 11, the prediction is a weighted sum of the observed y's. But these weights come from K<sub>σ</sub><sup>−1</sup>, which knows the training points overlap each other. Two near-duplicates share a vote, and weights can go <strong>negative</strong>.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">f vs. a new y</div>
+          <div class="card-title">Two different error bars</div>
+          <p class="card-body">Σ<sub>*</sub> is the uncertainty about the <em>true curve</em> f(x<sub>*</sub>). If you want to predict the next <em>measurement</em> y<sub>*</sub>, add the noise back on: 𝕍[y<sub>*</sub>] = Σ<sub>*</sub> + σ<sub>y</sub>². That band can never shrink below ± 2σ<sub>y</sub>, however much data you have.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px">
+          <div></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ nyOnReset }}" style="font-size:13px">Example data</button>
+            <button class="btn btn-ghost" sc-camel-on-click="{{ nyOnClear }}" style="font-size:13px">Clear</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <sc-for list="{{ nyBandBtns }}" as="b" hint-placeholder-count="2">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+          <button class="btn btn-secondary" sc-camel-on-click="{{ nyOnNf }}" style="font-size:13px">{{ nyNfBtn }}</button>
+        </div>
+        <svg sc-camel-view-box="0 0 560 220" sc-camel-on-pointer-down="{{ nyOnDown }}" style="width:100%;height:auto;cursor:crosshair;touch-action:none" role="img" aria-label="Noisy Gaussian process posterior with band, mean, sampled functions and a query line">
+          <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+          <path d="{{ nyBand }}" fill="var(--color-accent-2-500)" opacity=".2"></path>
+          <line x1="34" y1="{{ nyZero }}" x2="546" y2="{{ nyZero }}" stroke="var(--color-neutral-400)"></line>
+          <sc-for list="{{ nySamples }}" as="f" hint-placeholder-count="3">
+            <path d="{{ f.d }}" fill="none" stroke="{{ f.color }}" stroke-width="1.3" opacity=".75"></path>
+          </sc-for>
+          <path d="{{ nyNfCurve }}" fill="none" stroke="var(--color-neutral-700)" stroke-width="1.8" stroke-dasharray="6 4"></path>
+          <path d="{{ nyMean }}" fill="none" stroke="var(--color-accent)" stroke-width="2.8"></path>
+          <line x1="{{ nyQx }}" y1="{{ nyTop }}" x2="{{ nyQx }}" y2="{{ nyBottom }}" stroke="var(--color-text)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+          <sc-for list="{{ nyDots }}" as="p" hint-placeholder-count="13">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5.5" fill="var(--color-text)" stroke="var(--color-surface)" stroke-width="2"></circle>
+          </sc-for>
+          <circle cx="{{ nyQx }}" cy="{{ nyQy }}" r="6.5" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="2"></circle>
+          <sc-for list="{{ nyYTicks }}" as="t" hint-placeholder-count="3">
+            <text x="26" y="{{ t.y }}" text-anchor="end" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+          <sc-for list="{{ nyTicks }}" as="t" hint-placeholder-count="6">
+            <text x="{{ t.x }}" y="204" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="font-size:11.5px;color:var(--color-neutral-700);margin:8px 0 2px 6px">Each dot's weight w<sub>n</sub> in the prediction at the query (green pulls the prediction toward that dot's y, orange pushes away)</div>
+        <svg sc-camel-view-box="0 0 560 80" style="width:100%;height:auto" role="img" aria-label="Weight of each observation in the prediction at the query; weights can be negative">
+          <rect x="0" y="0" width="560" height="80" rx="12" fill="var(--color-neutral-100)"></rect>
+          <line x1="34" y1="40" x2="546" y2="40" stroke="var(--color-neutral-500)"></line>
+          <sc-for list="{{ nyWeights }}" as="b" hint-placeholder-count="13">
+            <rect x="{{ b.x }}" y="{{ b.y }}" width="6" height="{{ b.h }}" rx="2" fill="{{ b.fill }}"></rect>
+          </sc-for>
+          <line x1="{{ nyQx }}" y1="4" x2="{{ nyQx }}" y2="76" stroke="var(--color-text)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-text)"></span>noisy observations · {{ nyCount }}</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:3px;background:var(--color-accent)"></span>posterior mean</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:0;border-top:2px dashed var(--color-neutral-700)"></span>noise-free fit (if shown)</span>
+          <span>Click to add or remove dots.</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>noise σ<sub>y</sub></span><strong>{{ nyNoiseLabel }}</strong></div>
+              <input type="range" min="0.01" max="1.2" step="0.01" value="{{ nyNoise }}" sc-camel-on-change="{{ nyOnNoise }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>query x<sub>*</sub></span><strong>{{ nyQLabel }}</strong></div>
+              <input type="range" min="0" max="10" step="0.05" value="{{ nyQ }}" sc-camel-on-change="{{ nyOnQ }}" style="width:100%;accent-color:var(--color-text);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>length scale ℓ</span><strong>{{ nyLLabel }}</strong></div>
+              <input type="range" min="0.2" max="4" step="0.05" value="{{ nyL }}" sc-camel-on-change="{{ nyOnL }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>signal size σ<sub>f</sub></span><strong>{{ nySfLabel }}</strong></div>
+              <input type="range" min="0.3" max="2" step="0.05" value="{{ nySf }}" sc-camel-on-change="{{ nyOnSf }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Prediction μ(x<sub>*</sub>)</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ nyPred }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">Band (2 sd)</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ nyPredSd }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Sum of weights</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ nyWSum }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-100)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800)">Negative weights</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ nyNegCount }}</div>
+              </div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ nyNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Press <strong>Show noise-free fit</strong>. Look near x = 3.4, where two dots disagree. The dashed curve shoots off the chart to hit both; the solid one calmly goes between.</li>
+          <li>Drag σ<sub>y</sub> down to 0.01 and up to 1.2. Small: the curve chases every dot. Large: it barely believes them and sags toward 0.</li>
+          <li>Switch to <strong>Band for a new y</strong>. The band widens by σ<sub>y</sub> everywhere, even right on top of the data.</li>
+          <li>Put the query at 3.4. The two disagreeing dots split the vote, roughly in half each. Now slide the query around and count the orange (negative) bars. Nadaraya–Watson weights never do that.</li>
+          <li>Does the band touch zero width anywhere now? Compare with the noise-free lab above.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why can a weight be negative?</summary>
+          <p style="margin:8px 0 0">Suppose the query sits just past dot A, and dot B lies just past A on the far side. The GP reads A and B together as a slope: if B is higher than A, the curve is rising toward B, so at the query (on the other side of A) it should be <em>lower</em> than A. Giving B a negative weight does exactly that extrapolation. Nadaraya–Watson only averages, so it can't follow a trend this way.</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Is the "noise-free" GP just the noisy one with σ<sub>y</sub> = 0?</summary>
+          <p style="margin:8px 0 0">Yes. Every formula in 17.2.2 turns into 17.2.1 when σ<sub>y</sub> = 0. In code people still add a tiny σ<sub>y</sub> (a "jitter", here 10<sup>−6</sup> or less) because K<sub>X,X</sub> can be almost impossible to invert when two inputs are very close. That near-singular matrix is exactly what makes the dashed curve explode.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="s172wrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">17.2.1 – 17.2.2</span>
+        <h2 style="margin:0">Recap: two cases, one formula</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Section</th><th>The picture</th><th>The formula</th></tr></thead>
+          <tbody>
+            <tr><td>17.2.1 Noise-free</td><td>Observing data = slicing the cloud. Curves are pinned through every point; the band pinches to zero there.</td><td>μ<sub>*</sub> = K<sub>*,X</sub> K<sub>X,X</sub><sup>−1</sup> f<sub>X</sub></td></tr>
+            <tr><td>17.2.2 Noisy</td><td>Add σ<sub>y</sub>² to the diagonal. The curve goes between the dots, the band never pinches, and the mean is a weighted sum of the y's.</td><td>μ<sub>*</sub> = K<sub>*,X</sub> (K<sub>X,X</sub> + σ<sub>y</sub>² I)<sup>−1</sup> y</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>The catch:</strong> K<sub>σ</sub><sup>−1</sup> is an N × N inverse, which costs about N³ operations. Fine for a few thousand points, painful for a million. And the results depend heavily on ℓ, σ<sub>f</sub> and σ<sub>y</sub>; choosing them from the data comes later in the chapter.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 13.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 12);
+</script>
+</body></html>
