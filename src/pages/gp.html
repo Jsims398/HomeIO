@@ -70,6 +70,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
         <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
       </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT12 }}" hint-placeholder-val="{{ false }}">
@@ -468,7 +472,7 @@
         </table>
       </div>
       <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>The catch:</strong> K<sub>σ</sub><sup>−1</sup> is an N × N inverse, which costs about N³ operations. Fine for a few thousand points, painful for a million. And the results depend heavily on ℓ, σ<sub>f</sub> and σ<sub>y</sub>; choosing them from the data comes later in the chapter.</p>
-      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 13.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: the kernel trick — how an SVM draws curved boundaries using only similarity scores.</p>
     </section>
     </sc-if>
   </main>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kernel Trick · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/kt-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT13 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#ktlift" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;Lift the data</a>
+        <a href="#kttrick" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;Skip the lift</a>
+        <a href="#ktlab" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">③ &nbsp;Kernel SVM lab</a>
+        <a href="#ktwrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT13 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic13" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 13</span>
+        <span class="tag tag-accent-2">Murphy, PML — §17.3.4</span>
+        <span class="tag tag-outline">Support vector machines</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">Curved boundaries from straight lines</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">An SVM draws a straight line (a flat boundary) between two classes. Lots of data can't be split by a straight line. The fix has two steps. First, <strong>lift</strong> each point into more dimensions with a feature map φ(x), where a flat cut does work. Second, the <strong>trick</strong>: the SVM only ever needs dot products φ(a)·φ(b), and a kernel K(a, b) gives you that number straight from a and b. You never build φ at all.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+        <a href="#ktlift" class="tag tag-outline" style="text-decoration:none">① Why lift?</a>
+        <a href="#kttrick" class="tag tag-outline" style="text-decoration:none">② The shortcut</a>
+        <a href="#ktlab" class="tag tag-outline" style="text-decoration:none">③ Try it on an SVM</a>
+      </div>
+    </header>
+
+    <!-- ================= ① lift ================= -->
+    <section id="ktlift" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">①</span>
+        <h2 style="margin:0">Why lift: tangled in 1-D, easy in 2-D</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">Add a new coordinate that untangles the classes</div>
+          <p class="card-body">On a number line, a linear classifier is a single cut: everything right of it is one class. If one class sits in the middle, no cut works. But give each point a second coordinate x², and the middle points stay low while the outer ones go high. Now a flat line separates them.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded</div>
+          <div class="card-title">φ(x) = (x, x²)</div>
+          <p class="card-body"><strong>φ</strong> (phi) is the feature map: a recipe that turns each input into a longer list of numbers. The classifier is still linear, just in φ-space: "is x² below t?" Back on the original line, that one flat rule becomes two cuts at x = ±√t.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <sc-for list="{{ liftModeBtns }}" as="b" hint-placeholder-count="2">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <svg sc-camel-view-box="0 0 560 240" style="width:100%;height:auto" role="img" aria-label="One-dimensional points, optionally lifted onto the parabola x squared, with a linear boundary">
+          <rect x="0" y="0" width="560" height="240" rx="22" fill="var(--color-neutral-100)"></rect>
+          <path d="{{ liftShade }}" fill="var(--color-accent)" opacity=".1"></path>
+          <line x1="34" y1="{{ liftBase }}" x2="546" y2="{{ liftBase }}" stroke="var(--color-neutral-500)" stroke-width="1.4"></line>
+          <path d="{{ liftParabola }}" fill="none" stroke="var(--color-neutral-400)" stroke-width="1.4" stroke-dasharray="5 4"></path>
+          <sc-for list="{{ liftStems }}" as="t" hint-placeholder-count="12">
+            <line x1="{{ t.x }}" y1="{{ t.y1 }}" x2="{{ t.x }}" y2="{{ t.y2 }}" stroke="var(--color-neutral-400)" stroke-width="1"></line>
+          </sc-for>
+          <sc-if value="{{ liftShowFlat }}" hint-placeholder-val="{{ true }}">
+            <line x1="{{ liftCutX }}" y1="{{ liftTop }}" x2="{{ liftCutX }}" y2="{{ liftBottom }}" stroke="var(--color-text)" stroke-width="2"></line>
+          </sc-if>
+          <sc-if value="{{ liftShowLifted }}" hint-placeholder-val="{{ false }}">
+            <line x1="34" y1="{{ liftLineY }}" x2="546" y2="{{ liftLineY }}" stroke="var(--color-text)" stroke-width="2"></line>
+            <line x1="{{ liftRootL }}" y1="{{ liftLineY }}" x2="{{ liftRootL }}" y2="{{ liftBase }}" stroke="var(--color-text)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+            <line x1="{{ liftRootR }}" y1="{{ liftLineY }}" x2="{{ liftRootR }}" y2="{{ liftBase }}" stroke="var(--color-text)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+            <text x="540" y="{{ liftLineY }}" dy="-6" text-anchor="end" font-size="11" fill="var(--color-text)">x² = t</text>
+          </sc-if>
+          <sc-for list="{{ liftDots }}" as="p" hint-placeholder-count="12">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="10" fill="none" stroke="{{ p.ring }}" stroke-width="2"></circle>
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="6.5" fill="{{ p.fill }}" stroke="var(--color-surface)" stroke-width="2"></circle>
+          </sc-for>
+          <sc-for list="{{ liftTicks }}" as="t" hint-placeholder-count="5">
+            <text x="{{ t.x }}" y="226" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>class +</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-2-600)"></span>class −</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:2px solid var(--color-text)"></span>on the wrong side</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:10px;border-radius:3px;background:var(--color-accent);opacity:.3"></span>region called +</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <sc-if value="{{ liftShowFlat }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px"><span>cut position c</span><strong>{{ liftCutLabel }}</strong></div>
+                <input type="range" min="-2.6" max="2.6" step="0.05" value="{{ liftCut }}" sc-camel-on-change="{{ liftOnCut }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+              </div>
+            </sc-if>
+            <sc-if value="{{ liftShowLifted }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px"><span>flat line height t</span><strong>{{ liftTLabel }}</strong></div>
+                <input type="range" min="0" max="6.5" step="0.05" value="{{ liftT }}" sc-camel-on-change="{{ liftOnT }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+              </div>
+              <div style="font-size:13px;color:var(--color-neutral-700)">back on the line, the cuts are at x = <strong>{{ liftRootLabel }}</strong></div>
+            </sc-if>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Dots on the wrong side</div>
+              <div style="font-family:var(--font-heading);font-size:24px;margin-top:2px">{{ liftErrors }} of 12</div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ liftNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>With <strong>Straight cut</strong>, slide c everywhere. What is the fewest mistakes you can get?</li>
+          <li>Switch to <strong>Lift</strong>. Every dot climbs to height x². Find a t with 0 mistakes.</li>
+          <li>Watch the two dashed drop-lines. One straight rule up top is two cuts down below: the boundary in the original space is no longer "straight".</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">So why not always lift?</summary>
+          <p style="margin:8px 0 0">Here φ added one number. Real data might have 1,000 inputs, and using all their pairwise products means about 500,000 new features; triples, about 167 million. Building and storing φ for every point gets hopeless. That cost is what the trick removes.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ② trick ================= -->
+    <section id="kttrick" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">②</span>
+        <h2 style="margin:0">The trick: get φ(a)·φ(b) without building φ</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Why it works for SVMs</div>
+          <div class="card-title">The SVM only asks "how much do these two points agree?"</div>
+          <p class="card-body">In the dual form of the SVM (§17.3.2), training and prediction use the inputs <em>only</em> through dot products xᵢ·xⱼ. Never a single coordinate on its own. So if we lift, all we need is φ(xᵢ)·φ(xⱼ), one number per pair.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded</div>
+          <div class="card-title">K(a, b) = φ(a)·φ(b)</div>
+          <p class="card-body">A <strong>kernel</strong> is a function that hands you that dot product directly. Example in 2-D: φ(x) = (x₁², √2 x₁x₂, x₂²) has the kernel K(a, b) = (a·b)². Lift-then-dot needs 3 features; the kernel needs one 2-D dot product and a square. Below, check that they give the same number.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Point a</div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>a₁</span><strong>{{ trA1Label }}</strong></div>
+              <input type="range" min="-3" max="3" step="0.1" value="{{ trA1 }}" sc-camel-on-change="{{ trOnA1 }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>a₂</span><strong>{{ trA2Label }}</strong></div>
+              <input type="range" min="-3" max="3" step="0.1" value="{{ trA2 }}" sc-camel-on-change="{{ trOnA2 }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-700);margin-top:6px">Point b</div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>b₁</span><strong>{{ trB1Label }}</strong></div>
+              <input type="range" min="-3" max="3" step="0.1" value="{{ trB1 }}" sc-camel-on-change="{{ trOnB1 }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>b₂</span><strong>{{ trB2Label }}</strong></div>
+              <input type="range" min="-3" max="3" step="0.1" value="{{ trB2 }}" sc-camel-on-change="{{ trOnB2 }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+          </div>
+          <div style="flex:2 1 340px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.8;font-variant-numeric:tabular-nums">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">The long way: lift, then dot</div>
+              <div>φ(a) = {{ trPhiA }}</div>
+              <div>φ(b) = {{ trPhiB }}</div>
+              <div style="overflow-wrap:anywhere">φ(a)·φ(b) = {{ trProducts }} = <strong>{{ trLong }}</strong></div>
+            </div>
+            <div style="padding:14px 18px;border-radius:24px;background:var(--color-accent-2-100);font-size:14px;line-height:1.8;font-variant-numeric:tabular-nums">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">The short way: kernel</div>
+              <div>a·b = {{ trDot }}</div>
+              <div>K(a, b) = (a·b)² = <strong>{{ trShort }}</strong></div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">Same number, every time: move any slider. The short way never wrote down φ.</p>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--color-divider);margin-top:24px;padding-top:20px;display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="font-size:13.5px;font-weight:600">How big does the saving get?</div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>input size D (numbers per point)</span><strong>{{ trDimLabel }}</strong></div>
+              <input type="range" min="0" max="4" step="1" value="{{ trDim }}" sc-camel-on-change="{{ trOnDim }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>kernel power d in (a·b)<sup>d</sup></span><strong>{{ trDegLabel }}</strong></div>
+              <input type="range" min="2" max="5" step="1" value="{{ trDeg }}" sc-camel-on-change="{{ trOnDeg }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start">
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Length of φ (long way)</div>
+              <div style="font-family:var(--font-heading);font-size:20px;margin-top:2px;overflow-wrap:anywhere">{{ trLongCost }}</div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">Multiplies (short way)</div>
+              <div style="font-family:var(--font-heading);font-size:20px;margin-top:2px">{{ trShortCost }}</div>
+            </div>
+            <div style="grid-column:1 / -1;padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Kernel saving, per pair of points</div>
+              <div style="font-family:var(--font-heading);font-size:20px;margin-top:2px">{{ trRatio }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Make a and b point the same way: K is big. Make them perpendicular (a·b = 0): K is 0. A kernel is a <em>similarity score</em>.</li>
+          <li>Set D = 1,000 and d = 3. The long way needs a list of 167 million numbers per point. The short way: about a thousand multiplies.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">What about the RBF kernel?</summary>
+          <p style="margin:8px 0 0">K(a, b) = exp(−γ‖a − b‖²) is 1 when a = b and fades to 0 as they move apart. Its φ has <em>infinitely</em> many features, so the long way is impossible, yet the short way is one subtraction and one exp(). That is the trick at its most extreme.</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Can any function be a kernel?</summary>
+          <p style="margin:8px 0 0">No. K has to equal φ(a)·φ(b) for <em>some</em> φ, even one you never write down. Those are called Mercer (positive definite) kernels: every Gram matrix [K(xᵢ, xⱼ)] they produce has no negative eigenvalues. Linear, polynomial and RBF all qualify.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ③ lab ================= -->
+    <section id="ktlab" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">③</span>
+        <h2 style="margin:0">Lab: one SVM, three kernels</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Formula, decoded · the prediction</div>
+          <div class="card-title">f(x) = Σ<sub>n</sub> α<sub>n</sub> y<sub>n</sub> K(x<sub>n</sub>, x) + w₀</div>
+          <p class="card-body">Swap every x·x′ in the SVM for K(x, x′). To classify a new x, compare it with each training point using K, weight by α<sub>n</sub> (learned) and the label y<sub>n</sub> = ±1, and add them up. Positive → class +.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">The book calls it</div>
+          <div class="card-title">Support vectors</div>
+          <p class="card-body">Most α<sub>n</sub> come out exactly 0, so most points drop out of the sum. The ones left (ringed below) are the support vectors: the points on or inside the margin. The prediction only needs K between x and those few points.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">The SVM code is identical for every kernel button; only K changes. Click the plot to add a dot with the chosen colour; click a dot to remove it. Pale shading is the margin (|f| &lt; 1), and the colour edge through it is the boundary f(x) = 0.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <sc-for list="{{ labKernelBtns }}" as="b" hint-placeholder-count="3">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <sc-for list="{{ labDataBtns }}" as="b" hint-placeholder-count="3">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ labOnClear }}" style="font-size:13px">Clear</button>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 280px;min-width:0;max-width:440px">
+            <svg sc-camel-view-box="0 0 300 300" sc-camel-on-pointer-down="{{ labOnDown }}" style="width:100%;height:auto;cursor:crosshair;touch-action:none;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Kernel SVM decision regions with training points and support vectors">
+              <sc-for list="{{ labHeat }}" as="h" hint-placeholder-count="4">
+                <path d="{{ h.d }}" fill="{{ h.color }}" opacity="{{ h.opacity }}"></path>
+              </sc-for>
+              <line x1="150" y1="0" x2="150" y2="300" stroke="var(--color-neutral-400)" stroke-width=".8"></line>
+              <line x1="0" y1="150" x2="300" y2="150" stroke="var(--color-neutral-400)" stroke-width=".8"></line>
+              <sc-for list="{{ labSv }}" as="p" hint-placeholder-count="6">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="9" fill="none" stroke="var(--color-text)" stroke-width="1.8"></circle>
+              </sc-for>
+              <sc-for list="{{ labDots }}" as="p" hint-placeholder-count="30">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5" fill="{{ p.fill }}" stroke="var(--color-surface)" stroke-width="1.5"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>class +</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-2-600)"></span>class −</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:2px solid var(--color-text)"></span>support vector</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ labBrushBtns }}" as="b" hint-placeholder-count="2">
+                <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ labShowGamma }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px"><span>RBF width γ (bigger = narrower bumps)</span><strong>{{ labGammaLabel }}</strong></div>
+                <input type="range" min="0.05" max="8" step="0.05" value="{{ labGamma }}" sc-camel-on-change="{{ labOnGamma }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+              </div>
+            </sc-if>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>C (how hard mistakes are punished)</span><strong>{{ labCLabel }}</strong></div>
+              <input type="range" min="0" max="6" step="1" value="{{ labC }}" sc-camel-on-change="{{ labOnC }}" style="width:100%;accent-color:var(--color-neutral-600);cursor:pointer">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Training accuracy</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ labAcc }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Support vectors</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ labSvCount }} of {{ labCount }}</div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-100);font-size:13.5px;line-height:1.6">f(x) = sum over the <strong>{{ labSvCount }}</strong> support vectors of α<sub>n</sub> y<sub>n</sub> K(x<sub>n</sub>, x), plus w₀ = {{ labW0 }}</div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ labNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Start on <strong>Rings</strong> with <strong>Linear</strong>. The best straight line is useless. Switch to <strong>Polynomial</strong>: a circle appears, from the same SVM code.</li>
+          <li>Try <strong>XOR</strong> with each kernel. Which hidden feature of (a·b)² makes it work?</li>
+          <li>Pick <strong>RBF</strong> and push γ up to 8. The boundary wraps tightly around single dots and the support vector count climbs.</li>
+          <li>On <strong>Two blobs</strong>, Linear is enough and needs only a few support vectors. Polynomial (a·b)² actually does worse: its boundaries must be symmetric through the centre. Picking the kernel matters.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">How did the SVM learn α without φ?</summary>
+          <p style="margin:8px 0 0">The dual training problem is: maximise Σα<sub>n</sub> − ½ ΣΣ α<sub>i</sub>α<sub>j</sub> y<sub>i</sub>y<sub>j</sub> K(x<sub>i</sub>, x<sub>j</sub>) with 0 ≤ α<sub>n</sub> ≤ C and Σα<sub>n</sub>y<sub>n</sub> = 0. The data shows up only in the N × N table of K values (the Gram matrix). This page fills that table, then solves for α with SMO, a standard solver that updates two α's at a time.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="ktwrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">17.3.4</span>
+        <h2 style="margin:0">Recap: the kernel trick in three lines</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Step</th><th>The picture</th><th>The formula</th></tr></thead>
+          <tbody>
+            <tr><td>① Lift</td><td>Add features so a flat cut separates the classes. Flat in φ-space = curved in the original space.</td><td>x ↦ φ(x)</td></tr>
+            <tr><td>② Trick</td><td>The SVM only needs dot products, and a kernel gives them without building φ, even when φ is huge or infinite.</td><td>K(a, b) = φ(a)·φ(b)</td></tr>
+            <tr><td>③ Predict</td><td>Compare the new point with each support vector using K; weigh and add.</td><td>f(x) = Σ<sub>n</sub> α<sub>n</sub> y<sub>n</sub> K(x<sub>n</sub>, x) + w₀</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>Link back:</strong> this is the same K as the Gaussian process kernel in Topic 12. There it measured how strongly two function values move together; here it measures how similar two inputs are. Same object, two uses.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 14.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 13);
+</script>
+</body></html>
