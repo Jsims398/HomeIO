@@ -103,5 +103,5 @@ window.KTMath = (function () {
     return pts.map(([a, b, l]) => [clamp(a, -DATA_LIM, DATA_LIM), clamp(b, -DATA_LIM, DATA_LIM), l]);
   }
 
-  return { kernel, lift2, featureCount, trainSvm, decision, dataset, dot };
+  return { rng, kernel, lift2, featureCount, trainSvm, decision, dataset, dot };
 })();

@@ -74,6 +74,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
         <span style="font-size:11px;opacity:.85">§17.3.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT13 }}" hint-placeholder-val="{{ false }}">
@@ -423,7 +427,7 @@
         </table>
       </div>
       <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>Link back:</strong> this is the same K as the Gaussian process kernel in Topic 12. There it measured how strongly two function values move together; here it measures how similar two inputs are. Same object, two uses.</p>
-      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 14.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: tuning an SVM's C by cross-validation, and two ways to do regression with kernels.</p>
     </section>
     </sc-if>
   </main>

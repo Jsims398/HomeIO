@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kernel Machines · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/km-math.js"></script>
+<script src="../logic/km-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT14 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#kmc" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;Choosing C</a>
+        <a href="#kmreg" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;Ridge vs SVR</a>
+        <a href="#kmwrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT14 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic14" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 14</span>
+        <span class="tag tag-accent-2">Murphy, PML — §17.3.6 – 17.3.8</span>
+        <span class="tag tag-outline">Kernel machines</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">One kernel, different knobs, different losses</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">Topic 13 built a kernel SVM. Two questions are left. First, the SVM has a knob <strong>C</strong> that decides how much training mistakes matter. How do you set it without fooling yourself? Second, kernels also work for <strong>regression</strong>, predicting a number instead of a class. There are two classic ways to do it. They use the same kernel but a different loss, and the loss decides which training points the model has to remember.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+        <a href="#kmc" class="tag tag-outline" style="text-decoration:none">① Pick C with cross-validation</a>
+        <a href="#kmreg" class="tag tag-outline" style="text-decoration:none">② Kernel ridge vs SVM regression</a>
+      </div>
+    </header>
+
+    <!-- ================= ① choosing C ================= -->
+    <section id="kmc" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">①</span>
+        <h2 style="margin:0">Choosing C: trust held-out points, not training points</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Big idea</div>
+          <div class="card-title">Training error always says "bigger C"</div>
+          <p class="card-body">C is the price of a training mistake. Raise it and the SVM bends its boundary to fix more mistakes, so training error (mostly) falls. That says nothing about <em>new</em> points. Some labels are noise, and a boundary that chases them will be wrong on fresh data.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">The book's recipe · §17.3.6</div>
+          <div class="card-title">5-fold cross-validation over a grid of C</div>
+          <p class="card-body">Split the data into 5 groups. For each C, train on 4 groups and count mistakes on the 5th, rotating so every point is held out once. The C with the fewest held-out mistakes wins. C interacts with the kernel width γ, so the book searches both together.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">The true boundary is the dashed wave. About 8% of the labels were flipped on purpose (drawn with a dark halo): no sensible classifier should get those right. Slide C from left to right and watch both error curves.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <sc-for list="{{ cGammaBtns }}" as="b" hint-placeholder-count="3">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ cOnResample }}" style="font-size:13px">New sample</button>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 280px;min-width:0;max-width:440px">
+            <svg sc-camel-view-box="0 0 300 300" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="RBF SVM decision regions at the chosen C, with the true wave boundary and noisy labels marked">
+              <sc-for list="{{ cHeat }}" as="h" hint-placeholder-count="4">
+                <path d="{{ h.d }}" fill="{{ h.color }}" opacity="{{ h.opacity }}"></path>
+              </sc-for>
+              <path d="{{ cWave }}" fill="none" stroke="var(--color-text)" stroke-width="1.6" stroke-dasharray="6 4" opacity=".7"></path>
+              <sc-for list="{{ cSv }}" as="p" hint-placeholder-count="10">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="8.5" fill="none" stroke="var(--color-neutral-600)" stroke-width="1.2"></circle>
+              </sc-for>
+              <sc-for list="{{ cNoisy }}" as="p" hint-placeholder-count="4">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="7" fill="var(--color-text)"></circle>
+              </sc-for>
+              <sc-for list="{{ cDots }}" as="p" hint-placeholder-count="60">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4.5" fill="{{ p.fill }}" stroke="var(--color-surface)" stroke-width="1.3"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>class +</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-2-600)"></span>class −</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--color-text)"></span>flipped (noise) label</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--color-neutral-600)"></span>support vector</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;border-top:2px dashed var(--color-text)"></span>true boundary</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>C (price of a training mistake)</span><strong>{{ cLabel }}</strong></div>
+              <input type="range" min="0" max="9" step="1" value="{{ cIdx }}" sc-camel-on-change="{{ cOnC }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Training error</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ cTrain }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">5-fold CV error</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ cCv }}</div>
+              </div>
+              <div style="grid-column:1 / -1;padding:12px 16px;border-radius:24px;background:var(--color-neutral-100);font-size:13.5px;line-height:1.6">Support vectors: <strong>{{ cSvCount }}</strong> of {{ cCount }} &nbsp;·&nbsp; best C by CV: <strong>{{ cBestLabel }}</strong> ({{ cBestCv }} error)</div>
+            </div>
+            <div><button class="btn btn-ghost" sc-camel-on-click="{{ cOnBest }}" style="font-size:13px">Jump to the best C</button></div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ cNote }}</p>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--color-divider);margin-top:24px;padding-top:18px">
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:6px">Error vs C (click a point to jump there)</div>
+          <svg sc-camel-view-box="0 0 560 220" style="width:100%;height:auto" role="img" aria-label="Training error and cross-validation error plotted against C on a log scale">
+            <rect x="0" y="0" width="560" height="220" rx="22" fill="var(--color-neutral-100)"></rect>
+            <sc-for list="{{ cYTicks }}" as="t" hint-placeholder-count="4">
+              <line x1="44" y1="{{ t.y }}" x2="544" y2="{{ t.y }}" stroke="var(--color-divider)" stroke-width="1"></line>
+              <text x="38" y="{{ t.y }}" dy="3.5" text-anchor="end" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+            </sc-for>
+            <line x1="{{ cMarkX }}" y1="14" x2="{{ cMarkX }}" y2="184" stroke="var(--color-neutral-500)" stroke-width="1.2" stroke-dasharray="4 3"></line>
+            <path d="{{ cTrainPath }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="2"></path>
+            <path d="{{ cCvPath }}" fill="none" stroke="var(--color-accent)" stroke-width="2.6"></path>
+            <circle cx="{{ cBestX }}" cy="{{ cBestY }}" r="11" fill="none" stroke="var(--color-accent)" stroke-width="1.6"></circle>
+            <sc-for list="{{ cPoints }}" as="p" hint-placeholder-count="10">
+              <circle cx="{{ p.x }}" cy="{{ p.yT }}" r="{{ p.r }}" fill="var(--color-neutral-600)" stroke="var(--color-surface)" stroke-width="1.5" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              <circle cx="{{ p.x }}" cy="{{ p.yC }}" r="{{ p.r }}" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="1.5" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+            </sc-for>
+            <sc-for list="{{ cXTicks }}" as="t" hint-placeholder-count="10">
+              <text x="{{ t.x }}" y="202" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+            </sc-for>
+          </svg>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-neutral-600)"></span>training error</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent)"></span>cross-validation error</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:1.6px solid var(--color-accent)"></span>lowest CV error</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Start at C = 0.03 and step right. Training error (grey) heads to 0. Where does the orange CV curve bottom out?</li>
+          <li>At C = 1000, look at the dark-halo noise points. The boundary has grown little islands to claim them. Does that help on new data?</li>
+          <li>Switch to <strong>Narrow</strong> γ = 5. Training error hits 0% at a much smaller C. Narrow bumps are flexible, so it takes less C to overfit. That is why C and γ are tuned together.</li>
+          <li>Hit <strong>New sample</strong> a few times. The best C moves around. With 60 points, the CV estimate is noisy too.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why a log scale for C?</summary>
+          <p style="margin:8px 0 0">Going from C = 1 to 2 changes the SVM about as much as going from 100 to 200: what matters is the ratio. So the grid is spaced by factors of ≈3 (0.03, 0.1, 0.3, 1, …), the standard choice.</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why not just use a separate test set?</summary>
+          <p style="margin:8px 0 0">You can, if you have plenty of data. With 60 points, holding out 20 leaves only 40 to train on, and a score from 20 points is very noisy. Cross-validation uses every point for both training and testing, just never at the same time.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ② ridge vs SVR ================= -->
+    <section id="kmreg" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">②</span>
+        <h2 style="margin:0">Regression: kernel ridge vs SVM regression</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">§17.3.7 · Kernel ridge regression</div>
+          <div class="card-title">Squared loss: α = (K + λI)⁻¹ y</div>
+          <p class="card-body">Predict f(x) = Σ<sub>n</sub> α<sub>n</sub> K(x<sub>n</sub>, x). Each miss costs (error)², and λ penalises wiggly curves. The answer is one linear solve, but it is <strong>dense</strong>: every α<sub>n</sub> is nonzero, so prediction needs every training point.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">§17.3.8 · SVM regression</div>
+          <div class="card-title">ε-insensitive loss: max(0, |error| − ε)</div>
+          <p class="card-body">Same f(x), but misses smaller than ε are free: a tube of half-width ε around the curve. Points inside the tube get weight exactly 0. Only points on or outside it are <strong>support vectors</strong>, so the model is <strong>sparse</strong>. C caps how hard any one point can pull.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Both fits use the same RBF kernel with the same γ. Click the plot to add a point; click a point to remove it. The bar chart underneath shows each training point's weight, lined up under the point. Grey ticks mean the weight is exactly zero.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+          <sc-for list="{{ rShowBtns }}" as="b" hint-placeholder-count="3">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ rOnOutlier }}" style="font-size:13px">Add an outlier</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ rOnResample }}" style="font-size:13px">New sample</button>
+        </div>
+
+        <svg sc-camel-view-box="0 0 560 260" sc-camel-on-pointer-down="{{ rOnDown }}" style="width:100%;height:auto;cursor:crosshair;touch-action:none" role="img" aria-label="Noisy 1-D data with the kernel ridge fit, the SVM regression fit and its epsilon tube">
+          <rect x="0" y="0" width="560" height="260" rx="22" fill="var(--color-neutral-100)"></rect>
+          <line x1="34" y1="{{ rZeroY }}" x2="546" y2="{{ rZeroY }}" stroke="var(--color-neutral-400)" stroke-width=".8"></line>
+          <sc-if value="{{ rShowSvr }}" hint-placeholder-val="{{ true }}">
+            <path d="{{ rTube }}" fill="var(--color-accent)" opacity=".14"></path>
+          </sc-if>
+          <path d="{{ rTruth }}" fill="none" stroke="var(--color-text)" stroke-width="1.4" stroke-dasharray="6 4" opacity=".55"></path>
+          <sc-if value="{{ rShowRidge }}" hint-placeholder-val="{{ true }}">
+            <path d="{{ rRidgePath }}" fill="none" stroke="var(--color-accent-2-600)" stroke-width="2.6"></path>
+          </sc-if>
+          <sc-if value="{{ rShowSvr }}" hint-placeholder-val="{{ true }}">
+            <path d="{{ rSvrPath }}" fill="none" stroke="var(--color-accent)" stroke-width="2.6"></path>
+          </sc-if>
+          <sc-for list="{{ rSv }}" as="p" hint-placeholder-count="10">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="8.5" fill="none" stroke="var(--color-text)" stroke-width="1.6"></circle>
+          </sc-for>
+          <sc-for list="{{ rDots }}" as="p" hint-placeholder-count="24">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4.5" fill="var(--color-neutral-700)" stroke="var(--color-surface)" stroke-width="1.3"></circle>
+          </sc-for>
+          <sc-for list="{{ rXTicks }}" as="t" hint-placeholder-count="7">
+            <text x="{{ t.x }}" y="250" text-anchor="middle" font-size="10.5" fill="var(--color-neutral-600)">{{ t.label }}</text>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent-2-600)"></span>kernel ridge</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent)"></span>SVM regression</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:10px;border-radius:3px;background:var(--color-accent);opacity:.3"></span>ε-tube</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:2px solid var(--color-text)"></span>support vector</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;border-top:2px dashed var(--color-text)"></span>true curve</span>
+        </div>
+
+        <svg sc-camel-view-box="0 0 560 130" style="width:100%;height:auto;margin-top:14px" role="img" aria-label="Per-point weights: kernel ridge on top, SVM regression below">
+          <rect x="0" y="0" width="560" height="130" rx="18" fill="var(--color-neutral-100)"></rect>
+          <line x1="34" y1="30" x2="546" y2="30" stroke="var(--color-neutral-400)" stroke-width=".8"></line>
+          <line x1="34" y1="96" x2="546" y2="96" stroke="var(--color-neutral-400)" stroke-width=".8"></line>
+          <text x="10" y="34" font-size="12" fill="var(--color-accent-2-700)">α</text>
+          <text x="10" y="100" font-size="12" fill="var(--color-accent-700)">β</text>
+          <sc-for list="{{ rRidgeBars }}" as="b" hint-placeholder-count="24">
+            <rect x="{{ b.x }}" y="{{ b.y }}" width="6" height="{{ b.h }}" rx="1.5" fill="{{ b.fill }}"></rect>
+          </sc-for>
+          <sc-for list="{{ rSvrBars }}" as="b" hint-placeholder-count="24">
+            <rect x="{{ b.x }}" y="{{ b.y }}" width="6" height="{{ b.h }}" rx="1.5" fill="{{ b.fill }}"></rect>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span>top: kernel ridge weights α<sub>n</sub></span>
+          <span>bottom: SVR weights β<sub>n</sub></span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:2px;background:var(--color-neutral-400)"></span>exactly 0</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+          <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>RBF width γ (both)</span><strong>{{ rGammaLabel }}</strong></div>
+              <input type="range" min="0.1" max="6" step="0.1" value="{{ rGamma }}" sc-camel-on-change="{{ rOnGamma }}" style="width:100%;accent-color:var(--color-neutral-600);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>λ, ridge penalty</span><strong>{{ rLamLabel }}</strong></div>
+              <input type="range" min="0" max="4" step="1" value="{{ rLam }}" sc-camel-on-change="{{ rOnLam }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>ε, SVR tube half-width</span><strong>{{ rEpsLabel }}</strong></div>
+              <input type="range" min="0" max="1" step="0.02" value="{{ rEps }}" sc-camel-on-change="{{ rOnEps }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>C, SVR cap on each weight</span><strong>{{ rCLabel }}</strong></div>
+              <input type="range" min="0" max="5" step="1" value="{{ rC }}" sc-camel-on-change="{{ rOnC }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">Ridge: points used</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rRidgeActive }} of {{ rCount }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">SVR: points used</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rSvrActive }} of {{ rCount }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Ridge: error vs truth</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rRidgeMse }}</div>
+              </div>
+              <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">SVR: error vs truth</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ rSvrMse }}</div>
+              </div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ rNote }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Compare the two bar rows. Ridge: a bar under every point. SVR: grey ticks wherever a point sits inside the tube.</li>
+          <li>Slide ε from 0 to 1. Support vectors drop from nearly all points to a handful. Past some width, the fit stops following the wave: sparsity is not free.</li>
+          <li>Press <strong>Add an outlier</strong>. Which curve gets dragged further toward it? Now lower C to 0.3 and watch SVR shrug it off.</li>
+          <li>Set ε = 0. Every point is now outside the (zero-width) tube, so SVR uses all of them, just like ridge.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">How does SVR find β, and why are some exactly 0?</summary>
+          <p style="margin:8px 0 0">The SVR dual is: minimise ½ βᵀKβ − yᵀβ + ε Σ|β<sub>n</sub>| with −C ≤ β<sub>n</sub> ≤ C. The ε Σ|β<sub>n</sub>| term is an L1 penalty, the same thing that makes the lasso sparse. This page solves it one β<sub>n</sub> at a time: each update is a "soft threshold" that snaps β<sub>n</sub> to 0 whenever that point's error is under ε. (A constant 1 is added to K so the curve can shift up or down. It plays the role of the bias w₀.)</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Have I seen kernel ridge before?</summary>
+          <p style="margin:8px 0 0">Yes: it is exactly the Gaussian process posterior mean from Topic 12, with λ in the role of the noise variance σ<sub>y</sub>². Ridge gives the same curve but no error bars.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="kmwrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">17.3.6 – 8</span>
+        <h2 style="margin:0">Recap: ridge vs SVR, and how to set the knobs</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th></th><th>Kernel ridge</th><th>SVM regression</th></tr></thead>
+          <tbody>
+            <tr><td>Loss on one point</td><td>(error)²</td><td>max(0, |error| − ε)</td></tr>
+            <tr><td>Weights</td><td>Dense: all N nonzero</td><td>Sparse: only points on or outside the tube</td></tr>
+            <tr><td>Training</td><td>One linear solve, (K + λI)⁻¹ y</td><td>A constrained optimisation (QP)</td></tr>
+            <tr><td>One outlier</td><td>Pulls hard (squared)</td><td>Pull capped by C</td></tr>
+            <tr><td>Knobs</td><td>λ, kernel</td><td>ε, C, kernel</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>And for every knob:</strong> C, γ, λ and ε are all chosen the way part ① chose C. Make a grid, cross-validate, and pick the lowest held-out error. Never judge by training error alone.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 15.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 14);
+</script>
+</body></html>
