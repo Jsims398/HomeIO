@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision Trees · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/cart-math.js"></script>
+<script src="../logic/cart-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
+      <button sc-camel-on-click="{{ goT15 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t15Bg }};color:{{ t15Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 15 · Decision trees</span>
+        <span style="font-size:11px;opacity:.85">§18.1</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT15 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#ctsplit" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;One split by hand</a>
+        <a href="#ctgrow" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;Grow the tree</a>
+        <a href="#ctwrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT15 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic15" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 15</span>
+        <span class="tag tag-accent-2">Murphy, PML — §18.1</span>
+        <span class="tag tag-outline">Classification and regression trees</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">A tree is a stack of yes/no questions</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">A CART tree asks "is x<sub>j</sub> ≤ t?" at each node and sends a point left or right until it reaches a leaf, which holds a prediction. Building one comes down to a single step, repeated: take the points at a node, call them <strong>D</strong>, and pick the feature j and threshold t that cut D into a left part <strong>D<sub>L</sub></strong> and a right part <strong>D<sub>R</sub></strong> that are as <em>pure</em> as possible. For classification, purity is usually measured with the <strong>Gini index</strong>.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+        <a href="#ctsplit" class="tag tag-outline" style="text-decoration:none">① Compute D<sub>L</sub>, D<sub>R</sub> and Gini for one split</a>
+        <a href="#ctgrow" class="tag tag-outline" style="text-decoration:none">② Repeat it to grow the tree</a>
+      </div>
+    </header>
+
+    <!-- ================= ① one split ================= -->
+    <section id="ctsplit" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">①</span>
+        <h2 style="margin:0">One split: D<sub>L</sub>, D<sub>R</sub> and the Gini index</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Step 1 · split the data</div>
+          <div class="card-title">D<sub>L</sub> = {n : x<sub>nj</sub> ≤ t}, &nbsp;D<sub>R</sub> = {n : x<sub>nj</sub> &gt; t}</div>
+          <p class="card-body">Pick a feature j and a threshold t. Every point with x<sub>j</sub> ≤ t goes left, the rest go right. Only thresholds between two neighbouring data values matter, so the candidates T<sub>j</sub> come from sorting the unique values of x<sub>j</sub>.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Step 2 · score each side</div>
+          <div class="card-title">π̂<sub>c</sub> = N<sub>c</sub> / |D|, &nbsp;G = Σ<sub>c</sub> π̂<sub>c</sub>(1 − π̂<sub>c</sub>) = 1 − Σ<sub>c</sub> π̂<sub>c</sub>²</div>
+          <p class="card-body">π̂<sub>c</sub> is the fraction of the node's points in class c. Gini is the chance that two points drawn at random from the node (with replacement) have different labels. A pure node has G = 0; three equal classes give G = 2/3.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Step 3 · weigh and pick</div>
+          <div class="card-title">cost = |D<sub>L</sub>|/|D| · G(D<sub>L</sub>) + |D<sub>R</sub>|/|D| · G(D<sub>R</sub>)</div>
+          <p class="card-body">Each side counts in proportion to how many points it holds. Try every j and every t ∈ T<sub>j</sub>, and keep the (j, t) with the lowest cost.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Below are 36 points from three classes. Choose a feature, slide the threshold, and the table and formulas recompute D<sub>L</sub>, D<sub>R</sub> and their impurity. Click a point to change its class.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+          <sc-for list="{{ sFeatBtns }}" as="b" hint-placeholder-count="2">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:13px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ sOnBest }}" style="font-size:13px">Jump to the best split</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ sOnResample }}" style="font-size:13px">New sample</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <span style="font-size:12px;color:var(--color-neutral-700);margin-right:4px">Impurity:</span>
+          <sc-for list="{{ sKindBtns }}" as="b" hint-placeholder-count="3">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:12.5px;padding:6px 12px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 280px;min-width:0;max-width:420px">
+            <svg sc-camel-view-box="0 0 300 300" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Points of three classes with the current split line dividing them into D_L and D_R">
+              <rect x="{{ sLeft.x }}" y="{{ sLeft.y }}" width="{{ sLeft.w }}" height="{{ sLeft.h }}" fill="var(--color-accent-2-200)" opacity=".45"></rect>
+              <rect x="{{ sRight.x }}" y="{{ sRight.y }}" width="{{ sRight.w }}" height="{{ sRight.h }}" fill="var(--color-accent-200)" opacity=".45"></rect>
+              <g font-size="9" fill="var(--color-neutral-500)"><text x="60" y="296" text-anchor="middle">2</text><text x="120" y="296" text-anchor="middle">4</text><text x="180" y="296" text-anchor="middle">6</text><text x="240" y="296" text-anchor="middle">8</text><text x="4" y="243">2</text><text x="4" y="183">4</text><text x="4" y="123">6</text><text x="4" y="63">8</text></g>
+              <line x1="{{ sCut.x1 }}" y1="{{ sCut.y1 }}" x2="{{ sCut.x2 }}" y2="{{ sCut.y2 }}" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="6 4"></line>
+              <text x="{{ sLabL.x }}" y="{{ sLabL.y }}" text-anchor="{{ sLabL.anchor }}" font-size="13" font-weight="700" fill="var(--color-accent-2-800)">D_L</text>
+              <text x="{{ sLabR.x }}" y="{{ sLabR.y }}" text-anchor="{{ sLabR.anchor }}" font-size="13" font-weight="700" fill="var(--color-accent-800)">D_R</text>
+              <sc-for list="{{ sDots }}" as="p" hint-placeholder-count="36">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5.5" fill="{{ p.fill }}" stroke="var(--color-surface)" stroke-width="1.4" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>class A</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-2-600)"></span>class B</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#4f6d8a"></span>class C</span>
+              <span>horizontal axis x₁, vertical x₂</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>Threshold t</span><strong>D_L: {{ sRule }}</strong></div>
+              <input type="range" min="0" max="10" step="0.05" value="{{ sT }}" sc-camel-on-change="{{ sOnT }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div style="font-size:13px;border-radius:20px;background:var(--color-neutral-100);padding:10px 14px">
+              <div style="display:grid;grid-template-columns:1fr .6fr 1.3fr 1.3fr 1.3fr 1fr;gap:6px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding-bottom:6px;border-bottom:1px solid var(--color-divider)">
+                <span>Set</span><span>|·|</span><span style="color:var(--color-accent-700)">A (π̂)</span><span style="color:var(--color-accent-2-700)">B (π̂)</span><span style="color:#4f6d8a">C (π̂)</span><span>{{ sSym }}</span>
+              </div>
+              <sc-for list="{{ sRows }}" as="r" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:1fr .6fr 1.3fr 1.3fr 1.3fr 1fr;gap:6px;padding:6px 0;border-bottom:1px solid var(--color-divider)">
+                  <strong>{{ r.name }}</strong><span>{{ r.n }}</span>
+                  <sc-for list="{{ r.cells }}" as="cell" hint-placeholder-count="3"><span>{{ cell.text }}</span></sc-for>
+                  <strong>{{ r.imp }}</strong>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ sRows }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+                  <span style="width:30px">{{ r.name }}</span>
+                  <div style="flex:1;display:flex;height:12px;border-radius:999px;overflow:hidden;background:var(--color-neutral-200)">
+                    <sc-for list="{{ r.bar }}" as="seg" hint-placeholder-count="3"><span style="width:{{ seg.w }};background:{{ seg.bg }}"></span></sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:16px 20px;border-radius:28px;background:var(--color-neutral-100);font-size:14px;line-height:1.8;overflow-x:auto">
+          <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">Worked out ({{ sKind }})</div>
+          <div>{{ sSym }}(D) &nbsp;= {{ sWorkD }}</div>
+          <div>{{ sSym }}(D<sub>L</sub>) = {{ sWorkL }}</div>
+          <div>{{ sSym }}(D<sub>R</sub>) = {{ sWorkR }}</div>
+          <div style="margin-top:4px">cost = |D<sub>L</sub>|/|D| · {{ sSym }}(D<sub>L</sub>) + |D<sub>R</sub>|/|D| · {{ sSym }}(D<sub>R</sub>) = <strong>{{ sCostLine }}</strong></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px">
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Before: {{ sSym }}(D)</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ sParent }}</div>
+          </div>
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">After: weighted cost</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ sCost }}</div>
+          </div>
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-2-100)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-800)">Reduction</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ sGain }}</div>
+          </div>
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-100)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Best overall</div>
+            <div style="font-size:14px;margin-top:6px"><strong>{{ sBestRule }}</strong> → {{ sBestCost }}</div>
+          </div>
+        </div>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ sNote }}</p>
+
+        <div style="border-top:1px solid var(--color-divider);margin-top:22px;padding-top:18px">
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:6px">Cost of every threshold on {{ sFeat }} (ticks along the bottom are the candidates T<sub>j</sub>)</div>
+          <svg sc-camel-view-box="0 0 560 200" style="width:100%;height:auto" role="img" aria-label="Weighted impurity of the split plotted against the threshold t">
+            <rect x="0" y="0" width="560" height="200" rx="22" fill="var(--color-neutral-100)"></rect>
+            <sc-for list="{{ sCYTicks }}" as="t" hint-placeholder-count="4">
+              <line x1="44" y1="{{ t.y }}" x2="544" y2="{{ t.y }}" stroke="var(--color-divider)" stroke-width="1"></line>
+            </sc-for>
+            <line x1="44" y1="{{ sParentY }}" x2="544" y2="{{ sParentY }}" stroke="var(--color-neutral-600)" stroke-width="1.2" stroke-dasharray="5 4"></line>
+            <text x="540" y="{{ sParentY }}" dy="-5" text-anchor="end" font-size="10" fill="var(--color-neutral-600)">no split</text>
+            <sc-for list="{{ sCands }}" as="k" hint-placeholder-count="30">
+              <line x1="{{ k.x }}" y1="166" x2="{{ k.x }}" y2="172" stroke="var(--color-neutral-500)" stroke-width="1"></line>
+            </sc-for>
+            <line x1="{{ sMarkX }}" y1="14" x2="{{ sMarkX }}" y2="170" stroke="var(--color-text)" stroke-width="1.4" stroke-dasharray="4 3"></line>
+            <path d="{{ sCurve }}" fill="none" stroke="var(--color-accent)" stroke-width="2.6"></path>
+            <circle cx="{{ sBestX }}" cy="{{ sBestY }}" r="7" fill="none" stroke="var(--color-accent-2-600)" stroke-width="2"></circle>
+            <g font-size="10.5" fill="var(--color-neutral-600)" text-anchor="middle"><text x="44" y="188">t = 0</text><text x="144" y="188">2</text><text x="244" y="188">4</text><text x="344" y="188">6</text><text x="444" y="188">8</text><text x="536" y="188">10</text></g>
+          </svg>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent)"></span>weighted cost</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;border-top:2px dashed var(--color-text)"></span>current t</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:2px solid var(--color-accent-2-600)"></span>best t on this feature</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Slide t slowly. The cost only changes when a point crosses the line, so the curve is flat steps. That is why only the candidates T<sub>j</sub> need checking.</li>
+          <li>Push t all the way to 0 or 10. One side is empty and the cost equals G(D): an "empty" split buys nothing.</li>
+          <li>Find a t that makes D<sub>L</sub> pure (G = 0). Is it the best split? Often not, if it only peels off a few points.</li>
+          <li>Switch to <strong>Error rate</strong> and slide again. The curve has long flat stretches where Gini and entropy still slope downhill toward the good splits.</li>
+          <li>Click points near the cut to change their class and watch π̂ and G update.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why weight by |D<sub>L</sub>|/|D|?</summary>
+          <p style="margin:8px 0 0">Without the weights, cutting off one point would give a perfectly pure child (G = 0) and look great. Weighting by size makes the cost the average impurity per point after the split, so a child counts only as much as the points it holds.</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">And for regression trees?</summary>
+          <p style="margin:8px 0 0">Same D<sub>L</sub> / D<sub>R</sub> search and the same weighted cost, but the impurity of a node is the mean squared error around its average: c(D) = (1/|D|) Σ<sub>n∈D</sub> (y<sub>n</sub> − ȳ)². A leaf predicts ȳ, the mean of its points.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ② grow the tree ================= -->
+    <section id="ctgrow" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">②</span>
+        <h2 style="margin:0">Grow the tree: repeat the split on D<sub>L</sub> and D<sub>R</sub></h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">The tree is grown greedily. Find the best split of the root, then treat D<sub>L</sub> and D<sub>R</sub> each as a new D and do it again. A node stops splitting when it is pure, reaches the maximum depth, or every split would leave a child below the minimum size. These are the same points (and impurity) as part ①, including any classes you changed. Click a node in the tree to see its numbers and its box in the plot.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <span style="font-size:12px;color:var(--color-neutral-700);margin-right:4px">Impurity:</span>
+          <sc-for list="{{ gKindBtns }}" as="b" hint-placeholder-count="3">
+            <button class="btn btn-ghost" sc-camel-on-click="{{ b.onClick }}" style="font-size:12.5px;padding:6px 12px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 260px;min-width:0;max-width:380px">
+            <svg sc-camel-view-box="0 0 300 300" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Rectangular regions of the tree's leaves, tinted by predicted class, with the training points">
+              <sc-for list="{{ gCells }}" as="r" hint-placeholder-count="4">
+                <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" opacity="{{ r.opacity }}"></rect>
+              </sc-for>
+              <sc-for list="{{ gCuts }}" as="l" hint-placeholder-count="3">
+                <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="var(--color-text)" stroke-width="1.4" opacity=".7"></line>
+              </sc-for>
+              <sc-for list="{{ gDots }}" as="p" hint-placeholder-count="36">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4.5" fill="{{ p.fill }}" stroke="var(--color-surface)" stroke-width="1.3"></circle>
+              </sc-for>
+              <rect x="{{ gSelBox.x }}" y="{{ gSelBox.y }}" width="{{ gSelBox.w }}" height="{{ gSelBox.h }}" fill="none" stroke="var(--color-text)" stroke-width="3"></rect>
+              <g font-size="9" fill="var(--color-neutral-500)"><text x="60" y="296" text-anchor="middle">2</text><text x="120" y="296" text-anchor="middle">4</text><text x="180" y="296" text-anchor="middle">6</text><text x="240" y="296" text-anchor="middle">8</text><text x="4" y="243">2</text><text x="4" y="183">4</text><text x="4" y="123">6</text><text x="4" y="63">8</text></g>
+            </svg>
+          </div>
+          <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>Maximum depth</span><strong>{{ gDepth }}</strong></div>
+              <input type="range" min="0" max="6" step="1" value="{{ gDepth }}" sc-camel-on-change="{{ gOnDepth }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>Minimum points per leaf</span><strong>{{ gMin }}</strong></div>
+              <input type="range" min="1" max="8" step="1" value="{{ gMin }}" sc-camel-on-change="{{ gOnMin }}" style="width:100%;accent-color:var(--color-accent-2);cursor:pointer">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Leaves</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ gLeafCount }}</div>
+              </div>
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Depth used</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ gUsed }}</div>
+              </div>
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Train error</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ gErr }}</div>
+              </div>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ gNote }}</p>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--color-divider);margin-top:22px;padding-top:18px">
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:6px">The tree (left branch = yes, x<sub>j</sub> ≤ t)</div>
+          <div style="position:relative;width:100%;aspect-ratio:{{ gTreeRatio }}">
+            <svg sc-camel-view-box="{{ gTreeBox }}" style="position:absolute;inset:0;width:100%;height:100%" role="img" aria-label="Tree diagram: split nodes show their rule, leaves show their predicted class and size">
+              <sc-for list="{{ gEdges }}" as="e" hint-placeholder-count="4">
+                <line x1="{{ e.x1 }}" y1="{{ e.y1 }}" x2="{{ e.x2 }}" y2="{{ e.y2 }}" stroke="var(--color-neutral-500)" stroke-width="1.4"></line>
+              </sc-for>
+              <sc-for list="{{ gInner }}" as="n" hint-placeholder-count="2">
+                <rect x="{{ n.x }}" y="{{ n.y }}" width="80" height="36" rx="12" fill="var(--color-surface)" stroke="{{ n.stroke }}" stroke-width="{{ n.sw }}" style="cursor:pointer" sc-camel-on-click="{{ n.onClick }}"></rect>
+              </sc-for>
+              <sc-for list="{{ gLeaves }}" as="n" hint-placeholder-count="3">
+                <circle cx="{{ n.x }}" cy="{{ n.y }}" r="15" fill="{{ n.fill }}" stroke="{{ n.stroke }}" stroke-width="{{ n.sw }}" style="cursor:pointer" sc-camel-on-click="{{ n.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <sc-for list="{{ gEdges }}" as="e" hint-placeholder-count="4">
+              <span style="position:absolute;left:{{ e.left }};top:{{ e.top }};transform:translate(-50%,-50%);font-size:10px;color:var(--color-neutral-600);pointer-events:none">{{ e.label }}</span>
+            </sc-for>
+            <sc-for list="{{ gInner }}" as="n" hint-placeholder-count="2">
+              <span style="position:absolute;left:{{ n.left }};top:{{ n.top }};transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;line-height:1.15;white-space:nowrap;pointer-events:none">
+                <strong style="font-size:11.5px">{{ n.rule }}</strong>
+                <span style="font-size:9.5px;color:var(--color-neutral-700)">{{ n.sub }}</span>
+              </span>
+            </sc-for>
+            <sc-for list="{{ gLeaves }}" as="n" hint-placeholder-count="3">
+              <strong style="position:absolute;left:{{ n.left }};top:{{ n.top }};transform:translate(-50%,-50%);font-size:11px;color:var(--color-bg);pointer-events:none">{{ n.n }}</strong>
+              <span style="position:absolute;left:{{ n.left }};top:{{ n.subTop }};transform:translate(-50%,-50%);font-size:9.5px;color:var(--color-neutral-700);white-space:nowrap;pointer-events:none">{{ n.sub }}</span>
+            </sc-for>
+          </div>
+          <div style="margin-top:10px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.65">{{ gDetail }}</div>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Set depth 1 and click the root. Its split is exactly what <strong>Jump to the best split</strong> found in part ①.</li>
+          <li>Raise the depth one step at a time. Each new cut lives only inside its parent's box, which is why the regions are axis-aligned rectangles.</li>
+          <li>At depth 6, click the smallest leaves. Many hold one or two points: the tree has carved out boxes for single points in the overlap.</li>
+          <li>Now raise the minimum points per leaf. Those tiny boxes disappear and the tree gets simpler, at the cost of a little training error.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why greedy, one node at a time?</summary>
+          <p style="margin:8px 0 0">Finding the best tree overall is NP-complete, so CART does not try. It makes the locally best split at each node and never goes back. That is fast (sort each feature, scan the thresholds), but a split that looks poor now and would set up great splits later is never chosen.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="ctwrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">18.1</span>
+        <h2 style="margin:0">Recap: one split, step by step</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Step</th><th>Formula</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Split</td><td>D<sub>L</sub> = {x<sub>nj</sub> ≤ t}, D<sub>R</sub> = {x<sub>nj</sub> &gt; t}</td><td>Feature j, threshold t ∈ T<sub>j</sub></td></tr>
+            <tr><td>Class shares</td><td>π̂<sub>c</sub> = N<sub>c</sub> / |D|</td><td>Fraction of the node in class c</td></tr>
+            <tr><td>Gini</td><td>G = 1 − Σ<sub>c</sub> π̂<sub>c</sub>²</td><td>0 = pure; 2/3 = three even classes</td></tr>
+            <tr><td>Entropy</td><td>H = −Σ<sub>c</sub> π̂<sub>c</sub> log π̂<sub>c</sub></td><td>The other common choice; ranks splits much like Gini</td></tr>
+            <tr><td>Cost</td><td>|D<sub>L</sub>|/|D| · c(D<sub>L</sub>) + |D<sub>R</sub>|/|D| · c(D<sub>R</sub>)</td><td>Pick the (j, t) that minimises it</td></tr>
+            <tr><td>Grow</td><td>Recurse on D<sub>L</sub> and D<sub>R</sub></td><td>Stop when pure, too deep, or too small</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 16.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 15);
+</script>
+</body></html>
