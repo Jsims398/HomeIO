@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boosting · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/boost-math.js"></script>
+<script src="../logic/boost-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
+      <button sc-camel-on-click="{{ goT15 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t15Bg }};color:{{ t15Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 15 · Decision trees</span>
+        <span style="font-size:11px;opacity:.85">§18.1</span>
+      </button>
+      <button sc-camel-on-click="{{ goT16 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t16Bg }};color:{{ t16Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 16 · Boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.1 – 18.5.4</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT16 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#bsrecipe" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;The recipe</a>
+        <a href="#bsls" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;Least squares</a>
+        <a href="#bsada" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">③ &nbsp;AdaBoost</a>
+        <a href="#bslogit" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">④ &nbsp;LogitBoost</a>
+        <a href="#bswrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT16 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic16" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 16</span>
+        <span class="tag tag-accent-2">Murphy, PML — §18.5.1 – 18.5.4</span>
+        <span class="tag tag-outline">Boosting</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:21ch;text-wrap:pretty">Many weak learners, added one at a time</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">Boosting builds a strong model as a sum <strong>f(x) = Σ<sub>m</sub> β<sub>m</sub> F<sub>m</sub>(x)</strong> of weak ones. Here every F<sub>m</sub> is a <em>stump</em>: a tree with a single split. Each round adds one new term aimed at what the current sum still gets wrong. Least squares boosting, AdaBoost and LogitBoost all follow the same recipe; they differ only in the <strong>loss</strong>, and the loss decides what "still gets wrong" means.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+        <a href="#bsrecipe" class="tag tag-outline" style="text-decoration:none">① The recipe (§18.5.1)</a>
+        <a href="#bsls" class="tag tag-outline" style="text-decoration:none">② Squared loss → residuals (§18.5.2)</a>
+        <a href="#bsada" class="tag tag-outline" style="text-decoration:none">③ Exponential loss → AdaBoost (§18.5.3)</a>
+        <a href="#bslogit" class="tag tag-outline" style="text-decoration:none">④ Log loss → LogitBoost (§18.5.4)</a>
+      </div>
+    </header>
+
+    <!-- ================= ① the recipe ================= -->
+    <section id="bsrecipe" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">①</span>
+        <h2 style="margin:0">The recipe: forward stagewise additive modelling</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+        <div class="card elev-sm" style="background:var(--color-neutral-200)">
+          <div class="card-kicker">Step 0 · start simple</div>
+          <div class="card-title">f<sub>0</sub>(x) = argmin<sub>γ</sub> Σ<sub>i</sub> ℓ(y<sub>i</sub>, γ)</div>
+          <p class="card-body">The best constant. For squared loss that is the mean ȳ; for the two classification losses below it is 0 when the classes are balanced ("no idea yet").</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-100)">
+          <div class="card-kicker">Step 1 · fit one new term</div>
+          <div class="card-title">(β<sub>m</sub>, θ<sub>m</sub>) = argmin<sub>β, θ</sub> Σ<sub>i</sub> ℓ(y<sub>i</sub>, f<sub>m−1</sub>(x<sub>i</sub>) + β F(x<sub>i</sub>; θ))</div>
+          <p class="card-body">Search only over the new learner F (its split θ) and its size β. Everything already in the model stays frozen.</p>
+        </div>
+        <div class="card elev-sm" style="background:var(--color-accent-2-100)">
+          <div class="card-kicker">Step 2 · add it and repeat</div>
+          <div class="card-title">f<sub>m</sub>(x) = f<sub>m−1</sub>(x) + β<sub>m</sub> F(x; θ<sub>m</sub>)</div>
+          <p class="card-body">Then go back to step 1 for round m + 1. Optional <em>shrinkage</em>: add ν β<sub>m</sub> F<sub>m</sub> with 0 &lt; ν ≤ 1 to take smaller steps.</p>
+        </div>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">"Stagewise" means old terms are never refit. Each round solves one small problem (pick one stump) instead of one huge joint problem (pick all M stumps at once). Step 1 is the only part that depends on the loss, and for each common loss it turns into something familiar:</p>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Loss</th><th>ℓ(y, f)</th><th>Step 1 becomes…</th><th>Walkthrough</th></tr></thead>
+          <tbody>
+            <tr><td>Squared</td><td>(y − f)²</td><td>fit F to the residuals r = y − f</td><td><a href="#bsls">② least squares boosting</a></td></tr>
+            <tr><td>Exponential</td><td>exp(−ỹ f)</td><td>fit F to reweighted data, ω<sub>i</sub> ∝ exp(−ỹ<sub>i</sub> f(x<sub>i</sub>))</td><td><a href="#bsada">③ AdaBoost</a></td></tr>
+            <tr><td>Log loss</td><td>log(1 + e<sup>−2ỹf</sup>)</td><td>fit F by weighted least squares to "working responses" z (a Newton step)</td><td><a href="#bslogit">④ LogitBoost</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="max-width:64ch;font-size:14px;line-height:1.6;color:var(--color-neutral-700);margin-top:12px">Notation: for classification the labels are ỹ ∈ {−1, +1}, and y* = (ỹ + 1)/2 ∈ {0, 1} is the same label written as 0/1. The product ỹ f(x) is the <em>margin</em>: positive means the point is on the right side, and bigger means more confident.</p>
+    </section>
+
+    <!-- ================= ② least squares boosting ================= -->
+    <section id="bsls" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">②</span>
+        <h2 style="margin:0">Squared loss: each round fits the residuals</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">24 noisy points from a wavy curve. The model starts flat at ȳ, and each round adds one stump. Press <strong>Next step</strong> to walk through a round one step at a time; the step cards fill in with the real numbers. Click any point to follow its own arithmetic.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ lBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ lNext }}" style="font-size:13px">{{ lNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ lSkip }}" style="font-size:13px">+5 rounds</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ lReset }}" style="font-size:13px">Reset</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ lResample }}" style="font-size:13px">New sample</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ lLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:13px;font-weight:600">Data and the model f(x)</div>
+            <svg sc-camel-view-box="0 0 560 240" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Data points with the current boosted model, a step function, and residual sticks from the model to each point">
+              <g stroke="var(--color-divider)" stroke-width="1"><line x1="36" y1="216" x2="548" y2="216"></line><line x1="36" y1="157.7" x2="548" y2="157.7"></line><line x1="36" y1="99.4" x2="548" y2="99.4"></line><line x1="36" y1="41.1" x2="548" y2="41.1"></line></g>
+              <g font-size="10" fill="var(--color-neutral-500)"><text x="28" y="219" text-anchor="end">0</text><text x="28" y="160.7" text-anchor="end">2</text><text x="28" y="102.4" text-anchor="end">4</text><text x="28" y="44.1" text-anchor="end">6</text><text x="36" y="234" text-anchor="middle">0</text><text x="138.4" y="234" text-anchor="middle">2</text><text x="240.8" y="234" text-anchor="middle">4</text><text x="343.2" y="234" text-anchor="middle">6</text><text x="445.6" y="234" text-anchor="middle">8</text><text x="548" y="234" text-anchor="middle">10</text></g>
+              <sc-for list="{{ lSticks }}" as="k" hint-placeholder-count="24">
+                <line x1="{{ k.x1 }}" y1="{{ k.y1 }}" x2="{{ k.x2 }}" y2="{{ k.y2 }}" stroke="var(--color-accent-2-600)" stroke-width="1.8" opacity=".85"></line>
+              </sc-for>
+              <path d="{{ lOld }}" fill="none" stroke="var(--color-text)" stroke-width="2.2" stroke-dasharray="{{ lOldDash }}" opacity="{{ lOldOpacity }}"></path>
+              <sc-if value="{{ lShowNew }}" hint-placeholder-val="{{ false }}">
+                <path d="{{ lNew }}" fill="none" stroke="var(--color-accent)" stroke-width="3"></path>
+              </sc-if>
+              <sc-for list="{{ lDots }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5" fill="#4f6d8a" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin-left:6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-text)"></span>f<sub>m−1</sub> (model so far)</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent)"></span>f<sub>m</sub> (after this round)</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:3px;height:14px;background:var(--color-accent-2-600)"></span>residual r<sub>i</sub></span>
+            </div>
+            <div style="font-size:13px;font-weight:600;margin-top:6px">{{ lResTitle }}</div>
+            <svg sc-camel-view-box="0 0 560 170" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Residuals of each point around zero, with the stump fitted to them">
+              <g stroke="var(--color-divider)" stroke-width="1"><line x1="36" y1="37.7" x2="548" y2="37.7"></line><line x1="36" y1="132.3" x2="548" y2="132.3"></line></g>
+              <line x1="36" y1="85" x2="548" y2="85" stroke="var(--color-neutral-500)" stroke-width="1.2"></line>
+              <g font-size="10" fill="var(--color-neutral-500)"><text x="28" y="40.7" text-anchor="end">+2</text><text x="28" y="88" text-anchor="end">0</text><text x="28" y="135.3" text-anchor="end">−2</text></g>
+              <sc-if value="{{ lShowStump }}" hint-placeholder-val="{{ false }}">
+                <line x1="{{ lCutX }}" y1="10" x2="{{ lCutX }}" y2="160" stroke="var(--color-text)" stroke-width="1.4" stroke-dasharray="5 4"></line>
+                <sc-for list="{{ lStumpSegs }}" as="g" hint-placeholder-count="2">
+                  <line x1="{{ g.x1 }}" y1="{{ g.y }}" x2="{{ g.x2 }}" y2="{{ g.y }}" stroke="var(--color-accent)" stroke-width="3.2"></line>
+                </sc-for>
+              </sc-if>
+              <sc-for list="{{ lRes }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4.5" fill="var(--color-accent-2-600)" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>Shrinkage ν (step size)</span><strong>ν = {{ lNuText }}</strong></div>
+              <input type="range" min="0.1" max="1" step="0.1" value="{{ lNu }}" sc-camel-on-change="{{ lOnNu }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Shrinkage nu">
+            </div>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ lCards }}" as="s" hint-placeholder-count="3">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Stumps in f</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ lRounds }}</div>
+              </div>
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">{{ lMseLabel }}</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ lMse }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.65">
+          <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">Follow one point (click a dot to change it)</div>
+          {{ lInspect }}
+        </div>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ lNote }}</p>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Step slowly through rounds 1 to 3. The stump always cuts where the residuals flip from mostly positive to mostly negative.</li>
+          <li>Press <strong>+5 rounds</strong> a few times. The training MSE keeps falling toward 0: late stumps are chasing single noisy points.</li>
+          <li>Set ν = 0.3 and press <strong>Reset</strong>. Each round now moves only 30% of the way, so the curve creeps up on the data.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Where did β go?</summary>
+          <p style="margin:8px 0 0">For squared loss the stump's two leaf values are already the best amounts to add (the mean residual on each side), so β can be folded into F and set to 1. Only ν, if you use shrinkage, scales the step.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ③ AdaBoost ================= -->
+    <section id="bsada" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">③</span>
+        <h2 style="margin:0">Exponential loss: AdaBoost reweights the data</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Now a two-class problem with labels ỹ ∈ {−1, +1}. Each weak learner is a stump that answers +1 or −1. Every point carries a weight ω (the dot size). Dashed rings mark the points the current stump gets wrong. The shading shows sign(f), stronger where |f| is bigger; during steps 2 and 3 it shows the new stump on its own.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ aBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ aNext }}" style="font-size:13px">{{ aNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ aSkip }}" style="font-size:13px">+5 rounds</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ aReset }}" style="font-size:13px">Reset</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ oToggle }}" style="font-size:13px">{{ oLabel }}</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ aLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 280px;min-width:0;max-width:420px">
+            <svg sc-camel-view-box="0 0 300 300" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Two classes of points sized by their AdaBoost weight, with the current stump or the boosted model's regions shaded">
+              <sc-for list="{{ aRects }}" as="r" hint-placeholder-count="2">
+                <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" opacity="{{ r.opacity }}"></rect>
+              </sc-for>
+              <g font-size="9" fill="var(--color-neutral-500)"><text x="60" y="296" text-anchor="middle">2</text><text x="120" y="296" text-anchor="middle">4</text><text x="180" y="296" text-anchor="middle">6</text><text x="240" y="296" text-anchor="middle">8</text><text x="4" y="243">2</text><text x="4" y="183">4</text><text x="4" y="123">6</text><text x="4" y="63">8</text></g>
+              <sc-if value="{{ aShowCut }}" hint-placeholder-val="{{ false }}">
+                <line x1="{{ aCut.x1 }}" y1="{{ aCut.y1 }}" x2="{{ aCut.x2 }}" y2="{{ aCut.y2 }}" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="6 4"></line>
+              </sc-if>
+              <sc-for list="{{ aDots }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="{{ p.fill }}" fill-opacity=".9" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}" stroke-dasharray="{{ p.dash }}" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>ỹ = +1</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#4f6d8a"></span>ỹ = −1</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;border:1.6px dashed var(--color-text)"></span>missed by this stump</span>
+              <span>size = weight ω</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ aCards }}" as="s" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.65">
+          <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">Follow one point (click a dot to change it)</div>
+          {{ aInspect }}
+        </div>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ aNote }}</p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;align-items:flex-start">
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent);color:var(--color-bg);min-width:150px">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">{{ aTrainLabel }}</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ aTrain }}</div>
+          </div>
+          <sc-if value="{{ aHasHist }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1 1 300px;min-width:0;overflow-x:auto">
+              <table class="table" style="font-size:13px">
+                <thead><tr><th>m</th><th>Stump F<sub>m</sub> (left side → )</th><th>err<sub>m</sub></th><th>β<sub>m</sub></th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ aHist }}" as="h" hint-placeholder-count="3">
+                    <tr><td>{{ h.m }}</td><td>{{ h.rule }}</td><td>{{ h.err }}</td><td>{{ h.beta }}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>In round 1 every dot is the same size. Step to step 4 and watch the missed points swell while the rest shrink.</li>
+          <li>Keep going. Later stumps often switch feature or move the cut: each one patches the mistakes the earlier ones left behind.</li>
+          <li>Check the β column: stumps with low err get a big say; a stump close to err = 0.5 adds almost nothing.</li>
+          <li>Press <strong>Add an outlier</strong> (a +1 point deep in the −1 corner), then <strong>+5 rounds</strong> a few times and click it. Its weight keeps growing while the stumps fail on it, and the stumps start bending toward it.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Where do err<sub>m</sub> and β<sub>m</sub> come from?</summary>
+          <p style="margin:8px 0 0">Plug exponential loss into step 1 of the recipe: Σ<sub>i</sub> exp(−ỹ<sub>i</sub>(f<sub>m−1</sub>(x<sub>i</sub>) + βF(x<sub>i</sub>))) = Σ<sub>i</sub> ω<sub>i</sub> exp(−β ỹ<sub>i</sub> F(x<sub>i</sub>)) with ω<sub>i</sub> = exp(−ỹ<sub>i</sub> f<sub>m−1</sub>(x<sub>i</sub>)). Since ỹF is +1 for a hit and −1 for a miss, this is (e<sup>β</sup> − e<sup>−β</sup>) Σ<sub>i</sub> ω<sub>i</sub> I(ỹ<sub>i</sub> ≠ F(x<sub>i</sub>)) + e<sup>−β</sup> Σ<sub>i</sub> ω<sub>i</sub>. The first term says: pick F with the smallest weighted error. Setting the derivative in β to 0 then gives β = ½ log((1 − err)/err).</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Murphy's β vs. the α in AdaBoost.M1</summary>
+          <p style="margin:8px 0 0">The classic algorithm uses α<sub>m</sub> = log((1 − err<sub>m</sub>)/err<sub>m</sub>) = 2β<sub>m</sub> and multiplies only the misses by e<sup>α</sup>. After normalising, the weights are the same as here, and sign(Σ α<sub>m</sub> F<sub>m</sub>) = sign(Σ β<sub>m</sub> F<sub>m</sub>), so it is the same classifier.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ④ LogitBoost ================= -->
+    <section id="bslogit" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">④</span>
+        <h2 style="margin:0">Log loss: LogitBoost takes Newton steps</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Exponential loss blows up for badly misclassified points, so a single outlier can dominate AdaBoost. LogitBoost swaps in log loss, the loss of logistic regression. First see why, then walk through a round.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:6px">Loss against the margin ỹ f(x), all scaled to equal 1 at margin 0</div>
+        <svg sc-camel-view-box="0 0 560 220" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Zero-one, exponential and log loss plotted against the margin">
+          <g stroke="var(--color-divider)" stroke-width="1"><line x1="36" y1="157.6" x2="548" y2="157.6"></line><line x1="36" y1="121.2" x2="548" y2="121.2"></line><line x1="36" y1="84.8" x2="548" y2="84.8"></line><line x1="36" y1="48.4" x2="548" y2="48.4"></line><line x1="292" y1="12" x2="292" y2="194"></line></g>
+          <line x1="36" y1="194" x2="548" y2="194" stroke="var(--color-neutral-500)" stroke-width="1.2"></line>
+          <g font-size="10" fill="var(--color-neutral-500)"><text x="28" y="197" text-anchor="end">0</text><text x="28" y="160.6" text-anchor="end">1</text><text x="28" y="124.2" text-anchor="end">2</text><text x="28" y="87.8" text-anchor="end">3</text><text x="28" y="51.4" text-anchor="end">4</text><text x="36" y="212" text-anchor="middle">−3</text><text x="121.3" y="212" text-anchor="middle">−2</text><text x="206.7" y="212" text-anchor="middle">−1</text><text x="292" y="212" text-anchor="middle">0</text><text x="377.3" y="212" text-anchor="middle">1</text><text x="462.7" y="212" text-anchor="middle">2</text><text x="548" y="212" text-anchor="middle">3</text><text x="150" y="30" text-anchor="middle">wrong side</text><text x="430" y="30" text-anchor="middle">right side</text></g>
+          <path d="{{ xZero }}" fill="none" stroke="var(--color-neutral-600)" stroke-width="2.2"></path>
+          <path d="{{ xExp }}" fill="none" stroke="#4f6d8a" stroke-width="2.8"></path>
+          <path d="{{ xLog }}" fill="none" stroke="var(--color-accent)" stroke-width="2.8"></path>
+          <line x1="{{ xMarkX }}" y1="12" x2="{{ xMarkX }}" y2="194" stroke="var(--color-text)" stroke-width="1.4" stroke-dasharray="4 3"></line>
+          <sc-for list="{{ xDots }}" as="d" hint-placeholder-count="3">
+            <circle cx="{{ d.x }}" cy="{{ d.y }}" r="5" fill="{{ d.color }}" opacity="{{ d.show }}" stroke="var(--color-surface)" stroke-width="1.4"></circle>
+          </sc-for>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-neutral-600)"></span>0-1 loss (what we really care about)</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:#4f6d8a"></span>exponential e<sup>−ỹf</sup> (AdaBoost)</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent)"></span>log loss log₂(1 + e<sup>−2ỹf</sup>) (LogitBoost)</span>
+        </div>
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Margin ỹ f(x)</span><strong>{{ xMText }}</strong></div>
+          <input type="range" min="-3" max="3" step="0.05" value="{{ xM }}" sc-camel-on-change="{{ xOnM }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Margin">
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:10px">
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">0-1 loss</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ xValZero }}</div>
+          </div>
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-neutral-200)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Exp loss · pull</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ xValExp }} · {{ xPullExp }}</div>
+          </div>
+          <div style="padding:12px 16px;border-radius:24px;background:var(--color-accent-100)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-800)">Log loss · pull</div>
+            <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ xValLog }} · {{ xPullLog }}</div>
+          </div>
+        </div>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ xNote }} <span style="color:var(--color-neutral-700)">("Pull" is the slope |dℓ / d margin|: how hard the next learner is pushed to fix this point.)</span></p>
+      </div>
+
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:28px 0 0">Now the algorithm, on the same data as ③ (and the same outlier, if you added it). The model is a probability, p(ỹ = +1 | x) = π(x) = 1 / (1 + e<sup>−2f(x)</sup>). Log loss has no closed-form step like AdaBoost's β, so each round takes one <strong>Newton step</strong>, and that step turns out to be a weighted least squares fit. Dashed rings mark the points the model currently puts on the wrong side; from step 2 on, dot size shows the Newton weight w.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ gBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ gNext }}" style="font-size:13px">{{ gNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ gSkip }}" style="font-size:13px">+5 rounds</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ gReset }}" style="font-size:13px">Reset</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ oToggle }}" style="font-size:13px">{{ oLabel }}</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ gLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 280px;min-width:0;max-width:420px">
+            <svg sc-camel-view-box="0 0 300 300" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Two classes of points sized by their LogitBoost Newton weight, with the model's probability regions shaded">
+              <sc-for list="{{ gRects }}" as="r" hint-placeholder-count="2">
+                <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" opacity="{{ r.opacity }}"></rect>
+              </sc-for>
+              <g font-size="9" fill="var(--color-neutral-500)"><text x="60" y="296" text-anchor="middle">2</text><text x="120" y="296" text-anchor="middle">4</text><text x="180" y="296" text-anchor="middle">6</text><text x="240" y="296" text-anchor="middle">8</text><text x="4" y="243">2</text><text x="4" y="183">4</text><text x="4" y="123">6</text><text x="4" y="63">8</text></g>
+              <sc-if value="{{ gShowCut }}" hint-placeholder-val="{{ false }}">
+                <line x1="{{ gCut.x1 }}" y1="{{ gCut.y1 }}" x2="{{ gCut.x2 }}" y2="{{ gCut.y2 }}" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="6 4"></line>
+              </sc-if>
+              <sc-for list="{{ gDots }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="{{ p.fill }}" fill-opacity=".9" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}" stroke-dasharray="{{ p.dash }}" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>ỹ = +1 (y* = 1)</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#4f6d8a"></span>ỹ = −1 (y* = 0)</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;border:1.6px dashed var(--color-text)"></span>wrong side of f</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ gCards }}" as="s" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Log loss (bits / point)</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ gLoss }}</div>
+              </div>
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">{{ gTrainLabel }}</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ gTrain }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.65">
+          <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">Follow one point (click a dot to change it)</div>
+          {{ gInspect }}
+        </div>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ gNote }}</p>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Round 1: every π = 0.5, so every w = 0.25 and every z = ±2. The first stump is a plain least squares fit to ±2 targets.</li>
+          <li>After a few rounds, click a point far from the boundary. π is close to its label, w is tiny, and it hardly affects the next stump.</li>
+          <li>On the loss chart, slide the margin to −3. Exponential loss pulls about 7× harder than log loss on that point.</li>
+          <li>Add the outlier, run ten rounds here and in ③, and click it in both. Compare its share of the weight ω in AdaBoost with its pull w · z = y* − π here, which can never pass 1.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why is the Newton step a weighted least squares fit?</summary>
+          <p style="margin:8px 0 0">Expand the log loss around the current f to second order. At each point the slope is g<sub>i</sub> ∝ π<sub>i</sub> − y*<sub>i</sub> and the curvature is h<sub>i</sub> ∝ π<sub>i</sub>(1 − π<sub>i</sub>) = w<sub>i</sub>. A quadratic Σ<sub>i</sub> (g<sub>i</sub> F<sub>i</sub> + ½ h<sub>i</sub> F<sub>i</sub>²) is, up to a constant, ½ Σ<sub>i</sub> w<sub>i</sub>(z<sub>i</sub> − F<sub>i</sub>)² with z<sub>i</sub> = −g<sub>i</sub>/h<sub>i</sub> = (y*<sub>i</sub> − π<sub>i</sub>)/w<sub>i</sub>. So minimising the local approximation is exactly a weighted least squares fit of F to z. The ½ in step 4 undoes the 2 in π = σ(2f).</p>
+        </details>
+        <details style="margin-top:6px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why clip z?</summary>
+          <p style="margin:8px 0 0">When π is very close to 0 or 1, w = π(1 − π) is tiny and z = (y* − π)/w can be huge for a point on the wrong side. Its weight is tiny too, so in exact arithmetic it barely matters, but numerically it is safer to cap z (here at ±4, a common choice).</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="bswrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">18.5</span>
+        <h2 style="margin:0">Recap: one recipe, three losses</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Method</th><th>Loss</th><th>Each round fits a stump to…</th><th>…then adds</th></tr></thead>
+          <tbody>
+            <tr><td>Forward stagewise (§18.5.1)</td><td>any ℓ</td><td>argmin<sub>β, F</sub> Σ ℓ(y<sub>i</sub>, f<sub>m−1</sub>(x<sub>i</sub>) + βF(x<sub>i</sub>))</td><td>β<sub>m</sub> F<sub>m</sub>, never revisiting old terms</td></tr>
+            <tr><td>Least squares boosting (§18.5.2)</td><td>(y − f)²</td><td>the residuals r<sub>i</sub> = y<sub>i</sub> − f<sub>m−1</sub>(x<sub>i</sub>)</td><td>ν F<sub>m</sub></td></tr>
+            <tr><td>AdaBoost (§18.5.3)</td><td>e<sup>−ỹf</sup></td><td>the labels, weighted by ω<sub>i</sub> ∝ e<sup>−ỹ<sub>i</sub> f<sub>m−1</sub>(x<sub>i</sub>)</sup> (min weighted error)</td><td>β<sub>m</sub> F<sub>m</sub>, β<sub>m</sub> = ½ log((1 − err<sub>m</sub>)/err<sub>m</sub>)</td></tr>
+            <tr><td>LogitBoost (§18.5.4)</td><td>log(1 + e<sup>−2ỹf</sup>)</td><td>z<sub>i</sub> = (y*<sub>i</sub> − π<sub>i</sub>)/w<sub>i</sub>, weighted by w<sub>i</sub> = π<sub>i</sub>(1 − π<sub>i</sub>)</td><td>½ F<sub>m</sub></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 17.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 16);
+</script>
+</body></html>
