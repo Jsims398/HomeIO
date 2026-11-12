@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gradient boosting · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/boost-math.js"></script>
+<script src="../logic/gb-math.js"></script>
+<script src="../logic/walkthrough.js"></script>
+<script src="../logic/gbi-view.js"></script>
+<script src="../logic/gb-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
+      <button sc-camel-on-click="{{ goT15 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t15Bg }};color:{{ t15Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 15 · Decision trees</span>
+        <span style="font-size:11px;opacity:.85">§18.1</span>
+      </button>
+      <button sc-camel-on-click="{{ goT16 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t16Bg }};color:{{ t16Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 16 · Boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.1 – 18.5.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT17 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t17Bg }};color:{{ t17Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 17 · Gradient boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.5, 18.6</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT17 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#gbgrad" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;Gradient boosting</a>
+        <a href="#gbxgb" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;XGBoost</a>
+        <a href="#gbimp" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">③ &nbsp;Feature importance</a>
+        <a href="#gbpdp" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">④ &nbsp;Partial dependence</a>
+        <a href="#gbwrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT17 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic17" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 17</span>
+        <span class="tag tag-accent-2">Murphy, PML — §18.5.5, 18.6</span>
+        <span class="tag tag-outline">Gradient boosting</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:22ch;text-wrap:pretty">Boosting for any loss, and reading what the trees learned</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)"><strong>Gradient boosting</strong> fits each new tree to the <em>negative gradient</em> of the loss, so one recipe works for any loss. <strong>XGBoost</strong> adds second derivatives and a penalty on tree size. Then two ways to look inside the finished model: <strong>feature importance</strong> and <strong>partial dependence</strong>.</p>
+    </header>
+
+    <!-- ================= ① gradient tree boosting ================= -->
+    <section id="gbgrad" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">①</span>
+        <h2 style="margin:0">Gradient boosting: fit each tree to the negative gradient</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Each round, compute −∂ℓ/∂f at every training point (the <em>pseudo-residual</em>) and fit a tree to it. Only that gradient depends on the loss:</p>
+      <div style="overflow-x:auto;margin-top:14px">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Loss ℓ(y, f)</th><th>−∂ℓ/∂f</th></tr></thead>
+          <tbody>
+            <tr><td>Squared ½(y − f)²</td><td>y − f</td></tr>
+            <tr><td>Absolute |y − f|</td><td>sign(y − f)</td></tr>
+            <tr><td>Exponential exp(−ỹ f)</td><td>ỹ exp(−ỹ f)</td></tr>
+            <tr><td>Log loss log(1 + e<sup>−ỹf</sup>)</td><td>y − π</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button sc-camel-on-click="{{ gbSq }}" style="border:0;cursor:pointer;font-family:var(--font-body);font-size:13px;padding:8px 14px;border-radius:999px;background:{{ gbSqBg }};color:{{ gbSqFg }}">Squared loss</button>
+          <button sc-camel-on-click="{{ gbAbs }}" style="border:0;cursor:pointer;font-family:var(--font-body);font-size:13px;padding:8px 14px;border-radius:999px;background:{{ gbAbsBg }};color:{{ gbAbsFg }}">Absolute loss</button>
+          <span style="width:12px"></span>
+          <button class="btn btn-secondary" sc-camel-on-click="{{ gbBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ gbNext }}" style="font-size:13px">{{ gbNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ gbReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ gbLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <svg sc-camel-view-box="0 0 560 240" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Data points with the current boosted model">
+              <g stroke="var(--color-divider)" stroke-width="1"><line x1="36" y1="216" x2="548" y2="216"></line><line x1="36" y1="157.7" x2="548" y2="157.7"></line><line x1="36" y1="99.4" x2="548" y2="99.4"></line><line x1="36" y1="41.1" x2="548" y2="41.1"></line></g>
+              <g font-size="10" fill="var(--color-neutral-500)"><text x="28" y="219" text-anchor="end">0</text><text x="28" y="160.7" text-anchor="end">2</text><text x="28" y="102.4" text-anchor="end">4</text><text x="28" y="44.1" text-anchor="end">6</text><text x="36" y="234" text-anchor="middle">0</text><text x="138.4" y="234" text-anchor="middle">2</text><text x="240.8" y="234" text-anchor="middle">4</text><text x="343.2" y="234" text-anchor="middle">6</text><text x="445.6" y="234" text-anchor="middle">8</text><text x="548" y="234" text-anchor="middle">10</text></g>
+              <path d="{{ gbOld }}" fill="none" stroke="var(--color-text)" stroke-width="2.2" stroke-dasharray="{{ gbOldDash }}" opacity="{{ gbOldOpacity }}"></path>
+              <sc-if value="{{ gbShowNew }}" hint-placeholder-val="{{ false }}">
+                <path d="{{ gbNew }}" fill="none" stroke="var(--color-accent)" stroke-width="3"></path>
+              </sc-if>
+              <sc-for list="{{ gbDots }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5" fill="#4f6d8a" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+            <div style="font-size:13px;font-weight:600;margin-top:4px">{{ gbResTitle }}</div>
+            <svg sc-camel-view-box="0 0 560 170" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Pseudo-residuals or residuals of each point, with the fitted tree's leaf values">
+              <sc-for list="{{ gbTicks }}" as="t" hint-placeholder-count="3">
+                <g>
+                  <line x1="36" y1="{{ t.y }}" x2="548" y2="{{ t.y }}" stroke="var(--color-divider)" stroke-width="1"></line>
+                  <text x="28" y="{{ t.y }}" dy="3" text-anchor="end" font-size="10" fill="var(--color-neutral-500)">{{ t.label }}</text>
+                </g>
+              </sc-for>
+              <sc-if value="{{ gbShowTree }}" hint-placeholder-val="{{ false }}">
+                <sc-for list="{{ gbSegs }}" as="g" hint-placeholder-count="4">
+                  <line x1="{{ g.x1 }}" y1="{{ g.y }}" x2="{{ g.x2 }}" y2="{{ g.y }}" stroke="{{ g.color }}" stroke-width="3.4"></line>
+                </sc-for>
+              </sc-if>
+              <sc-for list="{{ gbResDots }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4.5" fill="#4f6d8a" stroke="{{ p.stroke }}" stroke-width="{{ p.sw }}" style="cursor:pointer" sc-camel-on-click="{{ p.onClick }}"></circle>
+              </sc-for>
+            </svg>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ gbCards }}" as="s" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+            <div style="padding:12px 14px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">{{ gbLossLabel }}</div>
+              <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ gbLoss }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.65">
+          <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">Follow one point (click a dot to change it)</div>
+          {{ gbInspect }}
+        </div>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ gbNote }}</p>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Squared loss: steps 2 and 3 give the same leaf values. This is least squares boosting from Topic 16.</li>
+          <li>Absolute loss: the pseudo-residuals are only ±1, and step 3 turns each leaf back into a median residual.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= ② XGBoost ================= -->
+    <section id="gbxgb" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">②</span>
+        <h2 style="margin:0">XGBoost: second-order steps and a price on every leaf</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">XGBoost minimises <strong>Σ<sub>i</sub> ℓ(y<sub>i</sub>, f(x<sub>i</sub>)) + γJ + ½λ Σ<sub>j</sub> w<sub>j</sub>²</strong>, where J is the number of leaves and w<sub>j</sub> the leaf values. It uses both the gradient g and the second derivative h of the loss. Here: two-class data, log loss with π = σ(f), depth-2 trees.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ xgBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ xgNext }}" style="font-size:13px">{{ xgNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ xgReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ xgLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 280px;min-width:0;max-width:420px;display:flex;flex-direction:column;gap:12px">
+            <svg sc-camel-view-box="0 0 300 300" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Two classes of points sized by their Hessian, with the model or the new tree's leaves shaded">
+              <sc-for list="{{ xgRects }}" as="r" hint-placeholder-count="4">
+                <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" opacity="{{ r.opacity }}"></rect>
+              </sc-for>
+              <sc-for list="{{ xgCuts }}" as="q" hint-placeholder-count="3">
+                <line x1="{{ q.x1 }}" y1="{{ q.y1 }}" x2="{{ q.x2 }}" y2="{{ q.y2 }}" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="6 4"></line>
+              </sc-for>
+              <sc-for list="{{ xgDots }}" as="p" hint-placeholder-count="24">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="{{ p.fill }}" fill-opacity=".9" stroke="var(--color-surface)" stroke-width="1.2"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin-left:6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span>y* = 1</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#4f6d8a"></span>y* = 0</span>
+              <span>size = h</span>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>λ (shrinks leaf weights)</span><strong>λ = {{ xgLambdaText }}</strong></div>
+              <input type="range" min="0" max="10" step="0.5" value="{{ xgLambda }}" sc-camel-on-change="{{ xgOnLambda }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Lambda">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>γ (cost per leaf)</span><strong>γ = {{ xgGammaText }}</strong></div>
+              <input type="range" min="0" max="3" step="0.1" value="{{ xgGamma }}" sc-camel-on-change="{{ xgOnGamma }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Gamma">
+            </div>
+          </div>
+
+          <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ xgCards }}" as="s" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-neutral-200)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Log loss</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ xgLoss }}</div>
+              </div>
+              <div style="padding:12px 14px;border-radius:24px;background:var(--color-accent);color:var(--color-bg)">
+                <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85">{{ xgTrainLabel }}</div>
+                <div style="font-family:var(--font-heading);font-size:22px;margin-top:2px">{{ xgTrain }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ xgShowTable }}" hint-placeholder-val="{{ false }}">
+          <div style="overflow-x:auto;margin-top:16px">
+            <table class="table" style="font-size:13px">
+              <thead><tr><th>Leaf</th><th>Points</th><th>G = Σ g</th><th>H = Σ h</th><th>w* = −G/(H+λ)</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ xgLeaves }}" as="q" hint-placeholder-count="4">
+                  <tr><td>{{ q.name }}</td><td>{{ q.n }}</td><td>{{ q.G }}</td><td>{{ q.H }}</td><td>{{ q.w }}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </sc-if>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ xgNote }}</p>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>At step 3, move λ from 0 to 10: every |w*| shrinks.</li>
+          <li>A few rounds in, raise γ: weak splits get pruned and the tree has fewer leaves.</li>
+        </ol>
+        <details style="margin-top:10px;font-size:14px;line-height:1.6">
+          <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Where w* and the gain come from</summary>
+          <p style="margin:8px 0 0">With ℓ(y, f + F) ≈ ℓ(y, f) + gF + ½hF², a leaf with value w costs Gw + ½(H + λ)w² + γ. The minimum is at w* = −G/(H + λ) and is worth −½G²/(H + λ) + γ. A split replaces one leaf by two, so it helps when gain = ½[G<sub>L</sub>²/(H<sub>L</sub>+λ) + G<sub>R</sub>²/(H<sub>R</sub>+λ) − G²/(H+λ)] is bigger than γ.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= ③ feature importance ================= -->
+    <section id="gbimp" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">③</span>
+        <h2 style="margin:0">Feature importance</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">A model of 100 trees can't be read tree by tree. Instead, add up how much each feature's splits reduced the loss:</p>
+      <div class="card elev-sm" style="margin-top:14px;background:var(--color-accent-100);max-width:64ch">
+        <div class="card-title">R<sub>k</sub>(T) = Σ<sub>j</sub> G<sub>j</sub> I(v<sub>j</sub> = k), &nbsp; R<sub>k</sub> = (1/M) Σ<sub>m</sub> R<sub>k</sub>(T<sub>m</sub>)</div>
+        <p class="card-body">Sum over a tree's split nodes j: v<sub>j</sub> is the feature split on, G<sub>j</sub> the loss reduction. Average over the M trees, then scale so the top feature is 100.</p>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:16px 0 0">Data with a known answer: <strong>y = 2 sin(0.6 x<sub>1</sub>) + 0.3 x<sub>2</sub> + 1·[x<sub>3</sub> &gt; 6] + noise</strong>, and x<sub>4</sub> is pure noise.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Number of trees M</span><strong>M = {{ fiMText }}</strong></div>
+          <input type="range" min="1" max="100" step="1" value="{{ fiM }}" sc-camel-on-change="{{ fiOnM }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Number of trees">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ fiBars }}" as="b" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 52px;gap:12px;align-items:center">
+              <span style="display:flex;flex-direction:column;gap:1px"><strong style="font-size:14px">{{ b.name }}</strong><span style="font-size:11.5px;color:var(--color-neutral-700)">true effect: {{ b.truth }}</span></span>
+              <span style="height:16px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden"><span style="display:block;height:100%;border-radius:999px;background:var(--color-accent);transition:width .2s ease;width:{{ b.w }}%"></span></span>
+              <span style="font-family:var(--font-heading);font-size:16px;text-align:right">{{ b.val }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Slide M from 1 to 100. The ranking x<sub>1</sub> &gt; x<sub>2</sub> &gt; x<sub>3</sub> &gt; x<sub>4</sub> matches the true effects.</li>
+          <li>x<sub>4</sub> never reaches exactly 0: late trees make small splits on noise.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= ④ partial dependence ================= -->
+    <section id="gbpdp" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">④</span>
+        <h2 style="margin:0">Partial dependence plots</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Importance says <em>which</em> features matter; partial dependence shows <em>how</em>. Fix feature k at a value, average the prediction over the other features in the training set:</p>
+      <div class="card elev-sm" style="margin-top:14px;background:var(--color-accent-100);max-width:64ch">
+        <div class="card-title">f̄<sub>k</sub>(x<sub>k</sub>) = (1/N) Σ<sub>n</sub> f(x<sub>k</sub>, x<sub>n,−k</sub>)</div>
+        <p class="card-body">Same model as ③, using its first {{ pdMText }} trees.</p>
+      </div>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <span style="font-size:13px;margin-right:4px">Feature:</span>
+          <sc-for list="{{ pdFeats }}" as="b" hint-placeholder-count="4">
+            <button sc-camel-on-click="{{ b.onClick }}" style="border:0;cursor:pointer;font-family:var(--font-body);font-size:13px;padding:8px 14px;border-radius:999px;background:{{ b.bg }};color:{{ b.fg }}">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <svg sc-camel-view-box="0 0 560 260" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Partial dependence curve of the model on the chosen feature, with the true effect">
+          <g stroke="var(--color-divider)" stroke-width="1"><line x1="36" y1="213.6" x2="548" y2="213.6"></line><line x1="36" y1="168.8" x2="548" y2="168.8"></line><line x1="36" y1="124" x2="548" y2="124"></line><line x1="36" y1="79.2" x2="548" y2="79.2"></line><line x1="36" y1="34.4" x2="548" y2="34.4"></line></g>
+          <g font-size="10" fill="var(--color-neutral-500)"><text x="28" y="216.6" text-anchor="end">−2</text><text x="28" y="171.8" text-anchor="end">0</text><text x="28" y="127" text-anchor="end">2</text><text x="28" y="82.2" text-anchor="end">4</text><text x="28" y="37.4" text-anchor="end">6</text><text x="36" y="252" text-anchor="middle">0</text><text x="138.4" y="252" text-anchor="middle">2</text><text x="240.8" y="252" text-anchor="middle">4</text><text x="343.2" y="252" text-anchor="middle">6</text><text x="445.6" y="252" text-anchor="middle">8</text><text x="548" y="252" text-anchor="middle">10</text></g>
+          <path d="{{ pdTruth }}" fill="none" stroke="var(--color-text)" stroke-width="1.8" stroke-dasharray="6 4"></path>
+          <path d="{{ pdPath }}" fill="none" stroke="var(--color-accent)" stroke-width="3.2"></path>
+          <line x1="{{ pdMarkX }}" y1="12" x2="{{ pdMarkX }}" y2="236" stroke="var(--color-text)" stroke-width="1.2" stroke-dasharray="3 3"></line>
+          <circle cx="{{ pdMarkX }}" cy="{{ pdMarkY }}" r="6" fill="var(--color-accent)" stroke="var(--color-surface)" stroke-width="2"></circle>
+        </svg>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin:6px 0 0 6px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--color-accent)"></span>partial dependence f̄<sub>k</sub></span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:0;border-top:2px dashed var(--color-text)"></span>true effect (shifted to the same level)</span>
+        </div>
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>Value of {{ pdName }}</span><strong>{{ pdName }} = {{ pdVText }}</strong></div>
+          <input type="range" min="0" max="10" step="0.25" value="{{ pdV }}" sc-camel-on-change="{{ pdOnV }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Feature value">
+        </div>
+        <div style="margin-top:14px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100);font-size:14px;line-height:1.65">
+          <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">One point of the curve</div>
+          {{ pdInspect }}
+        </div>
+      </div>
+
+      <div class="card elev-sm" style="margin-top:20px;background:var(--color-neutral-100)">
+        <div class="card-kicker">Try this</div>
+        <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
+          <li>Click through x<sub>1</sub> to x<sub>4</sub>: the orange curve tracks the true effect (a wave, a line, a step, flat).</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="gbwrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">18.5.5 · 18.6</span>
+        <h2 style="margin:0">Recap</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Idea</th><th>Key formula</th></tr></thead>
+          <tbody>
+            <tr><td>Gradient boosting (§18.5.5)</td><td>fit tree to r<sub>im</sub> = −∂ℓ(y<sub>i</sub>, f)/∂f at f<sub>m−1</sub>(x<sub>i</sub>)</td></tr>
+            <tr><td>Gradient tree boosting (§18.5.5.1)</td><td>γ<sub>jm</sub> = argmin<sub>γ</sub> Σ<sub>x<sub>i</sub>∈R<sub>jm</sub></sub> ℓ(y<sub>i</sub>, f<sub>m−1</sub>(x<sub>i</sub>) + γ)</td></tr>
+            <tr><td>XGBoost (§18.5.5.2)</td><td>w* = −G/(H+λ); split if gain &gt; γ</td></tr>
+            <tr><td>Feature importance (§18.6.1)</td><td>R<sub>k</sub> = (1/M) Σ<sub>m</sub> Σ<sub>j</sub> G<sub>j</sub> I(v<sub>j</sub> = k)</td></tr>
+            <tr><td>Partial dependence (§18.6.2)</td><td>f̄<sub>k</sub>(x<sub>k</sub>) = (1/N) Σ<sub>n</sub> f(x<sub>k</sub>, x<sub>n,−k</sub>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 18.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 17);
+</script>
+</body></html>

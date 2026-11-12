@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="../styles/organic.css">
 <script src="../logic/kt-math.js"></script>
 <script src="../logic/boost-math.js"></script>
+<script src="../logic/walkthrough.js"></script>
 <script src="../logic/boost-view.js"></script>
 <script src="../logic/reading-log.js"></script>
 <script src="../lib/dc-runtime.js"></script>
@@ -86,6 +87,10 @@
       <button sc-camel-on-click="{{ goT16 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t16Bg }};color:{{ t16Fg }}">
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 16 · Boosting</span>
         <span style="font-size:11px;opacity:.85">§18.5.1 – 18.5.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT17 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t17Bg }};color:{{ t17Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 17 · Gradient boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.5, 18.6</span>
       </button>
     </nav>
 
@@ -500,7 +505,7 @@
           </tbody>
         </table>
       </div>
-      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 17.</p>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: <a href="gradient-boosting.html">Topic 17 · Gradient boosting</a>.</p>
     </section>
     </sc-if>
   </main>
