@@ -1,7 +1,7 @@
 // Shared logic for every Reading Log page. Each page's inline
 // <script data-dc-script> calls createReadingLog(DCLogic, <topic number>).
 window.createReadingLog = function (DCLogic, topic) {
-const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html', 10: 'metric-learning.html', 11: 'kde.html', 12: 'gp.html', 13: 'kernel-trick.html', 14: 'kernel-machines.html', 15: 'cart.html', 16: 'boosting.html', 17: 'gradient-boosting.html' };
+const PAGES = { 1: 'probability.html', 2: 'distributions.html', 3: 'mahalanobis.html', 4: 'bias-variance.html', 5: 'roc.html', 6: 'kl.html', 7: 'mutual-info.html', 8: 'em.html', 9: 'naive-bayes.html', 10: 'metric-learning.html', 11: 'kde.html', 12: 'gp.html', 13: 'kernel-trick.html', 14: 'kernel-machines.html', 15: 'cart.html', 16: 'boosting.html', 17: 'gradient-boosting.html', 18: 'co-training.html' };
 const NB_SIZES = [4, 8, 16, 32, 64, 128, 256, 512];
 const NB_CYCLE = { yes: 'no', no: 'unk', unk: 'yes' };
 const EM_COLORS = ['#c67139', '#7a8a5e', '#4f6d8a'];
@@ -27,7 +27,8 @@ class Component extends DCLogic {
             ...(topic === 14 ? window.KMView.initState() : {}),
             ...(topic === 15 ? window.CARTView.initState() : {}),
             ...(topic === 16 ? window.BoostView.initState() : {}),
-            ...(topic === 17 ? window.GBView.initState() : {}) };
+            ...(topic === 17 ? window.GBView.initState() : {}),
+            ...(topic === 18 ? window.CTView.initState() : {}) };
 
   goTopic(n) { if (n !== this.state.topic) location.href = PAGES[n]; }
 
@@ -508,6 +509,20 @@ class Component extends DCLogic {
     };
     if (!on) return nav;
     return { ...nav, ...window.GBView.render(this) };
+  }
+
+  // ---- Topic 18: co-training (§19.3.3). View in ct-view.js, math in ct-math.js ----
+
+  t18() {
+    const on = this.state.topic === 18;
+    const nav = {
+      showT18: on,
+      goT18: () => this.goTopic(18),
+      t18Bg: on ? 'var(--color-accent)' : 'transparent',
+      t18Fg: on ? 'var(--color-bg)' : 'var(--color-text)'
+    };
+    if (!on) return nav;
+    return { ...nav, ...window.CTView.render(this) };
   }
 
   // ---- Topic 9: Naive Bayes. Pure math is in nb-math.js, which only naive-bayes.html loads ----
@@ -1123,7 +1138,7 @@ class Component extends DCLogic {
     if (s.phase === 'done') status = (s.won ? 'You won the car' : 'A goat. Bad luck') + ' \u2014 you ' + (s.choice === 'switch' ? 'switched to door ' + (finalPick + 1) : 'stayed on door ' + (s.picked + 1)) + ', and the car was behind door ' + (s.car + 1) + '.';
 
     return {
-      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(), ...this.t10(), ...this.t11(), ...this.t12(), ...this.t13(), ...this.t14(), ...this.t15(), ...this.t16(), ...this.t17(),
+      ...this.t2(), ...this.t3(), ...this.t4(), ...this.t5(), ...this.t6(), ...this.t7(), ...this.t8(), ...this.t9(), ...this.t10(), ...this.t11(), ...this.t12(), ...this.t13(), ...this.t14(), ...this.t15(), ...this.t16(), ...this.t17(), ...this.t18(),
       doors, status, round: s.round,
       deciding: s.phase === 'decide', finished: s.phase === 'done',
       pickedNum: s.picked === null ? '' : s.picked + 1,
