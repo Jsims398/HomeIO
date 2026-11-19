@@ -332,3 +332,13 @@ textarea.input { min-height: 90px; resize: vertical; }
 body{margin:0}
 a{color:var(--color-accent)}
 a:hover{color:var(--color-accent-700)}
+
+/* Exam-notes cards: hand-worked 4-point examples under each section */
+.notes { margin-top: 20px; padding: clamp(18px, 3vw, 28px); border-radius: 36px; background: var(--color-neutral-100); border: 2px dashed var(--color-accent-300); }
+.notes h3 { margin: 4px 0 6px; font-size: 19px; }
+.notes h4 { margin: 18px 0 4px; font-size: 15px; color: var(--color-accent-700); }
+.notes p, .notes li { font-size: 14.5px; line-height: 1.7; }
+.notes ol { margin: 6px 0 0; padding-left: 22px; }
+.notes li { margin-bottom: 4px; }
+.notes .m { font-variant-numeric: tabular-nums; box-decoration-break: clone; -webkit-box-decoration-break: clone; background: var(--color-accent-100); padding: 1px 6px; border-radius: 6px; }
+.notes .say { margin: 14px 0 0; padding: 10px 14px; border-radius: 16px; background: var(--color-accent-2-100); }

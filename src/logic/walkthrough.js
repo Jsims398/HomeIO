@@ -46,8 +46,21 @@ window.Walkthrough = (function () {
     };
   }
 
+  // a single pass of steps with no rounds (Topic 19): xNext, xBack, xReset, xLabel, xNextLabel, xCards
+  function steps(c, key, prefix, phases) {
+    const p = c.state[key].p, last = p + 1 >= phases.length;
+    return {
+      [prefix + 'Next']: () => { if (!last) patch(c, key, { p: p + 1 }); },
+      [prefix + 'Back']: () => { if (p > 0) patch(c, key, { p: p - 1 }); },
+      [prefix + 'Reset']: () => patch(c, key, { p: 0 }),
+      [prefix + 'Label']: 'Step ' + (p + 1) + ' of ' + phases.length,
+      [prefix + 'NextLabel']: last ? 'Done ✓' : 'Next step →',
+      [prefix + 'Cards']: stepCards(c, key, phases)
+    };
+  }
+
   // the inspector text grows one sentence per step reached
   const upTo = (p, sentences) => sentences.slice(0, p + 1).join(' ');
 
-  return { patch, bindings, upTo };
+  return { patch, bindings, steps, upTo };
 })();

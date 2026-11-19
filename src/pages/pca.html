@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCA · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/pca-math.js"></script>
+<script src="../logic/walkthrough.js"></script>
+<script src="../logic/pca-intro-view.js"></script>
+<script src="../logic/pca-comp-view.js"></script>
+<script src="../logic/pca-choose-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
+      <button sc-camel-on-click="{{ goT15 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t15Bg }};color:{{ t15Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 15 · Decision trees</span>
+        <span style="font-size:11px;opacity:.85">§18.1</span>
+      </button>
+      <button sc-camel-on-click="{{ goT16 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t16Bg }};color:{{ t16Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 16 · Boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.1 – 18.5.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT17 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t17Bg }};color:{{ t17Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 17 · Gradient boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.5, 18.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT18 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t18Bg }};color:{{ t18Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 18 · Co-training</span>
+        <span style="font-size:11px;opacity:.85">§19.3.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT19 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t19Bg }};color:{{ t19Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
+        <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT19 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#pcahand" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;PCA by hand</a>
+        <a href="#pcacomp" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;Computing it in practice</a>
+        <a href="#pcachoose" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">③ &nbsp;How many dimensions?</a>
+        <a href="#pcawrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT19 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic19" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 19</span>
+        <span class="tag tag-accent-2">Murphy, PML — §20.1.1, 20.1.3, 20.1.4</span>
+        <span class="tag tag-outline">Dimensionality reduction</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:22ch;text-wrap:pretty">PCA, one step at a time</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)"><strong>Principal components analysis</strong> finds the L directions w<sub>1</sub>, …, w<sub>L</sub> along which the data varies most, and describes each point x by its coordinates z = Wᵀ(x − μ) along them. Three walkthroughs, each with numbers small enough to check by hand: ① do PCA on six points, ② the practical issues in computing it, ③ how to pick L.</p>
+    </header>
+
+    <!-- ================= ① PCA by hand (§20.1.1) ================= -->
+    <section id="pcahand" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">① · 20.1.1</span>
+        <h2 style="margin:0">PCA by hand: 2-D down to 1-D</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Six points in the plane. We want one number per point instead of two. Press <strong>Next step</strong> and watch the table at the bottom fill in.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ piBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ piNext }}" style="font-size:13px">{{ piNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ piReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ piLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 300px;min-width:0;max-width:440px;display:flex;flex-direction:column;gap:10px">
+            <svg sc-camel-view-box="0 0 400 400" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Six points, their mean, covariance ellipse, eigenvectors, and projection onto a line">
+              <sc-for list="{{ piGridX }}" as="g" hint-placeholder-count="5">
+                <g>
+                  <line x1="{{ g.x }}" y1="{{ g.y1 }}" x2="{{ g.x }}" y2="{{ g.y2 }}" stroke="var(--color-divider)" stroke-width="1"></line>
+                </g>
+              </sc-for>
+              <sc-for list="{{ piGridY }}" as="g" hint-placeholder-count="5">
+                <g>
+                  <line x1="{{ g.x1 }}" y1="{{ g.y }}" x2="{{ g.x2 }}" y2="{{ g.y }}" stroke="var(--color-divider)" stroke-width="1"></line>
+                </g>
+              </sc-for>
+              <g font-size="10" fill="var(--color-neutral-500)"><text x="40" y="376" text-anchor="middle">0</text><text x="127" y="376" text-anchor="middle">2</text><text x="214" y="376" text-anchor="middle">4</text><text x="301" y="376" text-anchor="middle">6</text><text x="388" y="376" text-anchor="middle">8</text><text x="30" y="364" text-anchor="end">0</text><text x="30" y="277" text-anchor="end">2</text><text x="30" y="190" text-anchor="end">4</text><text x="30" y="103" text-anchor="end">6</text><text x="30" y="16" text-anchor="end">8</text></g>
+              <text x="214" y="396" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)" font-weight="700">x₁</text>
+              <text x="12" y="186" text-anchor="middle" font-size="11" fill="var(--color-neutral-700)" font-weight="700" transform="rotate(-90 12 186)">x₂</text>
+
+              <sc-if value="{{ piShowEllipse }}" hint-placeholder-val="{{ false }}">
+                <ellipse cx="{{ piEll.cx }}" cy="{{ piEll.cy }}" rx="{{ piEll.rx }}" ry="{{ piEll.ry }}" transform="{{ piEll.rot }}" fill="var(--color-accent-200)" fill-opacity=".45" stroke="var(--color-accent-400)" stroke-width="1.5"></ellipse>
+              </sc-if>
+              <sc-if value="{{ piShowMean }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <sc-for list="{{ piMuAxes }}" as="a" hint-placeholder-count="2">
+                    <line x1="{{ a.x1 }}" y1="{{ a.y1 }}" x2="{{ a.x2 }}" y2="{{ a.y2 }}" stroke="var(--color-neutral-500)" stroke-width="1" stroke-dasharray="4 4"></line>
+                  </sc-for>
+                </g>
+              </sc-if>
+              <sc-if value="{{ piShowLine }}" hint-placeholder-val="{{ false }}">
+                <line x1="{{ piLine.x1 }}" y1="{{ piLine.y1 }}" x2="{{ piLine.x2 }}" y2="{{ piLine.y2 }}" stroke="var(--color-accent)" stroke-width="2.5"></line>
+              </sc-if>
+              <sc-if value="{{ piShowResid }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <sc-for list="{{ piResid }}" as="r" hint-placeholder-count="6">
+                    <line x1="{{ r.x1 }}" y1="{{ r.y1 }}" x2="{{ r.x2 }}" y2="{{ r.y2 }}" stroke="var(--color-neutral-600)" stroke-width="2"></line>
+                  </sc-for>
+                </g>
+              </sc-if>
+              <sc-if value="{{ piShowEig }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <sc-for list="{{ piArrows }}" as="a" hint-placeholder-count="2">
+                    <g>
+                      <line x1="{{ a.x1 }}" y1="{{ a.y1 }}" x2="{{ a.x2 }}" y2="{{ a.y2 }}" stroke="{{ a.color }}" stroke-width="3.5" stroke-linecap="round"></line>
+                      <circle cx="{{ a.x2 }}" cy="{{ a.y2 }}" r="4.5" fill="{{ a.color }}"></circle>
+                    </g>
+                  </sc-for>
+                  <text x="{{ piW1Lbl.x }}" y="{{ piW1Lbl.y }}" font-size="13" font-weight="700" fill="var(--color-accent-700)">w₁</text>
+                  <text x="{{ piW2Lbl.x }}" y="{{ piW2Lbl.y }}" font-size="13" font-weight="700" fill="var(--color-accent-2-700)">w₂</text>
+                </g>
+              </sc-if>
+              <sc-for list="{{ piDots }}" as="p" hint-placeholder-count="6">
+                <circle cx="{{ p.x }}" cy="{{ p.y }}" r="6.5" fill="#4f6d8a" stroke="var(--color-neutral-100)" stroke-width="1.5"></circle>
+              </sc-for>
+              <sc-if value="{{ piShowLine }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <sc-for list="{{ piProj }}" as="p" hint-placeholder-count="6">
+                    <circle cx="{{ p.x }}" cy="{{ p.y }}" r="5" fill="var(--color-neutral-100)" stroke="var(--color-accent-700)" stroke-width="2.5"></circle>
+                  </sc-for>
+                </g>
+              </sc-if>
+              <sc-if value="{{ piShowMean }}" hint-placeholder-val="{{ false }}">
+                <path d="{{ piMuPath }}" fill="none" stroke="var(--color-text)" stroke-width="3" stroke-linecap="round"></path>
+              </sc-if>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin-left:6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#4f6d8a"></span>data x_n</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:var(--color-text)">✕</span>mean μ</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;border:2.5px solid var(--color-accent-700)"></span>reconstruction x̂_n</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:2px;background:var(--color-neutral-600)"></span>what's lost</span>
+            </div>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ piCards }}" as="s" hint-placeholder-count="6">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55;white-space:pre-line">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ piShowLine }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px;padding:14px 18px;border-radius:24px;background:var(--color-neutral-100)">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Why w₁? Rotate the line yourself</div>
+              <button class="btn btn-ghost" sc-camel-on-click="{{ piSnap }}" style="font-size:12.5px;margin-left:auto">Snap to w₁</button>
+            </div>
+            <input type="range" min="0" max="179" step="1" value="{{ piAng }}" sc-camel-on-change="{{ piOnAng }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Angle of the line in degrees">
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px">
+              <div style="padding:10px 12px;border-radius:18px;background:var(--color-accent-100)"><div style="font-size:11px;color:var(--color-neutral-700)">variance of z</div><div style="font-family:var(--font-heading);font-size:20px">{{ piVar }}</div></div>
+              <div style="padding:10px 12px;border-radius:18px;background:var(--color-neutral-200)"><div style="font-size:11px;color:var(--color-neutral-700)">mean ‖x − x̂‖²</div><div style="font-family:var(--font-heading);font-size:20px">{{ piErr }}</div></div>
+              <div style="padding:10px 12px;border-radius:18px;background:var(--color-accent-2-100)"><div style="font-size:11px;color:var(--color-neutral-700)">sum (never changes)</div><div style="font-family:var(--font-heading);font-size:20px">{{ piTot }}</div></div>
+            </div>
+            <p style="margin:10px 0 0;font-size:13.5px;line-height:1.6">{{ piAngNote }} The two numbers always add up to the total variance, so <strong>maximizing variance and minimizing reconstruction error are the same problem</strong>, and the top eigenvector solves it.</p>
+          </div>
+        </sc-if>
+
+        <div style="margin-top:18px;overflow-x:auto">
+          <div style="min-width:560px;display:flex;flex-direction:column;font-size:13px;font-variant-numeric:tabular-nums">
+            <div style="display:grid;grid-template-columns:36px repeat(5,minmax(0,1fr));gap:8px;padding:8px 10px;border-bottom:1.5px solid var(--color-divider);font-size:11px;letter-spacing:.06em;color:var(--color-neutral-700)">
+              <span>n</span><span>x_n</span><span>x̃_n = x_n − μ</span><span>z_n</span><span>x̂_n</span><span>‖x_n − x̂_n‖²</span>
+            </div>
+            <sc-for list="{{ piRows }}" as="r" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:36px repeat(5,minmax(0,1fr));gap:8px;padding:7px 10px;border-bottom:1px solid var(--color-divider)">
+                <span>{{ r.n }}</span><span>{{ r.x }}</span><span>{{ r.xc }}</span><span>{{ r.z }}</span><span>{{ r.xhat }}</span><span>{{ r.err }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>PCA on 4 points, fully by hand</h3>
+        <p style="margin:0">Data: <span class="m">x₁ = (2, 4)</span> <span class="m">x₂ = (4, 2)</span> <span class="m">x₃ = (6, 8)</span> <span class="m">x₄ = (8, 6)</span>. Goal: one number per point.</p>
+        <ol>
+          <li><strong>Mean.</strong> <span class="m">μ = ((2+4+6+8)/4, (4+2+8+6)/4) = (5, 5)</span></li>
+          <li><strong>Center.</strong> Subtract μ: <span class="m">x̃ = (−3, −1), (−1, −3), (1, 3), (3, 1)</span></li>
+          <li><strong>Covariance</strong> <span class="m">Σ = (1/N) Σ x̃ x̃ᵀ</span>:
+            <span class="m">Σ₁₁ = (9+1+1+9)/4 = 5</span>, <span class="m">Σ₂₂ = (1+9+9+1)/4 = 5</span>, <span class="m">Σ₁₂ = (3+3+3+3)/4 = 3</span>, so <span class="m">Σ = [5 3 ; 3 5]</span></li>
+          <li><strong>Eigenvalues.</strong> <span class="m">det(Σ − λI) = (5 − λ)² − 3² = 0</span> → <span class="m">5 − λ = ±3</span> → <span class="m">λ₁ = 8, λ₂ = 2</span></li>
+          <li><strong>Eigenvectors.</strong> λ₁ = 8: <span class="m">(5−8)w_x + 3w_y = 0 → w_x = w_y</span> → <span class="m">w₁ = (1, 1)/√2 ≈ (0.71, 0.71)</span>.
+            λ₂ = 2: <span class="m">3w_x + 3w_y = 0</span> → <span class="m">w₂ = (1, −1)/√2</span>. Always divide by the length so ‖w‖ = 1.</li>
+          <li><strong>Encode.</strong> <span class="m">z = w₁ᵀ x̃</span>: <span class="m">(−3 − 1)/√2 = −2.83</span>, so <span class="m">z = −2.83, −2.83, 2.83, 2.83</span></li>
+          <li><strong>Decode.</strong> <span class="m">x̂ = μ + z w₁</span>: <span class="m">−2.83 · (0.71, 0.71) = (−2, −2)</span>, so <span class="m">x̂ = (3, 3), (3, 3), (7, 7), (7, 7)</span></li>
+          <li><strong>Error.</strong> <span class="m">‖x₁ − x̂₁‖² = (2−3)² + (4−3)² = 2</span>, and the same for every point, so mean error <span class="m">= 2 = λ₂</span>.
+            Variance kept: <span class="m">mean z² = 8 = λ₁</span>. Check: <span class="m">8 + 2 = 10 = trace Σ = 5 + 5</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> center the data, take the eigenvectors of the covariance, keep the ones with the biggest eigenvalues; each direction you drop costs exactly its eigenvalue in squared reconstruction error.</p>
+      </div>
+    </section>
+
+    <!-- ================= ② computational issues (§20.1.3) ================= -->
+    <section id="pcacomp" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">② · 20.1.3</span>
+        <h2 style="margin:0">Computing it in practice</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Three practical points. Steps 1–2: PCA cares about units. Steps 3–5: when there are more features than examples, use the small matrix. Step 6: you don't even need Σ, the SVD gives the same answer.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ pcBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ pcNext }}" style="font-size:13px">{{ pcNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ pcReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ pcLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 300px;min-width:0;max-width:440px;display:flex;flex-direction:column;gap:10px">
+            <sc-if value="{{ pcShowCompass }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <svg sc-camel-view-box="0 0 220 220" style="width:100%;max-width:260px;height:auto;align-self:center;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Direction of the first principal component under different units">
+                  <circle cx="110" cy="110" r="90" fill="none" stroke="var(--color-divider)" stroke-width="1.5"></circle>
+                  <line x1="14" y1="110" x2="206" y2="110" stroke="var(--color-divider)"></line>
+                  <line x1="110" y1="14" x2="110" y2="206" stroke="var(--color-divider)"></line>
+                  <text x="208" y="104" text-anchor="end" font-size="10" fill="var(--color-neutral-600)">x₁</text>
+                  <text x="116" y="22" font-size="10" fill="var(--color-neutral-600)">x₂</text>
+                  <sc-for list="{{ pcArrows }}" as="a" hint-placeholder-count="3">
+                    <g>
+                      <line x1="110" y1="110" x2="{{ a.x2 }}" y2="{{ a.y2 }}" stroke="{{ a.color }}" stroke-width="4" stroke-linecap="round"></line>
+                      <circle cx="{{ a.x2 }}" cy="{{ a.y2 }}" r="5" fill="{{ a.color }}"></circle>
+                    </g>
+                  </sc-for>
+                </svg>
+                <div style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--color-neutral-800);margin-left:6px">
+                  <sc-for list="{{ pcArrows }}" as="a" hint-placeholder-count="3">
+                    <span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:4px;border-radius:2px;background:{{ a.color }}"></span>{{ a.label }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-for list="{{ pcBlocks }}" as="b" hint-placeholder-count="2">
+              <div style="padding:10px 14px;border-radius:18px;background:var(--color-neutral-100)">
+                <div style="font-size:11px;letter-spacing:.06em;color:var(--color-accent-700);margin-bottom:4px">{{ b.title }}</div>
+                <pre style="margin:0;font-size:12.5px;line-height:1.5;overflow-x:auto;font-variant-numeric:tabular-nums">{{ b.text }}</pre>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ pcCards }}" as="s" hint-placeholder-count="6">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point versions</div>
+        <h3>Three practical issues, each on 4 points</h3>
+
+        <h4>(a) Units: why you standardize</h4>
+        <ol>
+          <li>Same 4 points as ①, but measure x₁ in mm instead of cm (×10): <span class="m">x̃₁ = (−30, −10, 10, 30)</span>, x̃₂ unchanged <span class="m">(−1, −3, 3, 1)</span>.</li>
+          <li>Covariance: <span class="m">Σ₁₁ = (900+100+100+900)/4 = 500</span>, <span class="m">Σ₁₂ = (30+30+30+30)/4 = 30</span>, <span class="m">Σ₂₂ = 5</span> → <span class="m">Σ = [500 30 ; 30 5]</span></li>
+          <li>Eigen: <span class="m">λ₁ ≈ 501.8</span>, <span class="m">w₁ ≈ (0.998, 0.06)</span>, about 3.5° instead of 45°. PC1 is now just "the x₁ column": it chases the big numbers.</li>
+          <li>Fix: divide each column by its standard deviation. <span class="m">σ₁ = √500 = 22.4</span> (mm) or <span class="m">√5 = 2.24</span> (cm), <span class="m">σ₂ = √5</span>.
+            Either way you get the <strong>correlation matrix</strong> <span class="m">[1 0.6 ; 0.6 1]</span>, since <span class="m">3/(2.24·2.24) = 30/(22.4·2.24) = 0.6</span>.</li>
+          <li>Its eigenvalues are <span class="m">1 ± 0.6 = 1.6, 0.4</span> with <span class="m">w₁ = (1, 1)/√2</span>, whatever the units.</li>
+        </ol>
+
+        <h4>(b) More features than points (N &lt; D): the Gram trick</h4>
+        <ol>
+          <li>4 points with 5 features each, already centered (mean 0):
+            <span class="m">x₁ = (0, 3, 0, 0, 4)</span> <span class="m">x₂ = −x₁</span> <span class="m">x₃ = (2, 0, 1, 2, 0)</span> <span class="m">x₄ = −x₃</span></li>
+          <li>Normal way: eigen of <span class="m">X̃ᵀX̃</span>, a 5×5 matrix. Trick: use <span class="m">K = X̃X̃ᵀ</span>, only 4×4. Its entries are dot products of points:
+            <span class="m">x₁·x₁ = 25</span>, <span class="m">x₁·x₂ = −25</span>, <span class="m">x₃·x₃ = 9</span>, <span class="m">x₃·x₄ = −9</span>, <span class="m">x₁·x₃ = 0</span>
+            → <span class="m">K = [25 −25 0 0 ; −25 25 0 0 ; 0 0 9 −9 ; 0 0 −9 9]</span></li>
+          <li>Eigen of K: the block <span class="m">[25 −25 ; −25 25]</span> gives <span class="m">λ = 50</span> with <span class="m">u₁ = (1, −1, 0, 0)/√2</span>; the other block gives <span class="m">λ = 18</span> with <span class="m">u₂ = (0, 0, 1, −1)/√2</span>; the rest are 0.
+            The 5×5 matrix has eigenvalues <span class="m">50, 18, 0, 0, 0</span>: same non-zero ones.</li>
+          <li>Map back to 5-D: <span class="m">v = X̃ᵀu / √λ</span>. <span class="m">v₁ = (x₁ − x₂)/√2 / √50 = 2x₁/10 = (0, 0.6, 0, 0, 0.8)</span>, and <span class="m">v₂ = x₃/3 = (0.67, 0, 0.33, 0.67, 0)</span>.</li>
+          <li>Variances along them are <span class="m">λ/N = 50/4 = 12.5</span> and <span class="m">18/4 = 4.5</span>.</li>
+        </ol>
+
+        <h4>(c) SVD gives the same answer</h4>
+        <ol>
+          <li>Use ①'s centered points. <span class="m">X̃ᵀX̃ = [20 12 ; 12 20]</span> (that's 4Σ) → eigenvalues <span class="m">32, 8</span> → singular values <span class="m">s = √32 = 5.66, √8 = 2.83</span>.</li>
+          <li><span class="m">s²/N = 32/4, 8/4 = 8, 2</span>: exactly λ₁, λ₂ from ①.</li>
+          <li><span class="m">V</span> = the eigenvectors <span class="m">w₁ = (1, 1)/√2, w₂ = (1, −1)/√2</span>.</li>
+          <li><span class="m">U = X̃V / s</span>: column 1 <span class="m">= z / 5.66 = (−0.5, −0.5, 0.5, 0.5)</span>, column 2 <span class="m">= (−0.5, 0.5, −0.5, 0.5)</span>. So <span class="m">U·s</span> = the scores z.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence each:</strong> (a) PCA follows whichever feature has the biggest numbers, so standardize when units differ. (b) When N &lt; D, eigen-decompose the small N×N matrix X̃X̃ᵀ and map back with v = X̃ᵀu/√λ. (c) X̃ = USVᵀ: V holds the directions, s²/N the eigenvalues, US the scores, with no Σ needed.</p>
+      </div>
+    </section>
+
+    <!-- ================= ③ choosing L (§20.1.4) ================= -->
+    <section id="pcachoose" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">③ · 20.1.4</span>
+        <h2 style="margin:0">How many dimensions should you keep?</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">50 training points in 8 dimensions, secretly built from 3 directions plus noise, so the right answer is L = 3. Four ways of looking for it. Move the <strong>L</strong> slider on any step to read off the numbers.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ plBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ plNext }}" style="font-size:13px">{{ plNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ plReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ plLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 320px;min-width:0;max-width:460px;display:flex;flex-direction:column;gap:10px">
+            <svg sc-camel-view-box="0 0 420 240" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Chart over the number of kept dimensions L">
+              <rect x="{{ plBand.x }}" y="{{ plBand.y }}" width="{{ plBand.w }}" height="{{ plBand.h }}" fill="var(--color-accent-200)" opacity=".55"></rect>
+              <sc-for list="{{ plYTicks }}" as="t" hint-placeholder-count="5">
+                <g>
+                  <line x1="{{ t.x1 }}" y1="{{ t.y }}" x2="{{ t.x2 }}" y2="{{ t.y }}" stroke="var(--color-divider)"></line>
+                </g>
+              </sc-for>
+              <g font-size="10.5" fill="var(--color-neutral-600)" text-anchor="middle"><text x="68.6" y="222">1</text><text x="113.9" y="222">2</text><text x="159.1" y="222">3</text><text x="204.4" y="222">4</text><text x="249.6" y="222">5</text><text x="294.9" y="222">6</text><text x="340.1" y="222">7</text><text x="385.4" y="222">8</text></g>
+              <text x="233" y="236" text-anchor="middle" font-size="11" font-weight="700" fill="var(--color-neutral-700)">L (or j)</text>
+              <sc-for list="{{ plRef }}" as="r" hint-placeholder-count="1">
+                <line x1="{{ r.x1 }}" y1="{{ r.y }}" x2="{{ r.x2 }}" y2="{{ r.y }}" stroke="var(--color-neutral-500)" stroke-width="1.5" stroke-dasharray="6 5"></line>
+              </sc-for>
+              <sc-for list="{{ plBars }}" as="b" hint-placeholder-count="8">
+                <rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" rx="4" fill="{{ b.color }}"></rect>
+              </sc-for>
+              <sc-for list="{{ plLines }}" as="l" hint-placeholder-count="2">
+                <polyline points="{{ l.points }}" fill="none" stroke="{{ l.color }}" stroke-width="2.5" stroke-linejoin="round"></polyline>
+              </sc-for>
+              <sc-for list="{{ plDots }}" as="d" hint-placeholder-count="8">
+                <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="{{ d.r }}" fill="{{ d.color }}" stroke="var(--color-neutral-100)" stroke-width="1.5"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin-left:6px">
+              <span><strong>y:</strong> {{ plYTitle }}, from {{ plYLo }} (bottom) to {{ plYHi }} (top)</span>
+              <sc-for list="{{ plLegend }}" as="g" hint-placeholder-count="2">
+                <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:{{ g.color }}"></span>{{ g.label }}</span>
+              </sc-for>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;margin-top:4px">
+              <span>Keep <strong>L = {{ plL }}</strong> of {{ plD }} dimensions</span>
+              <input type="range" min="1" max="8" step="1" value="{{ plL }}" sc-camel-on-change="{{ plOnL }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer">
+            </label>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px">
+              <sc-for list="{{ plStats }}" as="s" hint-placeholder-count="5">
+                <div style="padding:8px 10px;border-radius:16px;background:var(--color-neutral-100)">
+                  <div style="font-size:11px;color:var(--color-neutral-700)">{{ s.k }}</div>
+                  <div style="font-family:var(--font-heading);font-size:17px">{{ s.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ plCards }}" as="s" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-eigenvalue version</div>
+        <h3>Choosing L when D = 4</h3>
+        <p style="margin:0">After PCA on some 4-D data the sorted eigenvalues are <span class="m">λ = 5, 4, 0.6, 0.4</span> (total 10).</p>
+        <ol>
+          <li><strong>Scree plot.</strong> Bars 5, 4, then a drop to 0.6, 0.4. The elbow is after the 2nd bar → <span class="m">L = 2</span>.</li>
+          <li><strong>Fraction of variance explained</strong> <span class="m">F_L = (λ₁ + … + λ_L) / 10</span>:
+            <span class="m">F₁ = 50%</span> <span class="m">F₂ = 90%</span> <span class="m">F₃ = 96%</span> <span class="m">F₄ = 100%</span>. The 90% rule → <span class="m">L = 2</span>.</li>
+          <li><strong>Reconstruction error</strong> = sum of the dropped eigenvalues:
+            <span class="m">L=1: 4 + 0.6 + 0.4 = 5</span> <span class="m">L=2: 1.0</span> <span class="m">L=3: 0.4</span> <span class="m">L=4: 0</span>.
+            It only ever goes down, on test data too, so it has no minimum and can't choose L by itself.</li>
+          <li><strong>Profile likelihood.</strong> Split the eigenvalues at L into two groups, model each as Gaussian with its own mean and a shared σ².
+            Because σ² = SS/D, <span class="m">ℓ(L) = −(D/2) ln(2πσ²) − D/2</span>, so <strong>the best L is the split with the smallest within-group sum of squares SS</strong>:
+            <ul style="margin:4px 0 0;padding-left:20px">
+              <li><span class="m">L=1: {5} | {4, 0.6, 0.4}</span>, means 5 and 1.67: <span class="m">SS = 0 + 2.33² + 1.07² + 1.27² = 8.19</span></li>
+              <li><span class="m">L=2: {5, 4} | {0.6, 0.4}</span>, means 4.5 and 0.5: <span class="m">SS = 0.25 + 0.25 + 0.01 + 0.01 = 0.52</span> ← smallest</li>
+              <li><span class="m">L=3: {5, 4, 0.6} | {0.4}</span>, means 3.2 and 0.4: <span class="m">SS = 3.24 + 0.64 + 6.76 + 0 = 10.64</span></li>
+            </ul>
+            So <span class="m">ℓ = −7.11, −1.60, −7.63</span> → <span class="m">L = 2</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> sort the eigenvalues and look for where "signal" turns into "noise", either by eye (scree elbow), by a variance threshold (F_L ≥ 90%), or automatically (profile likelihood picks the split that makes both groups tightest); reconstruction error alone can't decide because it always falls.</p>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="pcawrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">20.1</span>
+        <h2 style="margin:0">Recap</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Idea</th><th>One line</th></tr></thead>
+          <tbody>
+            <tr><td>Recipe</td><td>center → Σ = (1/N) X̃ᵀX̃ → top-L eigenvectors W → z = Wᵀ(x − μ) → x̂ = μ + Wz</td></tr>
+            <tr><td>Why eigenvectors</td><td>max variance of z = min reconstruction error; leftover error = sum of dropped λ</td></tr>
+            <tr><td>Units</td><td>PCA follows the biggest numbers; standardize (correlation matrix) if units differ</td></tr>
+            <tr><td>N &lt; D</td><td>eigen-decompose the N×N matrix X̃X̃ᵀ, then v = X̃ᵀu / √λ</td></tr>
+            <tr><td>SVD</td><td>X̃ = USVᵀ: V holds the w's, λ = s²/N, US holds the z's</td></tr>
+            <tr><td>Choosing L</td><td>scree elbow, variance-explained threshold, or profile likelihood; reconstruction error alone keeps falling</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 20.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 19);
+</script>
+</body></html>

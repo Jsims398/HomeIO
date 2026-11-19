@@ -92,6 +92,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 18 · Co-training</span>
         <span style="font-size:11px;opacity:.85">§19.3.3</span>
       </button>
+      <button sc-camel-on-click="{{ goT19 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t19Bg }};color:{{ t19Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
+        <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
+      </button>
     </nav>
 
 
@@ -160,6 +164,25 @@
           <div style="font-family:var(--font-heading);font-size:16px;margin-bottom:4px">This is where the two readings meet</div>
           <p style="margin:0;font-size:13.5px;line-height:1.6;color:var(--color-accent-2-900)">K = 1 can only ever draw one blob — badly wrong, but it says the same thing no matter which sample you hand it. K = N puts a component on every data point — perfectly faithful to this sample, useless on the next one. Everything below is that trade-off, made precise.</p>
         </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>A 2-component mixture on 4 points, by hand</h3>
+        <p style="margin:0">Data: <span class="m">x = 0, 1, 2, 3</span>. Model: K = 2 Gaussians with σ = 1, means <span class="m">μ₁ = 0, μ₂ = 2</span>, weights <span class="m">π₁ = π₂ = 0.5</span>.</p>
+        <ol>
+          <li><strong>Mixture density.</strong> <span class="m">p(x) = π₁ N(x | 0, 1) + π₂ N(x | 2, 1)</span>. At x = 1 both bumps give <span class="m">N = 0.242</span>, so <span class="m">p(1) = 0.5·0.242 + 0.5·0.242 = 0.242</span>.</li>
+          <li><strong>Responsibility</strong> (Bayes' rule on the hidden label): <span class="m">r_n1 = π₁N(x_n | μ₁) / (π₁N(x_n | μ₁) + π₂N(x_n | μ₂))</span>.</li>
+          <li><strong>Shortcut.</strong> Equal π and σ, so the ratio is <span class="m">N(x | 2)/N(x | 0) = exp((x² − (x−2)²)/2) = e^(2x − 2)</span>, giving <span class="m">r_n1 = 1 / (1 + e^(2x − 2))</span>.</li>
+          <li><strong>Plug in.</strong>
+            <span class="m">x=0: 1/(1+e⁻²) = 0.88</span>
+            <span class="m">x=1: 1/(1+e⁰) = 0.50</span>
+            <span class="m">x=2: 1/(1+e²) = 0.12</span>
+            <span class="m">x=3: 1/(1+e⁴) = 0.02</span>.
+            Each point's two responsibilities sum to 1: x = 1 is split 50/50 (soft clustering).</li>
+          <li><strong>Complexity knob.</strong> K = 1 gives one blob that is wrong in the same way for every sample (high bias). K = 4 gives one blob per point that fits this sample exactly and the next sample badly (high variance).</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> a mixture is a weighted sum of simple densities; each point's responsibility is the posterior over which component made it, and K is the complexity knob that trades bias for variance.</p>
       </div>
     </section>
 
@@ -239,6 +262,20 @@
       </div>
 
       <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Read the two error terms straight off the picture. <strong>Bias²</strong> is the gap between the dashed average fit and the sage truth — at degree 0 or 1 the average is nowhere near the curve, and no amount of data will fix that. <strong>Variance</strong> is how widely the faint curves fan out — at degree 8 or 9 each one wiggles off after its own handful of points, and the average can still look fine while every individual fit is bad. The third term is the noise floor: even the true function scores σ² on fresh data.</p>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Bias² + variance from 4 training sets</h3>
+        <p style="margin:0">Fit the same model to 4 different training sets and predict at one test input x₀. True value <span class="m">f(x₀) = 2</span>, noise <span class="m">σ² = 0.5</span>. The 4 predictions: <span class="m">ŷ = 1, 3, 4, 4</span>.</p>
+        <ol>
+          <li><strong>Average prediction.</strong> <span class="m">E[ŷ] = (1 + 3 + 4 + 4)/4 = 3</span></li>
+          <li><strong>Bias²</strong> = (average − truth)²: <span class="m">(3 − 2)² = 1</span>. How wrong the model is on average.</li>
+          <li><strong>Variance</strong> = average squared spread around the average: <span class="m">((1−3)² + (3−3)² + (4−3)² + (4−3)²)/4 = (4 + 0 + 1 + 1)/4 = 1.5</span>. How jumpy it is from one training set to the next.</li>
+          <li><strong>Check.</strong> Mean squared error against the truth: <span class="m">((1−2)² + (3−2)² + (4−2)² + (4−2)²)/4 = (1+1+4+4)/4 = 2.5 = 1 + 1.5</span> ✓</li>
+          <li><strong>Expected test error</strong> on a fresh noisy y adds the noise floor: <span class="m">bias² + variance + σ² = 1 + 1.5 + 0.5 = 3</span>. σ² is irreducible: no model can remove it.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> expected squared error = (how far the average fit is from the truth)² + (how much the fits scatter around their average) + noise.</p>
+      </div>
     </section>
 
     <section id="s476b">
@@ -284,6 +321,21 @@
           <div class="card-title">You only get one sample</div>
           <p class="card-body">Bias and variance are expectations over training sets you'll never see. That's why the practical version is a validation set or cross-validation — estimating the black curve without being able to draw the faint ones.</p>
         </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>The U-shape from 4 model sizes</h3>
+        <p style="margin:0">Illustrative numbers for 4 polynomial degrees, noise <span class="m">σ² = 0.5</span>:
+          <span class="m">degree 0: bias² 4, var 0.2</span> <span class="m">degree 1: bias² 1.5, var 0.4</span> <span class="m">degree 3: bias² 0.4, var 1.0</span> <span class="m">degree 9: bias² 0, var 2.4</span></p>
+        <ol>
+          <li><strong>Add the three terms.</strong> <span class="m">4 + 0.2 + 0.5 = 4.7</span> <span class="m">1.5 + 0.4 + 0.5 = 2.4</span> <span class="m">0.4 + 1.0 + 0.5 = 1.9</span> <span class="m">0 + 2.4 + 0.5 = 2.9</span></li>
+          <li><strong>Read the shape.</strong> Bias² only falls and variance only rises, so the total falls then rises: a U. The bottom is <span class="m">degree 3 (1.9)</span>.</li>
+          <li><strong>Get 4× more data.</strong> Variance shrinks roughly like 1/N, so divide it by 4 (bias doesn't change):
+            <span class="m">4.55</span> <span class="m">2.1</span> <span class="m">1.15</span> <span class="m">1.1</span>. Now the bottom is <span class="m">degree 9</span>: the dip moved right.</li>
+          <li><strong>In practice</strong> you never see bias and variance separately (you have one training set), so you estimate the total with a validation set or cross-validation.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> test error is U-shaped in model complexity because bias falls while variance rises, and more data shrinks variance so the best complexity moves up.</p>
       </div>
 
       <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: decision rules — the confusion matrix and ROC curves.</p>

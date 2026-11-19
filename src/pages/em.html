@@ -93,6 +93,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 18 · Co-training</span>
         <span style="font-size:11px;opacity:.85">§19.3.3</span>
       </button>
+      <button sc-camel-on-click="{{ goT19 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t19Bg }};color:{{ t19Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
+        <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT8 }}" hint-placeholder-val="{{ false }}">
@@ -204,6 +208,23 @@
           </div>
         </div>
       </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>One parameter, three EM rounds by hand</h3>
+        <p style="margin:0">Data: <span class="m">x = 0, 2, 3, 5</span>. Fixed: <span class="m">μ₁ = 1</span>, <span class="m">σ = 1</span>, <span class="m">π = (½, ½)</span>. Only <span class="m">θ = μ₂</span> is learned. Start at <span class="m">θ₀ = 3</span>.</p>
+        <ol>
+          <li><strong>E step shortcut.</strong> With equal π and σ = 1, the ½ and the normalizer cancel:
+            <span class="m">r_n2 = 1 / (1 + e^(−(θ − μ₁)(x_n − m)))</span> where <span class="m">m = (μ₁ + θ)/2</span> is the midpoint. With θ₀ = 3: <span class="m">θ − μ₁ = 2</span>, <span class="m">m = 2</span>.</li>
+          <li><strong>Responsibilities.</strong> Exponents <span class="m">2·(x − 2) = −4, 0, 2, 6</span> →
+            <span class="m">r_·2 = 1/(1+e⁴) = 0.018</span> <span class="m">1/(1+e⁰) = 0.5</span> <span class="m">1/(1+e⁻²) = 0.881</span> <span class="m">1/(1+e⁻⁶) = 0.998</span>.
+            The point at x = 2 sits exactly on the midpoint, so it's split 50/50.</li>
+          <li><strong>M step</strong> = weighted mean: <span class="m">θ₁ = Σ r_n2 x_n / Σ r_n2 = (0 + 1.0 + 2.64 + 4.99) / (0.018 + 0.5 + 0.881 + 0.998) = 8.63 / 2.40 = 3.60</span></li>
+          <li><strong>Repeat.</strong> <span class="m">θ: 3 → 3.60 → 3.77 → 3.83</span>, heading to the fixed point (just under 4).</li>
+          <li><strong>Check ℓ never drops.</strong> <span class="m">ℓ(θ): −8.61 → −8.08 → −8.04 → −8.03</span>. Each step is smaller than the last, typical of EM near the top.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> each E step builds a lower bound that touches ℓ at the current θ, each M step jumps to the bound's peak (here a responsibility-weighted average), and because the bound sits under ℓ, the true log-likelihood can only go up.</p>
+      </div>
     </section>
 
     <section id="s872" style="margin-bottom:56px">
@@ -228,6 +249,21 @@
           <div class="card-title">θ<sub>t+1</sub> = argmax<sub>θ</sub> Σ<sub>n</sub> E<sub>q<sub>n</sub></sub>[ log p(x<sub>n</sub>, z<sub>n</sub> | θ) ]</div>
           <p class="card-body">The entropy part of Ł doesn't depend on θ, so we only maximize the expected complete-data log-likelihood Q(θ, θ<sub>t</sub>). Then ℓ(θ<sub>t+1</sub>) ≥ Ł(θ<sub>t+1</sub>, q<sub>t</sub>) ≥ Ł(θ<sub>t</sub>, q<sub>t</sub>) = ℓ(θ<sub>t</sub>).</p>
         </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 1 point of the 4</div>
+        <h3>The bound and its gap, on one point</h3>
+        <p style="margin:0">The bound is a sum over points, so one point shows everything. Take <span class="m">x = 2</span> from the data 0, 2, 3, 5, with <span class="m">μ = (1, 4)</span>, <span class="m">σ = 1</span>, <span class="m">π = (½, ½)</span>. Natural logs.</p>
+        <ol>
+          <li><strong>Joint terms</strong> <span class="m">p(x, z = k) = π_k N(x | μ_k, 1)</span>: <span class="m">½·N(2 | 1) = ½·0.242 = 0.121</span>, <span class="m">½·N(2 | 4) = ½·0.054 = 0.027</span></li>
+          <li><strong>True value.</strong> <span class="m">p(x) = 0.121 + 0.027 = 0.148</span> → <span class="m">log p(x) = −1.911</span></li>
+          <li><strong>Bound with a lazy q = (½, ½)</strong>: <span class="m">Ł = Σ_k q_k log(p(x, k) / q_k) = ½ log(0.121/0.5) + ½ log(0.027/0.5) = −2.169</span>. It's below −1.911, as Jensen promises.</li>
+          <li><strong>The gap is a KL.</strong> Posterior <span class="m">p(z | x) = (0.121, 0.027)/0.148 = (0.818, 0.182)</span>. <span class="m">KL(q ‖ posterior) = ½ log(0.5/0.818) + ½ log(0.5/0.182) = 0.258</span>, and <span class="m">−1.911 − (−2.169) = 0.258</span> ✓</li>
+          <li><strong>E step</strong>: set <span class="m">q = posterior = (0.818, 0.182)</span>. Then <span class="m">Ł = −1.911</span> exactly: KL = 0, so the bound touches ℓ.</li>
+          <li><strong>M step</strong>: maximize Ł over θ with q held fixed. Its entropy part <span class="m">−Σ q log q</span> has no θ in it, so we maximize <span class="m">Σ q_k log p(x, k | θ)</span>, the expected complete-data log-likelihood.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> for any q, Jensen gives log p(x) ≥ Σ q log(p(x,z)/q) with gap KL(q ‖ p(z|x)); the E step makes the gap zero by choosing q = posterior, and the M step pushes the bound (and so ℓ) up.</p>
       </div>
     </section>
 
@@ -360,6 +396,23 @@
             <p style="margin:0;font-size:14px;line-height:1.6;color:var(--color-neutral-800)">{{ emNote }}</p>
           </div>
         </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>One full EM round for a 2-component GMM</h3>
+        <p style="margin:0">Data: <span class="m">x = 0, 2, 3, 5</span>. Start: <span class="m">π = (0.5, 0.5)</span>, <span class="m">μ = (1, 4)</span>, <span class="m">σ = (1, 1)</span>.</p>
+        <ol>
+          <li><strong>E step</strong> <span class="m">r_nk = π_k N(x_n | μ_k, σ_k²) / Σ_j π_j N(x_n | μ_j, σ_j²)</span>. With equal π and σ, <span class="m">r_n2 = 1/(1 + e^(−3(x_n − 2.5)))</span> (μ₂ − μ₁ = 3, midpoint 2.5).
+            Exponents <span class="m">−7.5, −1.5, 1.5, 7.5</span> →
+            <span class="m">r_·1 = (1.00, 0.82, 0.18, 0.00)</span>, <span class="m">r_·2 = (0.00, 0.18, 0.82, 1.00)</span>. Each row sums to 1.</li>
+          <li><strong>M step, counts.</strong> <span class="m">N₁ = 1 + 0.82 + 0.18 + 0 = 2</span>, <span class="m">N₂ = 2</span> → <span class="m">π = N_k/N = (0.5, 0.5)</span></li>
+          <li><strong>M step, means</strong> (weighted averages): <span class="m">μ₁ = (1·0 + 0.82·2 + 0.18·3 + 0·5)/2 = 1.09</span>, <span class="m">μ₂ = (0·0 + 0.18·2 + 0.82·3 + 1·5)/2 = 3.91</span></li>
+          <li><strong>M step, spreads</strong> <span class="m">σ_k² = Σ r_nk (x_n − μ_k)² / N_k</span>: <span class="m">σ₁² = σ₂² = 1.27</span> → <span class="m">σ = 1.13</span>. The fuzzy points at x = 2 and 3 widen both components.</li>
+          <li><strong>Check.</strong> <span class="m">ℓ = Σ log Σ_k π_k N(x_n | μ_k, σ_k²)</span> goes <span class="m">−8.04 → −7.94</span>: up, as guaranteed.</li>
+          <li>Compare with hard labels <span class="m">z = (1, 1, 2, 2)</span>: means 1 and 4, σ² = 1. EM's soft labels pull the means slightly toward each other because x = 2 and x = 3 are partly shared.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> the E step computes each point's responsibility for each component by Bayes' rule, and the M step recomputes every weight, mean and variance as the ordinary formula with each point counted r_nk times.</p>
       </div>
 
       <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: Naive Bayes — classifying by multiplying simple clues, and generative vs discriminative models.</p>
