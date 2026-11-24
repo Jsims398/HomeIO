@@ -340,5 +340,5 @@ a:hover{color:var(--color-accent-700)}
 .notes p, .notes li { font-size: 14.5px; line-height: 1.7; }
 .notes ol { margin: 6px 0 0; padding-left: 22px; }
 .notes li { margin-bottom: 4px; }
-.notes .m { font-variant-numeric: tabular-nums; box-decoration-break: clone; -webkit-box-decoration-break: clone; background: var(--color-accent-100); padding: 1px 6px; border-radius: 6px; }
+.notes .m { font-variant-numeric: tabular-nums; box-decoration-break: clone; -webkit-box-decoration-break: clone; background: var(--color-accent-200); color: var(--color-accent-900); padding: 1px 6px; border-radius: 6px; }
 .notes .say { margin: 14px 0 0; padding: 10px 14px; border-radius: 16px; background: var(--color-accent-2-100); }

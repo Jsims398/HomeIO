@@ -98,6 +98,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT11 }}" hint-placeholder-val="{{ false }}">
@@ -215,6 +219,18 @@
           <p style="margin:8px 0 0">A probability curve's total area is the chance that <em>something</em> happens, which must be 100%. If each bump has area 1 and we average N bumps, the result also has area 1, so it is a real probability distribution.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>One kernel at 4 places, two widths</h3>
+        <p style="margin:0">Boxcar kernel <span class="m">K(u) = ½ for |u| ≤ 1, else 0</span>, and <span class="m">K_h(x) = (1/h)·K(x/h)</span>. Evaluate at <span class="m">x = 0, 1, 2, 3</span>.</p>
+        <ol>
+          <li><strong>h = 1.</strong> <span class="m">K₁(x) = ½</span> for |x| ≤ 1: values <span class="m">½, ½, 0, 0</span>. Width 2 × height ½ → <span class="m">area = 1</span>.</li>
+          <li><strong>h = 2.</strong> <span class="m">K₂(x) = ½ · K(x/2) = ¼</span> for |x| ≤ 2: values <span class="m">¼, ¼, ¼, 0</span>. Width 4 × height ¼ → <span class="m">area = 1</span>.</li>
+          <li><strong>Gaussian check.</strong> Peak <span class="m">1/(h√(2π))</span>: <span class="m">h = 1 → 0.399</span>, <span class="m">h = 2 → 0.199</span>. Twice as wide, half as tall.</li>
+          <li><strong>The three rules</strong> hold for both: <span class="m">∫K = 1</span>, <span class="m">K(−x) = K(x)</span>, <span class="m">K ≥ 0</span>. The <span class="m">1/h</span> in front is exactly what keeps the area at 1 when x/h stretches it.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> a kernel is a symmetric, non-negative bump with area 1; K_h stretches it sideways by h and squashes it by 1/h, so the area stays 1 whatever the width.</p>
+      </div>
     </section>
 
     <!-- ================= 16.3.2 ================= -->
@@ -239,6 +255,19 @@
           <div class="card-title">p̂(x) = <sup>1</sup>⁄<sub>N</sub> Σ<sub>n</sub> K<sub>h</sub>(x − x<sub>n</sub>)</div>
           <p class="card-body"><strong>x<sub>n</sub></strong> is data point number n. <strong>x − x<sub>n</sub></strong> is how far x is from it. <strong>K<sub>h</sub>(…)</strong> is that point's bump height at x. <strong>Σ</strong> adds every point's bump, and <strong><sup>1</sup>⁄<sub>N</sub></strong> gives each one an equal share.</p>
         </div>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Parzen window on 4 points</h3>
+        <p style="margin:0">Data <span class="m">x = 1, 2, 3, 7</span> (three close together, one far away). Boxcar with <span class="m">h = 1</span>, so each bump is <span class="m">½</span> tall on <span class="m">[xₙ − 1, xₙ + 1]</span>.</p>
+        <ol>
+          <li><strong>Formula</strong> <span class="m">p̂(x) = (1/N) Σ K_h(x − xₙ)</span> with <span class="m">N = 4</span>.</li>
+          <li><strong>At x = 2.</strong> Points within 1 of 2: 1, 2, 3 → <span class="m">p̂(2) = (½ + ½ + ½ + 0)/4 = 0.375</span>.</li>
+          <li><strong>At x = 7.</strong> Only the point 7 → <span class="m">p̂(7) = ½ / 4 = 0.125</span>. One third as tall as the cluster: one bump vs three.</li>
+          <li><strong>At x = 5.</strong> No point within 1 → <span class="m">p̂(5) = 0</span>. A boxcar leaves gaps.</li>
+          <li><strong>Gaussian kernel, h = 1, at x = 2.</strong> <span class="m">(φ(1) + φ(0) + φ(1) + φ(5))/4 = (0.242 + 0.399 + 0.242 + 0)/4 = 0.221</span>. Smooth, never exactly 0.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> KDE puts one kernel on every data point and averages them, so p̂(x) is high where many points are nearby; it is non-parametric because the data itself is the model.</p>
       </div>
     </section>
 
@@ -345,6 +374,18 @@
           <p style="margin:8px 0 0">Every point adds the same amount of sand. Three bumps overlapping in one spot pile up to about three times the height of a lone bump. Many data points nearby means that value is common, so it should be more likely.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Sampling a new point from p̂</h3>
+        <p style="margin:0">Same data <span class="m">x = 1, 2, 3, 7</span>, Gaussian kernel with <span class="m">h = 1</span>.</p>
+        <ol>
+          <li><strong>Pick a data point</strong> uniformly: each has chance <span class="m">1/4</span>. Say a die picks the 3rd: <span class="m">x = 3</span>.</li>
+          <li><strong>Nudge it</strong> with a draw from the kernel: <span class="m">ε ~ 𝒩(0, h²)</span>, say <span class="m">ε = −0.4</span> → new point <span class="m">3 − 0.4 = 2.6</span>.</li>
+          <li><strong>Where do new points land?</strong> <span class="m">3/4</span> of the time near the cluster at 1–3, <span class="m">1/4</span> near 7, matching the heights in p̂.</li>
+          <li><strong>Bandwidth warning.</strong> With <span class="m">h = 0.05</span> the nudge is tiny: you just get near-copies of 1, 2, 3, 7. With <span class="m">h = 5</span> new points can land at −4 or 12, where no data ever was.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> to sample from a KDE, pick a stored point at random and add kernel-shaped noise of size h; that is exactly drawing from the mixture of N equal bumps.</p>
+      </div>
     </section>
 
     <!-- ================= 16.3.3 ================= -->
@@ -448,6 +489,26 @@
           <p style="margin:8px 0 0">With more points, neighbours are closer together, so even narrow bumps overlap into a smooth curve. Narrower bumps can then show finer detail without becoming spiky.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Choosing h for 4 points: rule of thumb vs. hide-one-out</h3>
+        <p style="margin:0">Data <span class="m">x = 1, 2, 3, 7</span>, Gaussian kernel.</p>
+        <h4>Rule of thumb</h4>
+        <ol>
+          <li><strong>Median</strong> of 1, 2, 3, 7: <span class="m">2.5</span>. Distances to it: <span class="m">1.5, 0.5, 0.5, 4.5</span>, whose median is <span class="m">1.0</span> (the MAD).</li>
+          <li><strong>Robust spread</strong> <span class="m">σ̂ = 1.4826 × 1.0 = 1.48</span>.</li>
+          <li><strong>Plug in</strong> <span class="m">h = σ̂ · (4/(3N))^(1/5) = 1.48 · (1/3)^0.2 = 1.48 · 0.80 = 1.19</span>.</li>
+        </ol>
+        <h4>Leave-one-out cross-validation</h4>
+        <ol>
+          <li><strong>For each point</strong>, build p̂ from the other 3 and take <span class="m">log p̂₋ₙ(xₙ)</span>; then average over the 4 points. Try 4 values of h.</li>
+          <li><span class="m">h = 0.5: −10.65</span> (hiding 7 leaves nothing near it: <span class="m">log p̂ = −33</span>).</li>
+          <li><span class="m">h = 1: −4.12</span>, <span class="m">h = 2: −2.75</span>, <span class="m">h = 4: −2.68</span>.</li>
+          <li><strong>Verdict.</strong> CV picks the widest h here, because one lonely point (7) punishes narrow bumps hard. With so few points that's reasonable; with more data the best h shrinks.</li>
+          <li><strong>Why hide the point?</strong> Without hiding, h → 0 puts an infinitely tall spike on each point and the score goes to +∞: pure memorization.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> h is chosen either by the rule of thumb (robust spread × (4/3N)^(1/5), which assumes one hump) or by leave-one-out cross-validation, which scores each h by how likely each hidden point is under the KDE built from the others.</p>
+      </div>
     </section>
 
     <!-- ================= 16.3.4 ================= -->
@@ -537,6 +598,19 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">So which K is best?</summary>
           <p style="margin:8px 0 0">Same Goldilocks story as h in 16.3.3. Small K overfits (follows every single point), big K underfits (washes out small groups). In practice you pick K with cross-validation too.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>KNN from a balloon, on 4 labelled points</h3>
+        <p style="margin:0">Points on a line: <span class="m">1 (red)</span> <span class="m">2 (red)</span> <span class="m">4 (blue)</span> <span class="m">5 (blue)</span>. Query <span class="m">x = 2.8</span>, <span class="m">K = 3</span>.</p>
+        <ol>
+          <li><strong>Distances</strong> to the query: <span class="m">1.8, 0.8, 1.2, 2.2</span>.</li>
+          <li><strong>Grow the balloon</strong> until it holds K = 3 points: 2 (0.8), 4 (1.2), 1 (1.8). Radius <span class="m">1.8</span>, so size <span class="m">V = 2 × 1.8 = 3.6</span> (a length in 1-D).</li>
+          <li><strong>Vote</strong> <span class="m">p(red | x) = N_red(x)/K = 2/3</span>, <span class="m">p(blue | x) = 1/3</span> → guess red.</li>
+          <li><strong>Why it's Bayes.</strong> <span class="m">p(x | red) ≈ 2/(2 · 3.6) = 0.278</span>, <span class="m">p(x | blue) ≈ 1/(2 · 3.6) = 0.139</span>, priors <span class="m">½, ½</span>. Posterior red <span class="m">= 0.139 / (0.139 + 0.069) = 2/3</span>. V cancels, leaving the vote.</li>
+          <li><strong>Fixed window instead.</strong> With h = 0.5 around 2.8 the window [2.3, 3.3] holds no points: no answer. The balloon always has K.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> KNN is density estimation with a balloon: grow a window until it holds K points, and by Bayes' rule the window size cancels, so p(class | x) is just the fraction of those K neighbours in that class.</p>
       </div>
     </section>
 
@@ -651,6 +725,20 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why does the average miss at the edge?</summary>
           <p style="margin:8px 0 0">At x = 0 there is no data to the left, so every neighbour is to the right. Here the curve is rising, so those neighbours are all higher than the true value, and their average comes out too high. A line through them knows the curve is rising and can follow it back down to x = 0.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Nadaraya–Watson on 4 points</h3>
+        <p style="margin:0">Data <span class="m">(0, 1)</span> <span class="m">(1, 3)</span> <span class="m">(2, 2)</span> <span class="m">(3, 5)</span>, Gaussian kernel with <span class="m">h = 1</span>.</p>
+        <ol>
+          <li><strong>Query x = 1.5.</strong> Distances <span class="m">1.5, 0.5, 0.5, 1.5</span> → kernel heights <span class="m">0.130, 0.352, 0.352, 0.130</span>.</li>
+          <li><strong>Weights</strong> = heights ÷ their sum (0.963): <span class="m">w = 0.135, 0.365, 0.365, 0.135</span>, adding to 1.</li>
+          <li><strong>Prediction</strong> <span class="m">ŷ = 0.135·1 + 0.365·3 + 0.365·2 + 0.135·5 = 2.63</span>.</li>
+          <li><strong>Uncertainty</strong> <span class="m">𝕍[y | x] = σ² + Σ wₙyₙ² − ŷ² = σ² + 8.25 − 6.94 = σ² + 1.31</span>. The 1.31 is large because the neighbours (2, 3, 1, 5) disagree.</li>
+          <li><strong>Edge problem, query x = 0.</strong> Weights <span class="m">0.57, 0.35, 0.08, 0.01</span> → <span class="m">ŷ = 1.79</span>, but the data says y(0) = 1. Every neighbour is to the right and higher, so the average is pulled up.</li>
+          <li><strong>Local line fixes it.</strong> Fit a weighted straight line with the same weights: slope <span class="m">1.15</span> through the weighted mean <span class="m">(0.52, 1.79)</span>, read at 0: <span class="m">1.79 − 1.15 · 0.52 = 1.20</span>. Much closer to 1.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> kernel regression predicts y as a kernel-weighted average of nearby y's (weights normalized to sum to 1), its variance grows when neighbours disagree, and a locally weighted line fixes the bias at the edges of the data.</p>
       </div>
     </section>
 

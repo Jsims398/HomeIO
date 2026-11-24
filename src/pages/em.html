@@ -97,6 +97,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT8 }}" hint-placeholder-val="{{ false }}">
@@ -143,6 +147,19 @@
           <div class="card-title">E: fill in z softly · M: refit</div>
           <p class="card-body">The E step builds the surrogate by computing p(z | x, θ<sub>t</sub>). The M step maximizes it, which is just a weighted version of the easy, fully observed MLE.</p>
         </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Why hidden labels make the MLE hard</h3>
+        <p style="margin:0">Data: <span class="m">x = 0, 2, 3, 5</span>. Model: mixture of two Gaussians, both with σ = 1 and π = (½, ½); unknown means μ₁, μ₂.</p>
+        <ol>
+          <li><strong>If the labels were observed</strong>, say <span class="m">z = (1, 1, 2, 2)</span>, then ℓ = Σ log N(x_n | μ_(z_n)) splits by group and the MLE is just each group's average: <span class="m">μ₁ = (0 + 2)/2 = 1</span>, <span class="m">μ₂ = (3 + 5)/2 = 4</span>. One line, no iteration.</li>
+          <li><strong>With z hidden</strong>, each point's likelihood is a sum over both labels: <span class="m">ℓ(θ) = Σ_n log [ ½N(x_n | μ₁) + ½N(x_n | μ₂) ]</span>. The sum sits inside the log, so the derivative of ℓ for μ₁ involves μ₂ too and there's no closed-form solution.</li>
+          <li><strong>EM's trick.</strong> E step: guess the labels softly, <span class="m">r_nk = p(z_n = k | x_n, θ_t)</span>. M step: do step 1 anyway, but with each point counting r_nk times. The worked numbers are in the cards below.</li>
+          <li><strong>Guarantee.</strong> ℓ never goes down: in the 8.7.3 example below, <span class="m">ℓ = −8.04 → −7.94</span> after one round.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> hidden variables put a sum inside the log so the MLE has no closed form, and EM gets around it by alternating "guess the hidden labels softly" with "solve the easy fully-labelled MLE using those guesses as weights", which never decreases the likelihood.</p>
       </div>
     </section>
 

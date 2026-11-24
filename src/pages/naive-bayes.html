@@ -97,6 +97,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT9 }}" hint-placeholder-val="{{ false }}">
@@ -145,6 +149,24 @@
         </div>
       </div>
       <p style="margin:20px 0 0;max-width:64ch;font-size:15px;line-height:1.65;color:var(--color-neutral-800)"><strong>Why it matters:</strong> it trains in one pass, works with tiny datasets and thousands of features, and is still a go-to first model for text: spam filters, sentiment, topic tagging.</p>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Naive Bayes on 4 training emails</h3>
+        <p style="margin:0">Training: <span class="m">S1 = {free}</span> <span class="m">S2 = {free, meeting}</span> (spam) · <span class="m">N1 = {meeting}</span> <span class="m">N2 = {free, meeting}</span> (normal). Two binary words: "free", "meeting". New email: free ✓, meeting ✗.</p>
+        <ol>
+          <li><strong>Prior.</strong> <span class="m">p(spam) = 2/4 = 0.5</span>, <span class="m">p(normal) = 0.5</span></li>
+          <li><strong>Fit by counting (MLE)</strong> <span class="m">θ = (# emails of that class with the word) / (# emails of that class)</span>:
+            spam: <span class="m">θ(free) = 2/2 = 1</span>, <span class="m">θ(meeting) = 1/2</span>; normal: <span class="m">θ(free) = 1/2</span>, <span class="m">θ(meeting) = 2/2 = 1</span></li>
+          <li><strong>Problem.</strong> Normal score <span class="m">= 0.5 · θ(free) · (1 − θ(meeting)) = 0.5 · 0.5 · 0 = 0</span>, so the posterior would be exactly 1 off just 4 emails.</li>
+          <li><strong>Smooth</strong> (add 1 to each count, 2 to each total) <span class="m">θ = (count + 1)/(N_c + 2)</span>:
+            spam: <span class="m">free 3/4</span>, <span class="m">meeting 2/4</span>; normal: <span class="m">free 2/4</span>, <span class="m">meeting 3/4</span></li>
+          <li><strong>Score each class</strong> (naive: multiply word by word; a ✗ word uses 1 − θ):
+            <span class="m">spam = 0.5 · 3/4 · (1 − 2/4) = 0.1875</span>, <span class="m">normal = 0.5 · 2/4 · (1 − 3/4) = 0.0625</span></li>
+          <li><strong>Normalize.</strong> <span class="m">p(spam | email) = 0.1875 / (0.1875 + 0.0625) = 0.75</span></li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> Naive Bayes flips the question with Bayes' rule, assumes the words are independent given the class so the likelihood is a product of per-word probabilities, and fits each probability by counting (plus one, so nothing is ever exactly zero).</p>
+      </div>
     </section>
 
     <section id="s93lab" style="margin-bottom:56px">
@@ -230,9 +252,25 @@
         <div class="card-title">log-odds = bias + push<sub>1</sub> + push<sub>2</sub> + …</div>
         <p class="card-body">Taking logs turns the products into a sum of one weight per word. That is exactly the shape of logistic regression, so Naive Bayes draws a straight-line boundary too. The only difference is how it gets the weights: by counting, instead of by searching for the best ones.</p>
       </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Same 4 emails as log-odds "pushes"</h3>
+        <p style="margin:0">Smoothed model from the card above: spam <span class="m">θ(free) = 3/4, θ(meeting) = 2/4</span>; normal <span class="m">θ(free) = 2/4, θ(meeting) = 3/4</span>; prior 0.5 / 0.5. Natural logs.</p>
+        <ol>
+          <li><strong>Bias</strong> (prior push): <span class="m">ln(0.5 / 0.5) = 0</span></li>
+          <li><strong>free ✓</strong> uses θ: <span class="m">ln(θ_spam / θ_normal) = ln(0.75 / 0.5) = ln 1.5 = +0.41</span> (toward spam)</li>
+          <li><strong>meeting ✗</strong> uses 1 − θ: <span class="m">ln((1 − 0.5) / (1 − 0.75)) = ln 2 = +0.69</span>. Missing "meeting" is more typical of spam, so it also pushes toward spam.</li>
+          <li><strong>Add the pushes.</strong> <span class="m">log-odds = 0 + 0.41 + 0.69 = 1.10 = ln 3</span> → odds 3 : 1 → <span class="m">p(spam) = 3/(3 + 1) = 0.75</span>, the same as multiplying it out.</li>
+          <li><strong>Unknown word (?)</strong>: just skip its push. With only free ✓: <span class="m">odds = 1.5</span> → <span class="m">p = 1.5/2.5 = 0.6</span></li>
+          <li><strong>Why smoothing matters.</strong> Unsmoothed, normal's θ(meeting) = 1, so meeting ✗ gives <span class="m">ln(0.5 / 0) = +∞</span>: one word overrides everything else.</li>
+          <li><strong>Link to logistic regression</strong>: log-odds = bias + Σ weight × feature, a linear boundary. Naive Bayes gets the weights by counting instead of optimizing.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> in log space Naive Bayes is a sum of one push per word plus a prior bias, which is a linear classifier like logistic regression, and smoothing keeps any single push from becoming infinite.</p>
+      </div>
     </section>
 
-    <section id="s94" style="margin-bottom:56px">
+    <section id="s94"style="margin-bottom:56px">
       <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
         <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">9.4</span>
         <h2 style="margin:0">Two ways to build a classifier</h2>
@@ -263,6 +301,28 @@
             <tr><td><strong>Probabilities</strong></td><td>Often overconfident</td><td>Usually better calibrated</td></tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Generative vs discriminative on 4 emails</h3>
+        <p style="margin:0">One feature x = "contains free". Data: <span class="m">spam: x = 1, 1</span> · <span class="m">normal: x = 0, 1</span> (the unsmoothed counts from the first card).</p>
+        <h4>Generative: learn p(x | y) and p(y), then flip</h4>
+        <ol>
+          <li><span class="m">p(spam) = 0.5</span>, <span class="m">p(x=1 | spam) = 2/2 = 1</span>, <span class="m">p(x=1 | normal) = 1/2</span></li>
+          <li>Bayes: <span class="m">p(spam | x=1) = 0.5·1 / (0.5·1 + 0.5·0.5) = 0.5/0.75 = 2/3</span></li>
+        </ol>
+        <h4>Discriminative: learn p(y | x) directly</h4>
+        <ol>
+          <li>Look only at emails with x = 1: three of them, two spam → <span class="m">p(spam | x=1) = 2/3</span>. With one feature, both approaches agree.</li>
+        </ol>
+        <h4>Where they differ</h4>
+        <ol>
+          <li><strong>Missing feature</strong> (§9.4.3): if x is unknown, the generative model drops the factor and returns the prior, <span class="m">0.5</span>. The discriminative model has no p(y) without an x to plug in.</li>
+          <li><strong>New class</strong>: generative fits p(x | new) on its own emails only; discriminative must retrain everything.</li>
+          <li><strong>Correlated features</strong>: copy "free" into a second feature. NB multiplies it twice: <span class="m">0.5·1·1 / (0.5·1·1 + 0.5·0.5·0.5) = 0.8</span> instead of 2/3, so it's overconfident. A discriminative model would split the weight and stay at 2/3.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> a generative model learns how each class produces the data and uses Bayes' rule to classify (so it handles missing features and new classes easily), while a discriminative model learns p(y | x) directly (so it isn't hurt by wrong independence assumptions).</p>
       </div>
     </section>
 
@@ -330,6 +390,24 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Why NB wins small and LR wins big</h3>
+        <p style="margin:0">4 emails, one feature x = "free": <span class="m">spam: x = 1, 1</span> · <span class="m">normal: x = 0, 0</span>. The feature separates the classes perfectly.</p>
+        <h4>Little data</h4>
+        <ol>
+          <li><strong>Logistic regression</strong> <span class="m">p(spam | x) = σ(w₀ + w x)</span>: the data are perfectly separable, so the likelihood keeps rising as <span class="m">w → ∞</span>. The MLE predicts exactly 1 and 0: certain after 4 emails, which is overfitting.</li>
+          <li><strong>Naive Bayes</strong> with smoothing: <span class="m">θ_spam = (2+1)/(2+2) = 0.75</span>, <span class="m">θ_normal = (0+1)/4 = 0.25</span> → <span class="m">p(spam | x=1) = 0.75/(0.75 + 0.25) = 0.75</span>. Each number is a simple count, so it settles fast and stays sensible.</li>
+        </ol>
+        <h4>Lots of data</h4>
+        <ol>
+          <li>Suppose the truth is <span class="m">p(spam | free) = 0.75</span>, and the email has two features that always agree ("free" and "FREE").</li>
+          <li>NB multiplies the evidence twice however much data it sees: <span class="m">0.75² / (0.75² + 0.25²) = 0.5625 / 0.625 = 0.9</span>. The wrong independence assumption is baked in.</li>
+          <li>LR learns its weights jointly, splits the weight across the two copies, and converges to the true 0.75.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> a generative model like Naive Bayes estimates each parameter separately by counting, so it reaches its (possibly wrong) answer with very little data, while a discriminative model like logistic regression needs more data but ends up more accurate because it doesn't assume the features are independent.</p>
       </div>
 
     </section>

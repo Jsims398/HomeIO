@@ -100,6 +100,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT18 }}" hint-placeholder-val="{{ false }}">
@@ -224,6 +228,19 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">When does this work?</summary>
           <p style="margin:8px 0 0">Two assumptions: each view alone is enough to classify (x<sub>1</sub> or x<sub>2</sub> separates the classes), and the views are <strong>conditionally independent given the class</strong>, p(x<sub>1</sub>, x<sub>2</sub> | y) = p(x<sub>1</sub> | y) p(x<sub>2</sub> | y). The second is why a point A is sure of is a typical, informative example for B, rather than one B already finds easy.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Co-training, one round by hand</h3>
+        <p style="margin:0">Data (x₁, x₂): labelled <span class="m">s₀ = (1, 6), y = 0</span> <span class="m">s₁ = (6, 7), y = 1</span>; unlabelled <span class="m">u₁ = (0, 2)</span> <span class="m">u₂ = (6.5, 10)</span>. The true boundary is 5 in both views. Model A sees only x₁, B only x₂; each predicts the nearer class mean, so its line sits halfway between the means. With only 4 points (2 labelled, 2 unlabelled), each model labels one point per round.</p>
+        <ol>
+          <li><strong>Train on the labels.</strong> A: <span class="m">μ₀ = 1, μ₁ = 6 → t_A = 3.5</span>. B: <span class="m">μ₀ = 6, μ₁ = 7 → t_B = 6.5</span>. B's line is far from 5 because s₀ happens to have a high x₂.</li>
+          <li><strong>A labels for B.</strong> A's confidence is the distance from its line: <span class="m">|0 − 3.5| = 3.5</span> for u₁, <span class="m">|6.5 − 3.5| = 3</span> for u₂. Most confident: <span class="m">u₁ → class 0</span> (0 &lt; 3.5). It goes into <em>B's</em> training set.</li>
+          <li><strong>B labels for A.</strong> The remaining point u₂ has <span class="m">x₂ = 10 > 6.5 → class 1</span>. It goes into <em>A's</em> training set.</li>
+          <li><strong>Retrain.</strong> B: class-0 values <span class="m">6, 2 → μ₀ = 4</span>, so <span class="m">t_B = (4 + 7)/2 = 5.5</span> (was 6.5). A: class-1 values <span class="m">6, 6.5 → μ₁ = 6.25</span>, so <span class="m">t_A = (1 + 6.25)/2 = 3.625</span> (was 3.5). Both lines move toward 5.</li>
+          <li><strong>Why it worked.</strong> A picked u₁ only for its x₁. On B's axis it sits at <span class="m">x₂ = 2</span>, a fresh, typical class-0 value that drags B's mean down. That needs the views to be conditionally independent: <span class="m">p(x₁, x₂ | y) = p(x₁ | y) p(x₂ | y)</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> co-training trains one model per view on the few labels, and each model labels the unlabelled points it is most sure about for the other model; that helps because those points look like fresh examples in the other view.</p>
       </div>
     </section>
 

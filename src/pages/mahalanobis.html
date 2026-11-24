@@ -96,6 +96,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
 
@@ -149,6 +153,19 @@
           <div class="card-title">ρ = Σ<sub>12</sub> ⁄ σ<sub>1</sub>σ<sub>2</sub></div>
           <p class="card-body">The same tilt, rescaled into [−1, 1] so it's comparable across units. |ρ| → 1 squashes the ellipse toward a line.</p>
         </div>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Covariance matrix of 4 points</h3>
+        <p style="margin:0">Data: <span class="m">x = (1, 1), (3, 1), (3, 5), (5, 5)</span>.</p>
+        <ol>
+          <li><strong>Mean.</strong> <span class="m">μ = ((1+3+3+5)/4, (1+1+5+5)/4) = (3, 3)</span>.</li>
+          <li><strong>Center.</strong> <span class="m">x − μ = (−2, −2), (0, −2), (0, 2), (2, 2)</span>.</li>
+          <li><strong>Diagonal = variances.</strong> <span class="m">σ₁² = (4 + 0 + 0 + 4)/4 = 2</span>, <span class="m">σ₂² = (4 + 4 + 4 + 4)/4 = 4</span>.</li>
+          <li><strong>Off-diagonal = average product.</strong> <span class="m">Σ₁₂ = ((−2)(−2) + 0·(−2) + 0·2 + 2·2)/4 = 8/4 = 2</span>. Positive: they rise together. So <span class="m">Σ = [2 2 ; 2 4]</span>, symmetric.</li>
+          <li><strong>Correlation.</strong> <span class="m">ρ = Σ₁₂ / (σ₁σ₂) = 2 / (√2 · 2) = 0.71</span>. (Dividing by <span class="m">N − 1 = 3</span> instead of 4 scales every entry by 4/3 but leaves ρ unchanged.)</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> The covariance matrix holds each variable's variance on the diagonal and the average product of centered values off it; dividing the off-diagonal by both standard deviations gives the unit-free correlation ρ.</p>
       </div>
     </section>
 
@@ -250,6 +267,19 @@
           <p class="card-body">The MVN density is proportional to exp(−½ d<sub>M</sub>²), so a contour of constant density <em>is</em> a contour of constant Mahalanobis distance. Also outlier scores, and the distance term in Gaussian discriminant analysis.</p>
         </div>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Mahalanobis distance with that Σ</h3>
+        <p style="margin:0">Data: the same 4 points, with <span class="m">μ = (3, 3)</span> and <span class="m">Σ = [2 2 ; 2 4]</span>, plus two new test points.</p>
+        <ol>
+          <li><strong>Invert Σ</strong> (2×2: swap the diagonal, negate the off-diagonal, divide by det). <span class="m">det Σ = 2·4 − 2·2 = 4</span>, <span class="m">Σ⁻¹ = ¼[4 −2 ; −2 2] = [1 −0.5 ; −0.5 0.5]</span>.</li>
+          <li><strong>The formula.</strong> With <span class="m">(u, v) = x − μ</span>: <span class="m">d_M² = 1·u² + 2(−0.5)uv + 0.5·v² = u² − uv + 0.5v²</span>.</li>
+          <li><strong>The 4 data points.</strong> <span class="m">(−2, −2): 4 − 4 + 2 = 2</span>, <span class="m">(0, −2): 0 − 0 + 2 = 2</span>, <span class="m">(0, 2): 2</span>, <span class="m">(2, 2): 2</span>. All four sit on the same ellipse, <span class="m">d_M = √2</span>.</li>
+          <li><strong>Two new points, both √8 ≈ 2.83 from μ in plain distance.</strong> With the grain, <span class="m">x − μ = (2, 2)</span>: <span class="m">4 − 4 + 2 = 2</span>. Against the grain, <span class="m">x − μ = (2, −2)</span>: <span class="m">4 + 4 + 2 = 10</span>.</li>
+          <li><strong>How surprising?</strong> In 2-D, <span class="m">P(d_M² &gt; r²) = e^(−r²/2)</span>: <span class="m">e^(−1) ≈ 37%</span> vs <span class="m">e^(−5) ≈ 0.7%</span>. Same Euclidean distance, very different outliers.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> Mahalanobis distance is (x − μ)ᵀ Σ⁻¹ (x − μ): it measures distance in units of the data's own spread, so moving along the correlation is cheap and moving against it is expensive.</p>
+      </div>
     </section>
 
     <section id="s322b">
@@ -335,6 +365,24 @@
       </div>
 
       <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin-top:22px">Identical Euclidean distance, a 9× gap in d<sub>M</sub>², and one is ~80× rarer than the other. That factor lives entirely in the off-diagonal of Σ<sup>−1</sup> — which is the whole argument for using it. Go back up to the plot, push ρ to 0.8, and drag the point between those two corners to watch the number swing.</p>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>"Equally surprising" on 4 points</h3>
+        <h4>Uncorrelated: four points on one ellipse</h4>
+        <ol>
+          <li><strong>Setup.</strong> <span class="m">μ = 0</span>, <span class="m">Σ = [4 0 ; 0 1]</span>, so <span class="m">d_M² = x₁²/4 + x₂²</span>. Points <span class="m">(2, 0), (−2, 0), (0, 1), (0, −1)</span>.</li>
+          <li><strong>Euclidean.</strong> <span class="m">2, 2, 1, 1</span>: the first two look twice as far.</li>
+          <li><strong>Mahalanobis.</strong> <span class="m">2²/4 + 0 = 1</span>, <span class="m">1</span>, <span class="m">0 + 1² = 1</span>, <span class="m">1</span>: all <span class="m">d_M = 1</span>. Each is exactly one σ out along its own axis.</li>
+          <li><strong>Equal density and equal tail.</strong> All four have <span class="m">p(x) ∝ e^(−½)</span>, and <span class="m">P(further out) = e^(−½) ≈ 61%</span>.</li>
+        </ol>
+        <h4>Correlated: four points, two verdicts</h4>
+        <ol>
+          <li><strong>Setup.</strong> <span class="m">Σ = [1 0.8 ; 0.8 1]</span>, <span class="m">det = 1 − 0.64 = 0.36</span>, <span class="m">Σ⁻¹ = [2.78 −2.22 ; −2.22 2.78]</span>. Points <span class="m">(1, 1), (−1, −1), (1, −1), (−1, 1)</span>, all at Euclidean √2.</li>
+          <li><strong>With the grain</strong>, (1, 1) and (−1, −1): <span class="m">2.78 − 4.44 + 2.78 = 1.11</span> → <span class="m">d_M = 1.05</span>, tail <span class="m">≈ 57%</span>.</li>
+          <li><strong>Against the grain</strong>, (1, −1) and (−1, 1): <span class="m">2.78 + 4.44 + 2.78 = 10</span> → <span class="m">d_M = 3.16</span>, tail <span class="m">≈ 0.7%</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> Points with the same Mahalanobis distance have the same Gaussian density and the same tail probability, no matter how far apart they look in plain Euclidean distance.</p>
+      </div>
     </section>
     </sc-if>
 

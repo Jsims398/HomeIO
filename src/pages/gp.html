@@ -98,6 +98,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT12 }}" hint-placeholder-val="{{ false }}">
@@ -246,6 +250,18 @@
           <p style="margin:8px 0 0">Look at σ² = K₂₂ − K₁₂² ⁄ K₁₁: there is no a in it. For a Gaussian, every slice of the oval has the same width; only its centre moves. So a GP's error bars depend on <em>where</em> you have data, never on <em>what values</em> you saw. (That is a real limitation, and one reason people tune the kernel to the data.)</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Slicing the oval with numbers</h3>
+        <p style="margin:0">Prior with <span class="m">K₁₁ = K₂₂ = 1</span> and <span class="m">K₁₂ = 0.6</span>. We observe <span class="m">f(x₁) = a</span> and want <span class="m">f(x₂)</span>. The concept needs just 2 variables, so the "4" here is 4 observed values of a, then 4 distances.</p>
+        <ol>
+          <li><strong>Formulas</strong> <span class="m">μ = (K₁₂/K₁₁)·a = 0.6a</span>, <span class="m">σ² = K₂₂ − K₁₂²/K₁₁ = 1 − 0.36 = 0.64</span>.</li>
+          <li><strong>4 values of a</strong>: <span class="m">a = −2, 0, 1, 2</span> → <span class="m">μ = −1.2, 0, 0.6, 1.2</span>. The variance is <span class="m">0.64</span> every time: a moves the slice's centre, never its width.</li>
+          <li><strong>4 distances (RBF, ℓ = 1, σ_f = 1, a = 1).</strong> <span class="m">K₁₂ = exp(−d²/2)</span> for <span class="m">d = 0, 0.5, 1, 2</span>: <span class="m">1, 0.88, 0.61, 0.14</span>. Posterior <span class="m">μ = 1, 0.88, 0.61, 0.14</span>, <span class="m">sd = 0, 0.47, 0.80, 0.99</span>.</li>
+          <li><strong>Read it off.</strong> At d = 0 we know f exactly (sd 0). Far away (d = 2) the observation barely helps: μ ≈ 0, sd ≈ 1, back to the prior.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> observing f(x₁) = a slices the joint Gaussian; the posterior for f(x₂) has mean (K₁₂/K₁₁)a and variance K₂₂ − K₁₂²/K₁₁, so nearby points (big K₁₂) are pinned down and the error bars never depend on a.</p>
+      </div>
     </section>
 
     <!-- ================= 17.2.1 lab ================= -->
@@ -334,6 +350,19 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why does the mean always drift back to 0 far from data?</summary>
           <p style="margin:8px 0 0">Far from every point, K<sub>*,X</sub> ≈ 0: the test input is not similar to anything we saw. Then μ<sub>*</sub> = K<sub>*,X</sub>(…) ≈ 0 = the prior mean, and Σ<sub>*</sub> ≈ K<sub>*,*</sub> = the prior variance. With no similar data, the GP falls back on what it believed before.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 2 points + 3 queries</div>
+        <h3>Noise-free GP with 2 observations, by hand</h3>
+        <p style="margin:0">RBF kernel <span class="m">ℓ = 1, σ_f = 1</span>. Observations <span class="m">f(0) = 1</span>, <span class="m">f(2) = 2</span>. Queries at <span class="m">x* = 1, 0, 5</span>. (Two points keep K_X,X a 2×2 you can invert by hand; 4 points would need a 4×4 inverse.)</p>
+        <ol>
+          <li><strong>Kernel matrix</strong> <span class="m">K(0, 2) = e^(−2) = 0.135</span> → <span class="m">K_X,X = [1 0.135 ; 0.135 1]</span>, <span class="m">det = 1 − 0.018 = 0.982</span>, <span class="m">K⁻¹ = (1/0.982)[1 −0.135 ; −0.135 1]</span>.</li>
+          <li><strong>α = K⁻¹f</strong> <span class="m">= (1/0.982)(1 − 0.27, 2 − 0.135) = (0.743, 1.900)</span>.</li>
+          <li><strong>Query x* = 1</strong>: <span class="m">k* = (e^(−0.5), e^(−0.5)) = (0.607, 0.607)</span> → <span class="m">μ* = 0.607 · (0.743 + 1.900) = 1.60</span>, <span class="m">Σ* = 1 − k*ᵀK⁻¹k* = 1 − 0.648 = 0.35</span> (sd 0.59).</li>
+          <li><strong>Query x* = 0</strong> (a data point): <span class="m">μ* = 1</span>, <span class="m">sd = 0</span>. The mean goes through the data with no doubt: an interpolator.</li>
+          <li><strong>Query x* = 5</strong> (far away): <span class="m">k* ≈ (0, 0.011)</span> → <span class="m">μ* ≈ 0.02</span>, <span class="m">sd ≈ 1.00</span>. Back to the prior mean 0, ± σ_f.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> with exact data the GP mean is μ* = K*,X K⁻¹ f, which passes through every observation with zero variance there, and drifts back to the prior (mean 0, sd σ_f) far from the data.</p>
       </div>
     </section>
 
@@ -477,6 +506,20 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Is the "noise-free" GP just the noisy one with σ<sub>y</sub> = 0?</summary>
           <p style="margin:8px 0 0">Yes. Every formula in 17.2.2 turns into 17.2.1 when σ<sub>y</sub> = 0. In code people still add a tiny σ<sub>y</sub> (a "jitter", here 10<sup>−6</sup> or less) because K<sub>X,X</sub> can be almost impossible to invert when two inputs are very close. That near-singular matrix is exactly what makes the dashed curve explode.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 2 points, one query</div>
+        <h3>Noisy GP: weights, negative weights, two error bars</h3>
+        <p style="margin:0">RBF <span class="m">ℓ = 1, σ_f = 1</span>. Data <span class="m">(0, 1)</span>, <span class="m">(1, 2)</span>. Query <span class="m">x* = −1</span>. Compare <span class="m">σ_y = 0</span> with <span class="m">σ_y = 0.5</span>. (2 points keep the inverse doable by hand.)</p>
+        <ol>
+          <li><strong>Pieces</strong>: <span class="m">K(0, 1) = e^(−0.5) = 0.607</span>; <span class="m">k* = (K(−1, 0), K(−1, 1)) = (0.607, 0.135)</span>.</li>
+          <li><strong>Noise-free weights</strong> <span class="m">w = K⁻¹k*</span> with <span class="m">K = [1 0.607 ; 0.607 1]</span>, <span class="m">det = 0.632</span>: <span class="m">w = (0.524, −0.233)/0.632 = (0.83, −0.37)</span>. A <strong>negative</strong> weight: the data rises from x = 0 to x = 1, so the GP extrapolates downward at −1.</li>
+          <li><strong>Noise-free prediction</strong>: <span class="m">μ = 0.83·1 − 0.37·2 = 0.09</span>, <span class="m">Σ* = 1 − k*ᵀw = 0.55</span> (sd 0.74).</li>
+          <li><strong>Add noise</strong>: <span class="m">K_σ = K + 0.25I = [1.25 0.607 ; 0.607 1.25]</span>, <span class="m">det = 1.195</span>: <span class="m">w = (0.676, −0.199)/1.195 = (0.57, −0.17)</span>. Both weights shrink: the GP trusts each dot less, and the slope is extrapolated less aggressively.</li>
+          <li><strong>Noisy prediction</strong>: <span class="m">μ = 0.57 − 0.33 = 0.23</span>, <span class="m">Σ* = 0.68</span> (sd of f: 0.82).</li>
+          <li><strong>Two error bars.</strong> For the true curve: <span class="m">sd = 0.82</span>. For a new measurement: <span class="m">𝕍[y*] = Σ* + σ_y² = 0.68 + 0.25 = 0.93</span> → <span class="m">sd = 0.96</span>. That one can never drop below σ_y.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> with noisy data the only change is adding σ_y² to the diagonal of K, which shrinks the weights so the curve goes between the dots instead of through them; the weights can be negative (unlike Nadaraya–Watson), and a new y gets σ_y² added to its variance.</p>
       </div>
     </section>
 

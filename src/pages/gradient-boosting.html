@@ -102,6 +102,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT17 }}" hint-placeholder-val="{{ false }}">
@@ -219,6 +223,20 @@
           <li>Absolute loss: the pseudo-residuals are only ±1, and step 3 turns each leaf back into a median residual.</li>
         </ol>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Gradient boosting with absolute loss, by hand</h3>
+        <p style="margin:0">Data: <span class="m">x = 1, 2, 3, 4</span> <span class="m">y = 1, 2, 3, 10</span> (point 4 is an outlier). Loss <span class="m">|y − f|</span>.</p>
+        <ol>
+          <li><strong>Best constant.</strong> For absolute loss it is the median: <span class="m">f₀ = (2 + 3)/2 = 2.5</span>. Mean |error| <span class="m">(1.5 + 0.5 + 0.5 + 7.5)/4 = 2.5</span>.</li>
+          <li><strong>Pseudo-residuals</strong> <span class="m">rᵢ = −∂ℓ/∂f = sign(yᵢ − f₀) = −1, −1, +1, +1</span>. Only the direction counts, not the size: the outlier counts the same as point 3.</li>
+          <li><strong>Fit a tree to r.</strong> <span class="m">x ≤ 2.5</span> splits them perfectly (SSE 0; the other splits give 2.67). Regions <span class="m">R₁ = {1, 2}</span>, <span class="m">R₂ = {3, 4}</span>.</li>
+          <li><strong>Re-solve each leaf for the real loss.</strong> <span class="m">γⱼ = median of (y − f₀) in the leaf</span>: <span class="m">R₁: median(−1.5, −0.5) = −1</span>, <span class="m">R₂: median(0.5, 7.5) = 4</span>.</li>
+          <li><strong>Add it.</strong> <span class="m">f₁ = 1.5, 1.5, 6.5, 6.5</span>. Mean |error| <span class="m">2.5 → (0.5+0.5+3.5+3.5)/4 = 2</span>.</li>
+          <li><strong>Compare squared loss.</strong> <span class="m">f₀ = mean = 4</span>, residuals <span class="m">−3, −2, −1, 6</span>: the outlier's 6 dominates and the best split becomes <span class="m">x ≤ 3.5</span> (SSE 2), just to chase point 4.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> gradient boosting fits each tree to the negative gradient of the loss at the current predictions, then resets each leaf to the value that is best for the real loss, so any differentiable loss works.</p>
+      </div>
     </section>
 
     <!-- ================= ② XGBoost ================= -->
@@ -312,6 +330,19 @@
           <p style="margin:8px 0 0">With ℓ(y, f + F) ≈ ℓ(y, f) + gF + ½hF², a leaf with value w costs Gw + ½(H + λ)w² + γ. The minimum is at w* = −G/(H + λ) and is worth −½G²/(H + λ) + γ. A split replaces one leaf by two, so it helps when gain = ½[G<sub>L</sub>²/(H<sub>L</sub>+λ) + G<sub>R</sub>²/(H<sub>R</sub>+λ) − G²/(H+λ)] is bigger than γ.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>XGBoost, one split by hand</h3>
+        <p style="margin:0">Data: <span class="m">x = 1, 2, 3, 4</span> <span class="m">y* = 0, 0, 1, 1</span>, log loss, <span class="m">λ = 1</span>, <span class="m">γ = 0.5</span>, <span class="m">η = 0.5</span>.</p>
+        <ol>
+          <li><strong>Gradients and Hessians.</strong> <span class="m">f₀ = 0 → π = 0.5</span>. <span class="m">gᵢ = π − y* = 0.5, 0.5, −0.5, −0.5</span>, <span class="m">hᵢ = π(1 − π) = 0.25</span> each.</li>
+          <li><strong>Gain of each split</strong> <span class="m">½[G_L²/(H_L+λ) + G_R²/(H_R+λ) − G²/(H+λ)]</span>. For <span class="m">x ≤ 2.5</span>: <span class="m">G_L = 1, H_L = 0.5, G_R = −1, H_R = 0.5, G = 0</span> → <span class="m">½[1/1.5 + 1/1.5 − 0] = 0.667</span>. For <span class="m">x ≤ 1.5</span> or <span class="m">x ≤ 3.5</span>: <span class="m">0.171</span>.</li>
+          <li><strong>Prune with γ.</strong> Keep a split only if gain > γ: <span class="m">0.667 > 0.5</span> keeps <span class="m">x ≤ 2.5</span>; <span class="m">0.171 &lt; 0.5</span> would be dropped. γ is the price of one more leaf.</li>
+          <li><strong>Leaf weights</strong> <span class="m">w* = −G/(H + λ)</span>: <span class="m">left = −1/1.5 = −0.667</span>, <span class="m">right = +0.667</span>. Without λ it would be the raw Newton step <span class="m">−1/0.5 = −2</span>: λ shrinks leaves toward 0.</li>
+          <li><strong>Add with learning rate.</strong> <span class="m">f₁ = 0 + 0.5·(−0.667, −0.667, 0.667, 0.667) = −0.333, −0.333, 0.333, 0.333</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> XGBoost scores splits with first and second derivatives (G and H), charges γ per leaf and λ on leaf size, and sets each leaf to the regularized Newton step −G/(H + λ).</p>
+      </div>
     </section>
 
     <!-- ================= ③ feature importance ================= -->
@@ -349,6 +380,18 @@
           <li>Slide M from 1 to 100. The ranking x<sub>1</sub> &gt; x<sub>2</sub> &gt; x<sub>3</sub> &gt; x<sub>4</sub> matches the true effects.</li>
           <li>x<sub>4</sub> never reaches exactly 0: late trees make small splits on noise.</li>
         </ol>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Feature importance from 2 stumps</h3>
+        <p style="margin:0">Data: <span class="m">(x₁, x₂) = (1,1), (2,2), (3,1), (4,2)</span> <span class="m">y = 0, 1, 4, 5</span>. Squared loss, <span class="m">f₀ = ȳ = 2.5</span>, M = 2 stumps.</p>
+        <ol>
+          <li><strong>Tree 1.</strong> Before: <span class="m">Σ(y − 2.5)² = 6.25+2.25+2.25+6.25 = 17</span>. Split <span class="m">x₁ ≤ 2.5</span>: leaves <span class="m">0.5 | 4.5</span>, SSE <span class="m">0.5 + 0.5 = 1</span>. Loss reduction <span class="m">G = 17 − 1 = 16</span>, on feature x₁.</li>
+          <li><strong>Tree 2</strong> fits residuals <span class="m">−0.5, 0.5, −0.5, 0.5</span> (SSE 1). Split <span class="m">x₂ ≤ 1.5</span> fits them exactly: <span class="m">G = 1 − 0 = 1</span>, on feature x₂.</li>
+          <li><strong>Average over trees.</strong> <span class="m">R_x₁ = (16 + 0)/2 = 8</span>, <span class="m">R_x₂ = (0 + 1)/2 = 0.5</span>.</li>
+          <li><strong>Scale top to 100.</strong> <span class="m">x₁: 100</span>, <span class="m">x₂: 0.5/8·100 = 6.25</span>. x₁ moves y by about 4, x₂ by about 1, and the scores rank them that way.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> the importance of a feature is the total loss reduction from every split that used it, averaged over the trees and scaled so the top feature is 100.</p>
       </div>
     </section>
 
@@ -398,6 +441,18 @@
         <ol style="margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7">
           <li>Click through x<sub>1</sub> to x<sub>4</sub>: the orange curve tracks the true effect (a wave, a line, a step, flat).</li>
         </ol>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Partial dependence by hand</h3>
+        <p style="margin:0">Model from the card above: <span class="m">f(x₁, x₂) = 2.5 + (−2 if x₁ ≤ 2.5 else +2) + (−0.5 if x₂ ≤ 1.5 else +0.5)</span>. Training values: <span class="m">x₁ = 1, 2, 3, 4</span>, <span class="m">x₂ = 1, 2, 1, 2</span>.</p>
+        <ol>
+          <li><strong>Pick a value for x₁</strong>, say <span class="m">x₁ = 1</span>, and plug it into every training row, keeping each row's own x₂: <span class="m">f(1,1), f(1,2), f(1,1), f(1,2) = 0, 1, 0, 1</span>.</li>
+          <li><strong>Average.</strong> <span class="m">f̄₁(1) = (0+1+0+1)/4 = 0.5</span>. Repeat at <span class="m">x₁ = 3</span>: <span class="m">4, 5, 4, 5 → f̄₁(3) = 4.5</span>. The curve jumps by <span class="m">4</span>: x₁'s effect.</li>
+          <li><strong>Same for x₂.</strong> <span class="m">x₂ = 1: f = 0, 0, 4, 4 → 2</span>; <span class="m">x₂ = 2: 1, 1, 5, 5 → 3</span>. A jump of <span class="m">1</span>.</li>
+          <li><strong>Read it.</strong> Importance (card above) said x₁ matters more; partial dependence shows <em>how</em>: a step up of 4 for x₁ and of 1 for x₂.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> to get the partial dependence of feature k at value v, set feature k to v in every training row, predict, and average; plotting that against v shows how the model uses k on average.</p>
       </div>
     </section>
 

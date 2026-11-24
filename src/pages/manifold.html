@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manifolds · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<script src="../logic/kt-math.js"></script>
+<script src="../logic/pca-math.js"></script>
+<script src="../logic/manifold-math.js"></script>
+<script src="../logic/walkthrough.js"></script>
+<script src="../logic/manifold-roll-view.js"></script>
+<script src="../logic/manifold-images-view.js"></script>
+<script src="../logic/manifold-graph-view.js"></script>
+<script src="../logic/reading-log.js"></script>
+<script src="../lib/dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:2px">Topics</div>
+      <button sc-camel-on-click="{{ goT1 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t1Bg }};color:{{ t1Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 1 · Probability</span>
+        <span style="font-size:11px;opacity:.85">§2.1 – 2.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT2 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t2Bg }};color:{{ t2Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 2 · Distributions</span>
+        <span style="font-size:11px;opacity:.85">§2.4, 2.5, 2.6.4, 2.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT3 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t3Bg }};color:{{ t3Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 3 · Mahalanobis</span>
+        <span style="font-size:11px;opacity:.85">§3.2.2 (+ covariance)</span>
+      </button>
+      <button sc-camel-on-click="{{ goT4 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t4Bg }};color:{{ t4Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 4 · Bias &amp; variance</span>
+        <span style="font-size:11px;opacity:.85">§3.5, 4.7.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT5 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t5Bg }};color:{{ t5Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 5 · ROC curves</span>
+        <span style="font-size:11px;opacity:.85">§5.1.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT6 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t6Bg }};color:{{ t6Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 6 · KL direction</span>
+        <span style="font-size:11px;opacity:.85">§6.2.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT7 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t7Bg }};color:{{ t7Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 7 · Mutual information</span>
+        <span style="font-size:11px;opacity:.85">§6.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT8 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t8Bg }};color:{{ t8Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 8 · EM algorithm</span>
+        <span style="font-size:11px;opacity:.85">§8.7</span>
+      </button>
+      <button sc-camel-on-click="{{ goT9 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t9Bg }};color:{{ t9Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 9 · Naive Bayes</span>
+        <span style="font-size:11px;opacity:.85">§9.3 – 9.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT10 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t10Bg }};color:{{ t10Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 10 · Metric learning</span>
+        <span style="font-size:11px;opacity:.85">§16.2.2 – 16.2.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT11 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t11Bg }};color:{{ t11Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 11 · Kernel density</span>
+        <span style="font-size:11px;opacity:.85">§16.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT12 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t12Bg }};color:{{ t12Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 12 · Gaussian processes</span>
+        <span style="font-size:11px;opacity:.85">§17.2.1 – 17.2.2</span>
+      </button>
+      <button sc-camel-on-click="{{ goT13 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t13Bg }};color:{{ t13Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 13 · Kernel trick</span>
+        <span style="font-size:11px;opacity:.85">§17.3.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT14 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t14Bg }};color:{{ t14Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 14 · Tuning &amp; regression</span>
+        <span style="font-size:11px;opacity:.85">§17.3.6 – 17.3.8</span>
+      </button>
+      <button sc-camel-on-click="{{ goT15 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t15Bg }};color:{{ t15Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 15 · Decision trees</span>
+        <span style="font-size:11px;opacity:.85">§18.1</span>
+      </button>
+      <button sc-camel-on-click="{{ goT16 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t16Bg }};color:{{ t16Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 16 · Boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.1 – 18.5.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT17 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t17Bg }};color:{{ t17Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 17 · Gradient boosting</span>
+        <span style="font-size:11px;opacity:.85">§18.5.5, 18.6</span>
+      </button>
+      <button sc-camel-on-click="{{ goT18 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t18Bg }};color:{{ t18Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 18 · Co-training</span>
+        <span style="font-size:11px;opacity:.85">§19.3.3</span>
+      </button>
+      <button sc-camel-on-click="{{ goT19 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t19Bg }};color:{{ t19Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
+        <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
+      </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
+    </nav>
+
+    <sc-if value="{{ showT20 }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--color-divider);padding-top:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding-left:14px;margin-bottom:4px">On this page</div>
+        <a href="#mfwhat" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">① &nbsp;What is a manifold?</a>
+        <a href="#mfhyp" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">② &nbsp;The manifold hypothesis</a>
+        <a href="#mfhow" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-accent-700);text-decoration:none;font-weight:600" style-hover="background:var(--color-accent-200)">③ &nbsp;Approaches</a>
+        <a href="#mfwrap" style="padding:6px 14px;border-radius:999px;font-size:13px;color:var(--color-text);text-decoration:none" style-hover="background:var(--color-accent-200)">Recap</a>
+      </nav>
+    </sc-if>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <sc-if value="{{ showT20 }}" hint-placeholder-val="{{ false }}">
+    <header id="topic20" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Topic 20</span>
+        <span class="tag tag-accent-2">Murphy, PML — §20.4.1 – 20.4.3</span>
+        <span class="tag tag-outline">Dimensionality reduction</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:22ch;text-wrap:pretty">Manifolds: when the data is curved</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">PCA finds the best <em>flat</em> subspace. <strong>Manifold learning</strong> assumes the data lie on a low-dimensional <em>curved</em> surface inside ℝᴰ and tries to recover coordinates along that surface. Three walkthroughs: ① what a manifold is, on a rolled-up curve, ② why real data like images should lie on one, ③ the general recipe most methods follow, and how it breaks.</p>
+    </header>
+
+    <!-- ================= ① what is a manifold (§20.4.1) ================= -->
+    <section id="mfwhat" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">① · 20.4.1</span>
+        <h2 style="margin:0">What is a manifold?</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">A 1-D curve rolled up inside the 2-D plane: the simplest swiss roll. Press <strong>Next step</strong>, and drag <strong>P</strong> along the curve to test each idea at a different spot.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ mrBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ mrNext }}" style="font-size:13px">{{ mrNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ mrReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ mrLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 300px;min-width:0;max-width:440px;display:flex;flex-direction:column;gap:10px">
+            <svg sc-camel-view-box="0 0 400 400" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Points on a spiral curve, with a neighbourhood, tangent line, two marked points and the PCA line">
+              <polyline points="{{ mrCurve }}" fill="none" stroke="var(--color-divider)" stroke-width="2"></polyline>
+              <sc-if value="{{ mrShowPca }}" hint-placeholder-val="{{ false }}">
+                <line x1="{{ mrPcaLine.x1 }}" y1="{{ mrPcaLine.y1 }}" x2="{{ mrPcaLine.x2 }}" y2="{{ mrPcaLine.y2 }}" stroke="var(--color-accent)" stroke-width="2.5" stroke-dasharray="8 6"></line>
+              </sc-if>
+              <sc-if value="{{ mrShowLocal }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <circle cx="{{ mrCircle.cx }}" cy="{{ mrCircle.cy }}" r="{{ mrCircle.r }}" fill="var(--color-accent-200)" fill-opacity=".45" stroke="var(--color-accent-400)" stroke-width="1.5"></circle>
+                  <line x1="{{ mrTangent.x1 }}" y1="{{ mrTangent.y1 }}" x2="{{ mrTangent.x2 }}" y2="{{ mrTangent.y2 }}" stroke="var(--color-accent-700)" stroke-width="2.5" stroke-linecap="round"></line>
+                </g>
+              </sc-if>
+              <sc-if value="{{ mrShowPair }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <polyline points="{{ mrArc }}" fill="none" stroke="var(--color-text)" stroke-width="9" stroke-opacity=".22" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                  <line x1="{{ mrPairSeg.x1 }}" y1="{{ mrPairSeg.y1 }}" x2="{{ mrPairSeg.x2 }}" y2="{{ mrPairSeg.y2 }}" stroke="var(--color-text)" stroke-width="2.5" stroke-dasharray="5 4"></line>
+                </g>
+              </sc-if>
+              <sc-for list="{{ mrDots }}" as="d" hint-placeholder-count="120">
+                <circle cx="{{ d.x }}" cy="{{ d.y }}" r="{{ d.r }}" fill="{{ d.color }}"></circle>
+              </sc-for>
+              <circle cx="{{ mrP.x }}" cy="{{ mrP.y }}" r="7.5" fill="none" stroke="var(--color-text)" stroke-width="2.5"></circle>
+              <text x="{{ mrPLbl.x }}" y="{{ mrPLbl.y }}" font-size="14" font-weight="700" fill="var(--color-text)">P</text>
+              <sc-if value="{{ mrShowPair }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <circle cx="{{ mrQ.x }}" cy="{{ mrQ.y }}" r="7.5" fill="none" stroke="var(--color-text)" stroke-width="2.5"></circle>
+                  <text x="{{ mrQLbl.x }}" y="{{ mrQLbl.y }}" font-size="14" font-weight="700" fill="var(--color-text)">Q</text>
+                </g>
+              </sc-if>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin-left:6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:28px;height:10px;border-radius:5px;background:linear-gradient(90deg,#c67139,#7a8a5e,#4f6d8a)"></span>position along the curve (hidden from the algorithm)</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:0;border-top:2.5px dashed var(--color-text)"></span>straight-line distance</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:8px;border-radius:4px;background:var(--color-text);opacity:.22"></span>along the curve</span>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;margin-top:4px">
+              <span>Move <strong>P</strong> along the curve</span>
+              <input type="range" min="0" max="{{ mrMaxI }}" step="1" value="{{ mrI }}" sc-camel-on-change="{{ mrOnI }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Position of P along the curve">
+            </label>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px">
+              <sc-for list="{{ mrStats }}" as="s" hint-placeholder-count="3">
+                <div style="padding:8px 10px;border-radius:16px;background:var(--color-neutral-100)">
+                  <div style="font-size:11px;color:var(--color-neutral-700)">{{ s.k }}</div>
+                  <div style="font-family:var(--font-heading);font-size:17px">{{ s.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ mrCards }}" as="s" hint-placeholder-count="5">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ mrShowStrip }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px;padding:12px 16px;border-radius:24px;background:var(--color-neutral-100)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">1-D picture · {{ mrStripTitle }}</div>
+            <svg sc-camel-view-box="0 0 400 56" style="width:100%;height:auto" role="img" aria-label="Each point placed on a number line">
+              <line x1="22" y1="34" x2="378" y2="34" stroke="var(--color-divider)" stroke-width="2"></line>
+              <sc-for list="{{ mrStrip }}" as="d" hint-placeholder-count="120">
+                <circle cx="{{ d.x }}" cy="{{ d.y }}" r="4.5" fill="{{ d.color }}" fill-opacity=".85"></circle>
+              </sc-for>
+              <circle cx="{{ mrStripP.x }}" cy="34" r="7.5" fill="none" stroke="var(--color-text)" stroke-width="2.5"></circle>
+              <text x="{{ mrStripP.x }}" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-text)">P</text>
+              <sc-if value="{{ mrShowPair }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <circle cx="{{ mrStripQ.x }}" cy="34" r="7.5" fill="none" stroke="var(--color-text)" stroke-width="2.5"></circle>
+                  <text x="{{ mrStripQ.x }}" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-text)">Q</text>
+                </g>
+              </sc-if>
+            </svg>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>A U-shaped manifold, by hand</h3>
+        <p style="margin:0">Data walk around a "U": <span class="m">A = (0, 3)</span> <span class="m">B = (0, 0)</span> <span class="m">C = (2, 0)</span> <span class="m">D = (2, 3)</span>, joined A → B → C → D by straight pieces.</p>
+        <ol>
+          <li><strong>Dimensions.</strong> Each point has 2 numbers, so <span class="m">D = 2</span>. But one number, the distance travelled along the U, pins down any point on it, so the intrinsic dimension is <span class="m">d = 1</span>.</li>
+          <li><strong>Chart (intrinsic coordinate).</strong> Arc length from A: <span class="m">t_A = 0</span>, <span class="m">t_B = 3</span>, <span class="m">t_C = 3 + 2 = 5</span>, <span class="m">t_D = 5 + 3 = 8</span>.</li>
+          <li><strong>Local distances agree.</strong> <span class="m">‖A − B‖ = 3</span> and the path A → B is also 3. Neighbours on a straight piece: Euclidean = along the manifold.</li>
+          <li><strong>Far distances don't.</strong> <span class="m">‖A − D‖ = √(2² + 0²) = 2</span>, but along the U it is <span class="m">t_D − t_A = 8</span>. The two ends look close in ℝ² and are far apart on the manifold.</li>
+          <li><strong>PCA can't unroll it.</strong> <span class="m">μ = (1, 1.5)</span>; centred: <span class="m">(−1, 1.5), (−1, −1.5), (1, −1.5), (1, 1.5)</span>.
+            <span class="m">Σ₁₁ = 4/4 = 1</span>, <span class="m">Σ₂₂ = 9/4 = 2.25</span>, <span class="m">Σ₁₂ = (−1.5 + 1.5 − 1.5 + 1.5)/4 = 0</span>, so <span class="m">w₁ = (0, 1)</span>, <span class="m">λ₁ = 2.25</span>.</li>
+          <li><strong>Scores.</strong> <span class="m">z = w₁ᵀx̃ = 1.5, −1.5, −1.5, 1.5</span>. A and D get the same z (8 apart on the manifold), B and C too. The order A, B, C, D is lost: a straight line can't follow a bend.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> a d-dimensional manifold is a set that looks like flat ℝᵈ in every small patch (its tangent space) even if it bends through ℝᴰ, so straight-line distance is only trustworthy between close neighbours, and a linear method like PCA can merge points that are far apart along the manifold.</p>
+      </div>
+    </section>
+
+    <!-- ================= ② the manifold hypothesis (§20.4.2) ================= -->
+    <section id="mfhyp" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">② · 20.4.2</span>
+        <h2 style="margin:0">The manifold hypothesis</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">Why should real data be curved and low-dimensional? Tiny 7×7 images make the case: random pixels are noise, but images made by turning one knob trace a curve through ℝ⁴⁹.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ mhBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ mhNext }}" style="font-size:13px">{{ mhNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ mhReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ mhLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 300px;min-width:0;max-width:440px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start">
+              <div style="flex:0 0 auto;display:flex;flex-direction:column;gap:6px;align-items:center">
+                <svg sc-camel-view-box="0 0 140 140" style="width:150px;height:150px;border-radius:14px;background:var(--color-neutral-100)" role="img" aria-label="A 7 by 7 pixel image">
+                  <sc-for list="{{ mhCells }}" as="q" hint-placeholder-count="49">
+                    <rect x="{{ q.x }}" y="{{ q.y }}" width="20" height="20" fill="var(--color-text)" fill-opacity="{{ q.o }}"></rect>
+                  </sc-for>
+                </svg>
+                <span style="font-size:12px;color:var(--color-neutral-700)">{{ mhImgTitle }}</span>
+              </div>
+              <div style="flex:1 1 160px;min-width:0;padding:10px 12px;border-radius:18px;background:var(--color-neutral-100)">
+                <div style="font-size:11px;letter-spacing:.06em;color:var(--color-accent-700);margin-bottom:4px">the same image as 49 numbers</div>
+                <pre style="margin:0;font-size:11.5px;line-height:1.45;overflow-x:auto;font-variant-numeric:tabular-nums">{{ mhVector }}</pre>
+              </div>
+            </div>
+            <sc-if value="{{ mhShowRandom }}" hint-placeholder-val="{{ false }}">
+              <button class="btn btn-secondary" sc-camel-on-click="{{ mhReroll }}" style="font-size:13px;align-self:flex-start">Another random image</button>
+            </sc-if>
+            <sc-if value="{{ mhShowKnob }}" hint-placeholder-val="{{ false }}">
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:13px">
+                <span>Turn the knob: <strong>θ = {{ mhAng }}°</strong></span>
+                <input type="range" min="0" max="{{ mhAngMax }}" step="{{ mhAngStep }}" value="{{ mhAng }}" sc-camel-on-change="{{ mhOnAng }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Rotation angle of the bar">
+              </label>
+            </sc-if>
+            <sc-if value="{{ mhShowLoop }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <svg sc-camel-view-box="0 0 240 240" style="width:100%;max-width:280px;height:auto;align-self:center;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Rotated images projected onto the first two principal components form a loop">
+                  <line x1="120" y1="14" x2="120" y2="226" stroke="var(--color-divider)"></line>
+                  <line x1="14" y1="120" x2="226" y2="120" stroke="var(--color-divider)"></line>
+                  <text x="224" y="114" text-anchor="end" font-size="10" fill="var(--color-neutral-600)">PC1</text>
+                  <text x="126" y="24" font-size="10" fill="var(--color-neutral-600)">PC2</text>
+                  <polyline points="{{ mhLoopPath }}" fill="none" stroke="var(--color-neutral-400)" stroke-width="1.5"></polyline>
+                  <sc-for list="{{ mhLoopPts }}" as="d" hint-placeholder-count="36">
+                    <circle cx="{{ d.x }}" cy="{{ d.y }}" r="5" fill="{{ d.color }}"></circle>
+                  </sc-for>
+                  <circle cx="{{ mhLoopCur.x }}" cy="{{ mhLoopCur.y }}" r="9" fill="none" stroke="var(--color-text)" stroke-width="2.5"></circle>
+                </svg>
+                <span style="font-size:12px;color:var(--color-neutral-700);align-self:center">colour = angle θ, 0° → 175°; ring = current θ</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mhShowSpec }}" hint-placeholder-val="{{ false }}">
+              <svg sc-camel-view-box="0 0 420 200" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Eigenvalues of the rotated images, largest first">
+                <line x1="16" y1="176" x2="408" y2="176" stroke="var(--color-divider)"></line>
+                <sc-for list="{{ mhSpec }}" as="b" hint-placeholder-count="12">
+                  <rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" rx="4" fill="{{ b.color }}"></rect>
+                </sc-for>
+                <text x="212" y="194" text-anchor="middle" font-size="11" font-weight="700" fill="var(--color-neutral-700)">eigenvalues λ₁ … λ₁₂ (coloured: needed for 90%)</text>
+              </svg>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px">
+              <sc-for list="{{ mhStats }}" as="s" hint-placeholder-count="3">
+                <div style="padding:8px 10px;border-radius:16px;background:var(--color-neutral-100)">
+                  <div style="font-size:11px;color:var(--color-neutral-700)">{{ s.k }}</div>
+                  <div style="font-family:var(--font-heading);font-size:17px">{{ s.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ mhCards }}" as="s" hint-placeholder-count="5">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-pixel version</div>
+        <h3>A blurry dot sliding along 4 pixels</h3>
+        <p style="margin:0">Images are 1×4 strips (<span class="m">D = 4</span>). A blurry dot sits at position 1, 2, 3 or 4:
+          <span class="m">a₁ = (1, .5, 0, 0)</span> <span class="m">a₂ = (.5, 1, .5, 0)</span> <span class="m">a₃ = (0, .5, 1, .5)</span> <span class="m">a₄ = (0, 0, .5, 1)</span>.</p>
+        <ol>
+          <li><strong>One knob.</strong> Every image is fixed by one number, the dot's position, so the images lie on a 1-D manifold in ℝ⁴ (<span class="m">d = 1 ≪ D = 4</span>).</li>
+          <li><strong>Neighbours are close.</strong> <span class="m">‖a₁ − a₂‖² = .25 + .25 + .25 + 0 = .75</span> → <span class="m">0.87</span>; <span class="m">‖a₂ − a₃‖² = 4 · .25 = 1</span> → <span class="m">1.0</span>.</li>
+          <li><strong>Far ones stop getting farther.</strong> <span class="m">‖a₁ − a₃‖² = 1 + 0 + 1 + .25 = 2.25</span> → <span class="m">1.5</span>; <span class="m">‖a₁ − a₄‖² = 1 + .25 + .25 + 1 = 2.5</span> → <span class="m">1.58</span>. Three steps apart is barely farther than two: once the images stop overlapping, pixel distance saturates. Again, only local distances mean anything.</li>
+          <li><strong>Random images are not on it.</strong> Pick 4 random brightnesses, e.g. <span class="m">(.9, .1, .8, .2)</span>: no dot position produces that. With binary 28×28 images there are <span class="m">2⁷⁸⁴ ≈ 10²³⁶</span> possible pictures, and almost none look like a digit.</li>
+          <li><strong>Counting knobs for real data.</strong> Take one MNIST "6" and rotate it (1 knob) and shift it left/right and up/down (2 more): the copies form a <span class="m">d = 3</span> manifold inside <span class="m">ℝ⁷⁸⁴</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> the manifold hypothesis says natural high-dimensional data (images, sounds) are not spread through ℝᴰ but sit on or near a low-dimensional manifold, because a few underlying factors (pose, position, lighting) generate them; random points in ℝᴰ look like noise.</p>
+      </div>
+    </section>
+
+    <!-- ================= ③ approaches (§20.4.3) ================= -->
+    <section id="mfhow" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">③ · 20.4.3</span>
+        <h2 style="margin:0">Approaches to manifold learning</h2>
+      </div>
+      <p style="max-width:64ch;font-size:15.5px;line-height:1.65;margin:0">The recipe most nonparametric methods share, run on the spiral from ①: neighbour graph → distances along the graph → embedding. Move <strong>k</strong> on any step to see it hold up or break.</p>
+
+      <div style="margin-top:20px;padding:clamp(20px,3vw,32px);border-radius:52px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px">
+          <button class="btn btn-secondary" sc-camel-on-click="{{ mgBack }}" style="font-size:13px">← Back</button>
+          <button class="btn btn-primary" sc-camel-on-click="{{ mgNext }}" style="font-size:13px">{{ mgNextLabel }}</button>
+          <button class="btn btn-ghost" sc-camel-on-click="{{ mgReset }}" style="font-size:13px">Reset</button>
+          <span class="tag tag-accent-2" style="margin-left:auto">{{ mgLabel }}</span>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:24px">
+          <div style="flex:1 1 300px;min-width:0;max-width:440px;display:flex;flex-direction:column;gap:10px">
+            <svg sc-camel-view-box="0 0 400 400" style="width:100%;height:auto;border-radius:22px;background:var(--color-neutral-100)" role="img" aria-label="Spiral points with their nearest-neighbour graph and a shortest path">
+              <sc-if value="{{ mgShowEdges }}" hint-placeholder-val="{{ false }}">
+                <g>
+                  <sc-for list="{{ mgEdges }}" as="e" hint-placeholder-count="300">
+                    <line x1="{{ e.x1 }}" y1="{{ e.y1 }}" x2="{{ e.x2 }}" y2="{{ e.y2 }}" stroke="{{ e.color }}" stroke-width="{{ e.w }}"></line>
+                  </sc-for>
+                </g>
+              </sc-if>
+              <sc-if value="{{ mgShowPath }}" hint-placeholder-val="{{ false }}">
+                <polyline points="{{ mgPath }}" fill="none" stroke="var(--color-text)" stroke-width="9" stroke-opacity=".22" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              </sc-if>
+              <sc-for list="{{ mgDots }}" as="d" hint-placeholder-count="120">
+                <circle cx="{{ d.x }}" cy="{{ d.y }}" r="4" fill="{{ d.color }}"></circle>
+              </sc-for>
+            </svg>
+            <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--color-neutral-700);margin-left:6px">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:2px;background:var(--color-neutral-400)"></span>graph edge</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:#b3412e"></span>shortcut across turns</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:8px;border-radius:4px;background:var(--color-text);opacity:.22"></span>shortest path, inner end → outer end</span>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:13px;margin-top:4px">
+              <span>Neighbours per point: <strong>k = {{ mgK }}</strong></span>
+              <input type="range" min="{{ mgKMin }}" max="{{ mgKMax }}" step="1" value="{{ mgK }}" sc-camel-on-change="{{ mgOnK }}" style="width:100%;accent-color:var(--color-accent);cursor:pointer" aria-label="Number of nearest neighbours k">
+            </label>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px">
+              <sc-for list="{{ mgStats }}" as="s" hint-placeholder-count="4">
+                <div style="padding:8px 10px;border-radius:16px;background:var(--color-neutral-100)">
+                  <div style="font-size:11px;color:var(--color-neutral-700)">{{ s.k }}</div>
+                  <div style="font-family:var(--font-heading);font-size:17px">{{ s.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ mgCards }}" as="s" hint-placeholder-count="6">
+              <button sc-camel-on-click="{{ s.onClick }}" style="text-align:left;cursor:pointer;font-family:var(--font-body);color:var(--color-text);border:2px solid {{ s.border }};background:{{ s.bg }};opacity:{{ s.opacity }};border-radius:24px;padding:12px 16px;display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ s.num }} · {{ s.title }}</span>
+                <span style="font-size:13.5px;font-weight:700">{{ s.formula }}</span>
+                <span style="font-size:13.5px;line-height:1.55">{{ s.body }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ mgShowStrip }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px;padding:12px 16px;border-radius:24px;background:var(--color-neutral-100)">
+            <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:4px">1-D embedding · {{ mgStripTitle }}</div>
+            <svg sc-camel-view-box="0 0 400 56" style="width:100%;height:auto" role="img" aria-label="The learned 1-D coordinate of each point">
+              <line x1="22" y1="34" x2="378" y2="34" stroke="var(--color-divider)" stroke-width="2"></line>
+              <sc-for list="{{ mgStrip }}" as="d" hint-placeholder-count="120">
+                <circle cx="{{ d.x }}" cy="{{ d.y }}" r="4.5" fill="{{ d.color }}" fill-opacity=".85"></circle>
+              </sc-for>
+            </svg>
+          </div>
+        </sc-if>
+        <sc-if value="{{ mgShowBroken }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:18px 0 0;padding:12px 16px;border-radius:24px;background:var(--color-neutral-100);font-size:13.5px">The graph is in pieces at this k, so no embedding. Raise k.</p>
+        </sc-if>
+      </div>
+
+      <h3 style="margin:28px 0 10px;font-size:19px">The landscape of methods</h3>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Method</th><th>Linear?</th><th>Parametric?</th><th>Convex?</th><th>What it preserves</th><th>§</th></tr></thead>
+          <tbody>
+            <tr><td>PCA</td><td>yes</td><td>yes: z = Wᵀ(x − μ)</td><td>yes (eigenproblem)</td><td>variance / reconstruction</td><td>20.1</td></tr>
+            <tr><td>Classical MDS</td><td>yes</td><td>no</td><td>yes (dense eigenproblem)</td><td>all pairwise distances</td><td>20.4.4</td></tr>
+            <tr><td>Isomap</td><td>no</td><td>no</td><td>yes (dense eigenproblem)</td><td>shortest-path distances on the k-NN graph</td><td>20.4.5</td></tr>
+            <tr><td>Kernel PCA</td><td>no</td><td>no</td><td>yes (dense eigenproblem)</td><td>variance in a kernel feature space</td><td>20.4.6</td></tr>
+            <tr><td>LLE</td><td>no</td><td>no</td><td>yes (sparse eigenproblem)</td><td>each point as a weighted mix of its neighbours</td><td>20.4.8</td></tr>
+            <tr><td>Laplacian eigenmaps</td><td>no</td><td>no</td><td>yes (sparse eigenproblem)</td><td>graph neighbours stay close</td><td>20.4.9</td></tr>
+            <tr><td>t-SNE</td><td>no</td><td>no</td><td>no</td><td>neighbour probabilities</td><td>20.4.10</td></tr>
+            <tr><td>Autoencoder</td><td>no</td><td>yes: z = f_θ(x)</td><td>no</td><td>reconstruction</td><td>20.3</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point versions</div>
+        <h3>Graph, then distances, then embedding, by hand</h3>
+
+        <h4>(a) Build the graph, and watch it short-circuit</h4>
+        <ol>
+          <li>Same U as ①: <span class="m">A = (0, 3)</span> <span class="m">B = (0, 0)</span> <span class="m">C = (2, 0)</span> <span class="m">D = (2, 3)</span>. Pairwise: <span class="m">AB = 3</span>, <span class="m">BC = 2</span>, <span class="m">CD = 3</span>, <span class="m">AD = 2</span>, <span class="m">AC = BD = √13 ≈ 3.61</span>.</li>
+          <li><strong>k = 1.</strong> A's nearest is D (2 &lt; 3), B's is C, C's is B, D's is A. Edges A–D and B–C: two pieces, so some graph distances are ∞.</li>
+          <li><strong>k = 2.</strong> Adds A–B and C–D: a 4-cycle. Shortest A → D is now the edge itself, <span class="m">2</span>, instead of the true <span class="m">8</span>. A–D is a <strong>shortcut</strong> across the gap of the U.</li>
+          <li><strong>Fix: sample densely.</strong> Put a point every 1 unit along the U and connect points within <span class="m">ε = 1</span>. Now A–D (2 apart) is not an edge, and the shortest path A → D walks the whole U: <span class="m">8</span>. The gap must be wider than the neighbourhood size.</li>
+        </ol>
+
+        <h4>(b) Classical MDS from the graph distances</h4>
+        <ol>
+          <li>Correct path distances (from t = 0, 3, 5, 8): <span class="m">AB 3, AC 5, AD 8, BC 2, BD 5, CD 3</span>. Square them: <span class="m">D⁽²⁾ = [0 9 25 64 ; 9 0 4 25 ; 25 4 0 9 ; 64 25 9 0]</span>.</li>
+          <li>Row means <span class="m">24.5, 9.5, 9.5, 24.5</span>, grand mean <span class="m">17</span>.</li>
+          <li>Double-centre: <span class="m">B_ij = −½ (D⁽²⁾_ij − row_i − row_j + grand)</span>.
+            <span class="m">B_AA = −½(0 − 24.5 − 24.5 + 17) = 16</span>, <span class="m">B_AB = −½(9 − 24.5 − 9.5 + 17) = 4</span>, <span class="m">B_AD = −½(64 − 24.5 − 24.5 + 17) = −16</span>, <span class="m">B_BB = 1</span>, <span class="m">B_BC = −1</span>.</li>
+          <li>Notice <span class="m">B = z zᵀ</span> with <span class="m">z = (−4, −1, 1, 4)</span>: rank 1, <span class="m">λ₁ = ‖z‖² = 16 + 1 + 1 + 16 = 34</span>, <span class="m">u₁ = z / √34</span>.</li>
+          <li>Embedding <span class="m">z = √λ₁ u₁ = (−4, −1, 1, 4)</span> = <span class="m">t − 4</span>: the U is unrolled, A and D are 8 apart again. Compare PCA in ①, which put A and D on top of each other.</li>
+          <li>Feed MDS the <em>shortcut</em> distances from (a) instead and A, D come out close again: the embedding is only as good as the graph.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> parametric methods learn a map z = f(x) that works on new points, nonparametric ones only embed the training set, and most of the latter build a k-NN (or ε) graph, compute some property of it (shortest paths, local weights, neighbour probabilities) and find low-dimensional z that keep it, which works only if k or ε is small enough not to short-circuit the manifold.</p>
+      </div>
+    </section>
+
+    <!-- ================= Recap ================= -->
+    <section id="mfwrap" style="margin-bottom:56px">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+        <span style="font-family:var(--font-heading);font-size:13px;color:var(--color-accent);letter-spacing:.06em">20.4</span>
+        <h2 style="margin:0">Recap</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Idea</th><th>One line</th></tr></thead>
+          <tbody>
+            <tr><td>Manifold</td><td>a set that looks like flat ℝᵈ in every small patch, even though it bends through ℝᴰ</td></tr>
+            <tr><td>Intrinsic dimension d</td><td>how many numbers pin down a point on the manifold (knobs), vs D numbers to write it down</td></tr>
+            <tr><td>Tangent space</td><td>the flat ℝᵈ that best fits the manifold at one point (the tangent line in ①)</td></tr>
+            <tr><td>Distances</td><td>straight-line distance ≈ distance along the manifold only for close neighbours</td></tr>
+            <tr><td>Manifold hypothesis</td><td>real high-D data (images) sit near a low-D manifold; random points in ℝᴰ look like noise</td></tr>
+            <tr><td>Why not PCA</td><td>a flat subspace can't follow a bend: it merges far-apart points and needs many directions</td></tr>
+            <tr><td>Parametric vs not</td><td>learn z = f(x) (PCA, autoencoder) vs output z only for training points (Isomap, LLE, t-SNE…)</td></tr>
+            <tr><td>Common recipe</td><td>k-NN graph → property of the graph → low-D z that keeps it; k too big short-circuits</td></tr>
+            <tr><td>Convex vs not</td><td>eigenproblem methods give one answer; t-SNE and autoencoders can land in different local optima</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: send me the sections and I'll add Topic 21.</p>
+    </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;showHostRule&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showTally&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showBayes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const Component = createReadingLog(DCLogic, 20);
+</script>
+</body></html>

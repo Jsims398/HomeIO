@@ -100,6 +100,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT16 }}" hint-placeholder-val="{{ false }}">
@@ -167,6 +171,19 @@
         </table>
       </div>
       <p style="max-width:64ch;font-size:14px;line-height:1.6;color:var(--color-neutral-700);margin-top:12px">Notation: for classification the labels are ỹ ∈ {−1, +1}, and y* = (ỹ + 1)/2 ∈ {0, 1} is the same label written as 0/1. The product ỹ f(x) is the <em>margin</em>: positive means the point is on the right side, and bigger means more confident.</p>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>The recipe on 4 points</h3>
+        <p style="margin:0">Data: <span class="m">x = 1, 2, 3, 4</span> <span class="m">y = 2, 4, 8, 10</span> (regression), and for classification <span class="m">ỹ = −1, −1, +1, +1</span>.</p>
+        <ol>
+          <li><strong>Step 0: best constant.</strong> Squared loss: <span class="m">f₀ = argmin_γ Σ (yᵢ − γ)² = ȳ = (2+4+8+10)/4 = 6</span>. Check: <span class="m">Σ(y − 6)² = 16+4+4+16 = 40</span>, while <span class="m">Σ(y − 5)² = 44</span> is worse.</li>
+          <li>Exponential loss with balanced classes: <span class="m">Σ exp(−ỹᵢ γ) = 2e^{−γ} + 2e^{γ}</span> is smallest at <span class="m">γ = 0</span> (value 4; at γ = 0.5 it is 4.51). So <span class="m">f₀ = 0</span>: "no idea yet".</li>
+          <li><strong>Step 1: fit one new term.</strong> Search only the new stump F (its split, e.g. <span class="m">x ≤ 2.5</span>) and its size β. Everything already in f₀ is frozen.</li>
+          <li><strong>Step 2: add it.</strong> <span class="m">f₁(x) = f₀(x) + β₁F₁(x)</span>. Round 2 then searches a new F₂ with f₁ held fixed. Old terms are never refit: that is what "stagewise" means.</li>
+          <li><strong>Only step 1 depends on the loss</strong>: squared → fit residuals (②), exponential → reweight (③), log loss → Newton step (④). The cards below work each one on 4 points.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> start from the best constant, then each round adds one small learner chosen with everything before it frozen; the loss only changes what "best new learner" means.</p>
+      </div>
     </section>
 
     <!-- ================= ② least squares boosting ================= -->
@@ -270,6 +287,20 @@
           <p style="margin:8px 0 0">For squared loss the stump's two leaf values are already the best amounts to add (the mean residual on each side), so β can be folded into F and set to 1. Only ν, if you use shrinkage, scales the step.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Least squares boosting, one round by hand</h3>
+        <p style="margin:0">Data: <span class="m">x = 1, 2, 3, 4</span> <span class="m">y = 2, 4, 8, 10</span>, ν = 1.</p>
+        <ol>
+          <li><strong>Start.</strong> <span class="m">f₀ = ȳ = 6</span>.</li>
+          <li><strong>Residuals.</strong> <span class="m">rᵢ = yᵢ − f₀ = −4, −2, 2, 4</span>. Total squared error <span class="m">16 + 4 + 4 + 16 = 40</span>.</li>
+          <li><strong>Fit a stump to r.</strong> Each leaf predicts the mean residual of its points. Try every split: <span class="m">x ≤ 1.5: −4 | 1.33, SSE = 18.67</span> <span class="m">x ≤ 2.5: −3 | +3, SSE = 1+1+1+1 = 4</span> <span class="m">x ≤ 3.5: −1.33 | 4, SSE = 18.67</span>. Best: <span class="m">x ≤ 2.5</span>, so <span class="m">F₁ = −3 (left), +3 (right)</span>.</li>
+          <li><strong>Add it.</strong> <span class="m">f₁ = f₀ + F₁ = 3, 3, 9, 9</span>. Mean squared error <span class="m">40/4 = 10 → 4/4 = 1</span>.</li>
+          <li><strong>Next round</strong> fits the new residuals <span class="m">y − f₁ = −1, 1, −1, 1</span>: whatever the model still gets wrong.</li>
+          <li><strong>Shrinkage.</strong> With <span class="m">ν = 0.5</span> you add half the stump: <span class="m">f₁ = 6 + 0.5·(−3, −3, 3, 3) = 4.5, 4.5, 7.5, 7.5</span>. Smaller steps, more rounds, usually better test error.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> with squared loss, each round fits a small tree to the current residuals y − f and adds it, so the model keeps correcting whatever is left over.</p>
+      </div>
     </section>
 
     <!-- ================= ③ AdaBoost ================= -->
@@ -365,6 +396,20 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Murphy's β vs. the α in AdaBoost.M1</summary>
           <p style="margin:8px 0 0">The classic algorithm uses α<sub>m</sub> = log((1 − err<sub>m</sub>)/err<sub>m</sub>) = 2β<sub>m</sub> and multiplies only the misses by e<sup>α</sup>. After normalising, the weights are the same as here, and sign(Σ α<sub>m</sub> F<sub>m</sub>) = sign(Σ β<sub>m</sub> F<sub>m</sub>), so it is the same classifier.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>AdaBoost, one round by hand</h3>
+        <p style="margin:0">Data: <span class="m">x = 1, 2, 3, 4</span> <span class="m">ỹ = +1, +1, −1, +1</span>. No single stump gets all four right.</p>
+        <ol>
+          <li><strong>Start.</strong> <span class="m">f₀ = 0</span>, so every weight is equal: <span class="m">ωᵢ ∝ exp(−ỹᵢ·0) = 1 → ω = ¼, ¼, ¼, ¼</span>.</li>
+          <li><strong>Fit a stump to the weighted data.</strong> Take <span class="m">F₁ = +1 if x ≤ 2.5, else −1</span>: predictions <span class="m">+1, +1, −1, −1</span>. Only point 4 is wrong, so <span class="m">err₁ = Σ ωᵢ I(ỹᵢ ≠ F(xᵢ)) = ¼</span>.</li>
+          <li><strong>Give it a say.</strong> <span class="m">β₁ = ½ ln((1 − err)/err) = ½ ln(0.75/0.25) = ½ ln 3 = 0.549</span>. Lower error → bigger β.</li>
+          <li><strong>Reweight.</strong> <span class="m">ωᵢ ← ωᵢ e^{−β ỹᵢ F(xᵢ)}</span>: right points × <span class="m">e^{−0.549} = 0.577</span>, the wrong point × <span class="m">e^{0.549} = 1.732</span>. Unnormalized <span class="m">0.144, 0.144, 0.144, 0.433</span>, sum <span class="m">Z = 0.866</span>, normalized <span class="m">ω = 1/6, 1/6, 1/6, 1/2</span>.</li>
+          <li><strong>Meaning.</strong> The one mistake now carries half the total weight, so the next stump is forced to care about point 4. (After reweighting, the old stump's weighted error is always exactly ½.)</li>
+          <li><strong>Add.</strong> <span class="m">f₁ = 0.549·F₁ = 0.549, 0.549, −0.549, −0.549</span>. Exponential loss <span class="m">Σ e^{−ỹf} = 4 → 3(0.577) + 1.732 = 3.464 = 4·Z</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> AdaBoost fits a stump to weighted data, gives it a vote β = ½ ln((1 − err)/err), and multiplies up the weights of its mistakes so the next stump focuses on them.</p>
       </div>
     </section>
 
@@ -493,6 +538,19 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why clip z?</summary>
           <p style="margin:8px 0 0">When π is very close to 0 or 1, w = π(1 − π) is tiny and z = (y* − π)/w can be huge for a point on the wrong side. Its weight is tiny too, so in exact arithmetic it barely matters, but numerically it is safer to cap z (here at ±4, a common choice).</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>LogitBoost, one round by hand</h3>
+        <p style="margin:0">Data: same as ③, <span class="m">x = 1, 2, 3, 4</span>, <span class="m">ỹ = +1, +1, −1, +1</span>, written as <span class="m">y* = 1, 1, 0, 1</span>.</p>
+        <ol>
+          <li><strong>Why not AdaBoost?</strong> At margin <span class="m">ỹf = −3</span> (badly wrong), exponential loss is <span class="m">e³ = 20.1</span> but log loss is only <span class="m">log(1 + e⁶)/log 2 = 8.7</span> (both scaled to 1 at margin 0). Outliers matter less.</li>
+          <li><strong>Probabilities.</strong> <span class="m">f₀ = 0 → πᵢ = 1/(1 + e^{−2·0}) = 0.5</span> for every point.</li>
+          <li><strong>Newton weights and working responses.</strong> <span class="m">wᵢ = π(1 − π) = 0.25</span>, <span class="m">zᵢ = (y*ᵢ − π)/w = ±0.5/0.25 = 2, 2, −2, 2</span>.</li>
+          <li><strong>Weighted least-squares stump on z.</strong> <span class="m">x ≤ 1.5: SSE = 2.67</span> <span class="m">x ≤ 2.5: leaves 2 | 0, SSE = 0.25·(0 + 0 + 4 + 4) = 2</span> <span class="m">x ≤ 3.5: 2.67</span> → <span class="m">F₁ = 2 (left), 0 (right)</span>.</li>
+          <li><strong>Half a step.</strong> <span class="m">f₁ = f₀ + ½F₁ = 1, 1, 0, 0</span> → <span class="m">π = 1/(1 + e^{−2}) = 0.88</span> for points 1–2, still <span class="m">0.5</span> for 3–4. Confident where the data agrees, undecided where it doesn't.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> LogitBoost uses log loss instead of exponential loss and takes a Newton step: weights π(1 − π), targets z = (y* − π)/w, a weighted least-squares stump, then half a step.</p>
       </div>
     </section>
 

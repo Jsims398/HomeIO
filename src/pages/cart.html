@@ -99,6 +99,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT15 }}" hint-placeholder-val="{{ false }}">
@@ -289,6 +293,28 @@
           <p style="margin:8px 0 0">Same D<sub>L</sub> / D<sub>R</sub> search and the same weighted cost, but the impurity of a node is the mean squared error around its average: c(D) = (1/|D|) Σ<sub>n∈D</sub> (y<sub>n</sub> − ȳ)². A leaf predicts ȳ, the mean of its points.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>One split by hand: 4 points, 2 features, Gini</h3>
+        <p style="margin:0">Data <span class="m">(x₁, x₂, class)</span>: <span class="m">(1, 4, A)</span> <span class="m">(2, 1, A)</span> <span class="m">(3, 3, B)</span> <span class="m">(4, 2, B)</span>.</p>
+        <ol>
+          <li><strong>Root impurity.</strong> <span class="m">π̂_A = π̂_B = 2/4</span> → <span class="m">G = 1 − (0.5² + 0.5²) = 0.5</span>.</li>
+          <li><strong>Candidate thresholds</strong> = midpoints of the sorted values: <span class="m">T₁ = T₂ = {1.5, 2.5, 3.5}</span>.</li>
+          <li><strong>Cost of a split</strong> <span class="m">= |D_L|/|D| · G(D_L) + |D_R|/|D| · G(D_R)</span>.</li>
+          <li><strong>Feature x₁.</strong> <span class="m">t = 1.5</span>: L = {A} (G 0), R = {A, B, B} (<span class="m">G = 1 − (1/9 + 4/9) = 0.444</span>) → <span class="m">cost = ¾·0.444 = 0.333</span>. <span class="m">t = 2.5</span>: L = {A, A}, R = {B, B}, both pure → <span class="m">cost = 0</span>. <span class="m">t = 3.5</span>: <span class="m">0.333</span>.</li>
+          <li><strong>Feature x₂.</strong> Sorted by x₂ the classes read A, B, B, A. <span class="m">t = 1.5 → 0.333</span>; <span class="m">t = 2.5</span>: L = {A, B}, R = {B, A} → <span class="m">½·0.5 + ½·0.5 = 0.5</span> (no gain); <span class="m">t = 3.5 → 0.333</span>.</li>
+          <li><strong>Pick the minimum:</strong> <span class="m">j = 1, t = 2.5, cost 0</span>. The rule is "is <span class="m">x₁ ≤ 2.5</span>?" → left leaf A, right leaf B.</li>
+          <li><strong>Why weight by size?</strong> Unweighted, <span class="m">x₁ ≤ 1.5</span> would score <span class="m">0 + 0.444</span>, counting its pure 1-point child as much as the 3-point child. The weights make the cost the average impurity per point.</li>
+        </ol>
+        <h4>Same search for regression: impurity = MSE around the mean</h4>
+        <ol>
+          <li>Data <span class="m">x = 1, 2, 3, 4</span>, <span class="m">y = 1, 2, 6, 7</span>. Root: <span class="m">ȳ = 4</span>, <span class="m">MSE = (9 + 4 + 4 + 9)/4 = 6.5</span>.</li>
+          <li><span class="m">t = 1.5</span>: L = {1} (0), R = {2, 6, 7} with mean 5, <span class="m">MSE = (9 + 1 + 4)/3 = 4.67</span> → <span class="m">cost = ¾·4.67 = 3.5</span>.</li>
+          <li><span class="m">t = 2.5</span>: L = {1, 2} mean 1.5, R = {6, 7} mean 6.5, each <span class="m">MSE = 0.25</span> → <span class="m">cost = 0.25</span> ← best. <span class="m">t = 3.5</span>: <span class="m">3.5</span>.</li>
+          <li>Leaves predict their mean: <span class="m">x ≤ 2.5 → 1.5</span>, <span class="m">x > 2.5 → 6.5</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> for every feature j and every midpoint threshold t, split the node into D_L and D_R, score it by the size-weighted impurity of the two sides (Gini for classes, MSE for numbers), and keep the (j, t) with the lowest score.</p>
+      </div>
     </section>
 
     <!-- ================= ② grow the tree ================= -->
@@ -394,6 +420,25 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Why greedy, one node at a time?</summary>
           <p style="margin:8px 0 0">Finding the best tree overall is NP-complete, so CART does not try. It makes the locally best split at each node and never goes back. That is fast (sort each feature, scan the thresholds), but a split that looks poor now and would set up great splits later is never chosen.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Grow a tree greedily, and see where greedy fails</h3>
+        <p style="margin:0">Data <span class="m">(x₁, x₂, class)</span>: <span class="m">(1, 1, A)</span> <span class="m">(2, 1, A)</span> <span class="m">(3, 1, B)</span> <span class="m">(3, 3, A)</span>.</p>
+        <ol>
+          <li><strong>Root.</strong> 3 A, 1 B → <span class="m">G = 1 − (9/16 + 1/16) = 0.375</span>.</li>
+          <li><strong>Best root split.</strong> <span class="m">x₁ ≤ 1.5 → 0.333</span>; <span class="m">x₁ ≤ 2.5</span>: L = {A, A} (0), R = {B, A} (0.5) → <span class="m">½·0 + ½·0.5 = 0.25</span>; <span class="m">x₂ ≤ 2 → 0.333</span>. Winner: <span class="m">x₁ ≤ 2.5</span>.</li>
+          <li><strong>Recurse on D_L</strong> = {A, A}: pure → leaf A, stop.</li>
+          <li><strong>Recurse on D_R</strong> = {(3, 1, B), (3, 3, A)}: <span class="m">G = 0.5</span>. x₁ can't separate them (both 3); <span class="m">x₂ ≤ 2</span> gives {B} | {A} → <span class="m">cost 0</span>. Two pure leaves.</li>
+          <li><strong>Final tree (depth 2).</strong> <span class="m">x₁ ≤ 2.5 → A</span>; else <span class="m">x₂ ≤ 2 → B</span>, else <span class="m">A</span>. Training error <span class="m">0/4</span>.</li>
+        </ol>
+        <h4>Where greedy gets stuck: XOR</h4>
+        <ol>
+          <li>Data <span class="m">(1, 1, A)</span> <span class="m">(3, 3, A)</span> <span class="m">(1, 3, B)</span> <span class="m">(3, 1, B)</span>. Root <span class="m">G = 0.5</span>.</li>
+          <li>Every split (<span class="m">x₁ ≤ 2</span> or <span class="m">x₂ ≤ 2</span>) leaves {A, B} on both sides → <span class="m">cost = 0.5</span>, no better than the root. Greedy CART stops at a single leaf with <span class="m">2/4</span> wrong.</li>
+          <li>Yet a depth-2 tree (<span class="m">x₁ ≤ 2</span>, then <span class="m">x₂ ≤ 2</span> on each side) gets <span class="m">0/4</span> wrong. The first split looks useless on its own, so greedy never takes it. Finding the best tree overall is NP-complete, which is why CART settles for greedy.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> CART grows a tree by making the locally best split at a node and then treating each child as a new node, stopping when a node is pure, too deep or too small; it never looks ahead, so a split that only pays off later (like XOR's) is never chosen.</p>
       </div>
     </section>
 

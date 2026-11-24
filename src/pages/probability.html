@@ -96,6 +96,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
 
@@ -150,6 +154,19 @@
           <p class="card-body">P(A | B) isn't a new kind of quantity — it's the same probability measured inside a smaller sample space, the one where B is already true. Every surprise in this chapter comes from forgetting to shrink.</p>
         </div>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Union and conditioning on a 4-sided die</h3>
+        <p style="margin:0">Data: one fair 4-sided die, <span class="m">Ω = {1, 2, 3, 4}</span>, each outcome <span class="m">1/4</span>. Events: <span class="m">A = "roll a 4" = {4}</span>, <span class="m">B = "roll ≥ 3" = {3, 4}</span>.</p>
+        <ol>
+          <li><strong>Count.</strong> <span class="m">P(A) = 1/4</span>, <span class="m">P(B) = 2/4 = 1/2</span>, overlap <span class="m">A ∧ B = {4}</span> so <span class="m">P(A ∧ B) = 1/4</span>.</li>
+          <li><strong>Union.</strong> <span class="m">P(A ∨ B) = P(A) + P(B) − P(A ∧ B) = 1/4 + 1/2 − 1/4 = 1/2</span>. Check by listing: <span class="m">A ∨ B = {3, 4}</span>, 2 of 4 outcomes ✓.</li>
+          <li><strong>Conditional.</strong> <span class="m">P(A | B) = P(A ∧ B) / P(B) = (1/4) / (1/2) = 1/2</span>.</li>
+          <li><strong>Read it as shrinking the world.</strong> Once you know B, only {3, 4} are left, and one of those two is a 4: <span class="m">1/2</span>. Knowing B doubled P(A) from 1/4 to 1/2.</li>
+          <li><strong>Product rule check.</strong> <span class="m">P(A ∧ B) = P(A | B) P(B) = 1/2 · 1/2 = 1/4</span> ✓.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> Union adds the two probabilities and subtracts the double-counted overlap; conditioning on B throws away every outcome outside B and renormalizes what is left.</p>
+      </div>
     </section>
 
     <section id="s22" style="margin-bottom:52px">
@@ -171,6 +188,24 @@
         </div>
       </div>
       <p style="max-width:64ch;font-size:14.5px;line-height:1.65;margin-top:18px;color:var(--color-neutral-700)">The thing I keep having to re-learn: a density is not a probability. p(x) = 4 is legal. P(X = x) = 4 is not.</p>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>A pmf on 4 values, and a density bigger than 1</h3>
+        <h4>Discrete: a pmf on 4 values</h4>
+        <ol>
+          <li><strong>Data.</strong> <span class="m">X ∈ {0, 1, 2, 3}</span> with <span class="m">p(0) = 0.1, p(1) = 0.2, p(2) = 0.3, p(3) = 0.4</span>.</li>
+          <li><strong>Valid pmf?</strong> Each is between 0 and 1, and <span class="m">0.1 + 0.2 + 0.3 + 0.4 = 1</span> ✓.</li>
+          <li><strong>cdf = running sum.</strong> <span class="m">P(X ≤ 0) = 0.1, P(X ≤ 1) = 0.3, P(X ≤ 2) = 0.6, P(X ≤ 3) = 1</span>.</li>
+          <li><strong>A single value has real mass.</strong> <span class="m">P(X = 2) = 0.3</span> is a fair question for a discrete variable.</li>
+        </ol>
+        <h4>Continuous: Uniform(0, ¼)</h4>
+        <ol>
+          <li><strong>Density.</strong> It must integrate to 1 over a width of ¼, so <span class="m">p(x) = 1 / (1/4) = 4</span> on [0, ¼]. A density of 4 is legal.</li>
+          <li><strong>cdf.</strong> <span class="m">P(X ≤ x) = 4x</span> for x in [0, ¼]; its derivative gives back <span class="m">p(x) = 4</span>.</li>
+          <li><strong>Probability = area.</strong> <span class="m">P(0.1 ≤ X ≤ 0.2) = 4 · 0.1 = 0.4</span>, while any single point has <span class="m">P(X = 0.1) = 0</span>.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> A pmf gives each value real probability and those sum to 1, while a pdf is the slope of the cdf, so only areas under it are probabilities and its height can exceed 1.</p>
+      </div>
     </section>
 
     <section id="s223" style="margin-bottom:52px">
@@ -192,6 +227,24 @@
           </div>
         </div>
         <p class="card-body" style="margin-top:4px">Neither one implies the other, in either direction. Two variables can be dependent overall and independent given Z, or independent overall and dependent given Z.</p>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Joint, marginal, conditional, independence: 2 × 2 = 4 cells</h3>
+        <p style="margin:0">Data: X = rain (0/1), Y = umbrella (0/1). Joint table <span class="m">p(0,0) = 0.4, p(0,1) = 0.1, p(1,0) = 0.1, p(1,1) = 0.4</span>.</p>
+        <ol>
+          <li><strong>Marginal: sum out the other variable.</strong> <span class="m">p(X=1) = 0.1 + 0.4 = 0.5</span>, <span class="m">p(Y=1) = 0.1 + 0.4 = 0.5</span>.</li>
+          <li><strong>Conditional: fix a row, renormalize.</strong> <span class="m">p(Y=1 | X=1) = 0.4 / 0.5 = 0.8</span>. Rain makes the umbrella likely.</li>
+          <li><strong>Independence test.</strong> Is <span class="m">p(1,1) = p(X=1) p(Y=1)</span>? <span class="m">0.5 · 0.5 = 0.25 ≠ 0.4</span>, so X and Y are <em>dependent</em>.</li>
+          <li><strong>An independent table, for contrast.</strong> <span class="m">p = [0.3 0.3 ; 0.2 0.2]</span> has margins <span class="m">X: 0.6, 0.4</span> and <span class="m">Y: 0.5, 0.5</span>, and every cell equals the product, e.g. <span class="m">0.6 · 0.5 = 0.3</span> ✓.</li>
+        </ol>
+        <h4>Conditional independence is not independence</h4>
+        <ol>
+          <li><strong>Setup.</strong> A hidden <span class="m">Z ∈ {0, 1}</span>, each with prob ½. Given Z = 0, X and Y are independent coins with <span class="m">P(1) = 0.2</span>; given Z = 1, independent coins with <span class="m">P(1) = 0.8</span>. So <span class="m">X ⊥ Y | Z</span> by construction.</li>
+          <li><strong>Joint without Z.</strong> <span class="m">p(X=1, Y=1) = ½ · 0.2² + ½ · 0.8² = 0.02 + 0.32 = 0.34</span>.</li>
+          <li><strong>Marginals.</strong> <span class="m">p(X=1) = ½ · 0.2 + ½ · 0.8 = 0.5</span>, same for Y, so the product is <span class="m">0.25 ≠ 0.34</span>: X and Y are dependent overall, even though they are independent given Z.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> The joint table is everything: sum out a variable to get a marginal, fix a row and renormalize to get a conditional, and the variables are independent exactly when every cell equals the product of its margins.</p>
       </div>
     </section>
 
@@ -224,6 +277,19 @@
         </div>
       </div>
       <p style="max-width:64ch;font-size:14.5px;line-height:1.65;margin-top:20px;color:var(--color-neutral-700)">The denominator is the part people skip and then get wrong. It's not a mystery constant — it's the sum of the numerator over every hypothesis, which is exactly what makes the posterior add up to 1. And in the door problem below, it's the entire ballgame.</p>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Bayes' rule with 4 hypotheses</h3>
+        <p style="margin:0">Data: a bag with 4 coins whose heads-probabilities are <span class="m">θ = 0, 1/3, 2/3, 1</span>. Pick one at random, flip it once: <strong>heads</strong>. Which coin is it?</p>
+        <ol>
+          <li><strong>Prior.</strong> Picked at random: <span class="m">p(θ) = 1/4</span> for each coin.</li>
+          <li><strong>Likelihood.</strong> <span class="m">p(heads | θ) = θ</span>, so <span class="m">0, 1/3, 2/3, 1</span>.</li>
+          <li><strong>Evidence = sum of prior × likelihood.</strong> <span class="m">p(heads) = ¼(0 + 1/3 + 2/3 + 1) = ¼ · 2 = 1/2</span>.</li>
+          <li><strong>Posterior = prior × likelihood / evidence.</strong> <span class="m">(¼ · θ) / ½ = θ/2</span>: <span class="m">0, 1/6, 1/3, 1/2</span>.</li>
+          <li><strong>Check.</strong> <span class="m">0 + 1/6 + 1/3 + 1/2 = 1</span> ✓. The always-tails coin is ruled out, and the always-heads coin is now the best guess.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> The posterior is prior times likelihood divided by the evidence, and the evidence is just that same product summed over every hypothesis so the posterior adds to 1.</p>
+      </div>
     </section>
 
     <section id="monty">
@@ -384,6 +450,19 @@
       </sc-if>
 
       <p style="margin:36px 0 0;font-size:13.5px;color:var(--color-neutral-600);max-width:62ch">Next topic: the named distributions — and a softmax you can push around. Same shape: notes, then one thing you can actually poke at.</p>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Monty Hall with 4 doors</h3>
+        <p style="margin:0">Data: 4 doors, one car. You pick door 1. The host knows where the car is, never opens yours or the car, and picks at random among the goat doors he may open. He opens <strong>door 4</strong>.</p>
+        <ol>
+          <li><strong>Prior.</strong> <span class="m">p(C = 1) = p(C = 2) = p(C = 3) = p(C = 4) = 1/4</span>.</li>
+          <li><strong>Likelihood of "host opens 4".</strong> Car behind 1: he can open 2, 3 or 4 → <span class="m">1/3</span>. Car behind 2: he can open 3 or 4 → <span class="m">1/2</span>. Car behind 3: he can open 2 or 4 → <span class="m">1/2</span>. Car behind 4: never → <span class="m">0</span>.</li>
+          <li><strong>Evidence.</strong> <span class="m">p(H = 4) = ¼(1/3 + 1/2 + 1/2 + 0) = ¼ · 4/3 = 1/3</span>.</li>
+          <li><strong>Posterior.</strong> <span class="m">p(C = 1 | H = 4) = (¼ · ⅓) / ⅓ = 1/4</span>; <span class="m">p(C = 2 | H = 4) = (¼ · ½) / ⅓ = 3/8</span>; the same <span class="m">3/8</span> for door 3; <span class="m">0</span> for door 4.</li>
+          <li><strong>Decision.</strong> Staying wins <span class="m">1/4</span>; switching to either other closed door wins <span class="m">3/8</span>. Switching still helps, for the same reason as with 3 doors: your own door never gets new evidence.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> The host is more likely to open door 4 when the car is behind another closed door than when it is behind yours, so Bayes moves belief onto those doors and leaves yours at its prior.</p>
+      </div>
     </section>
     </sc-if>
 

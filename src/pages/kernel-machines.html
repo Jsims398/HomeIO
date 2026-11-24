@@ -99,6 +99,10 @@
         <span style="font-family:var(--font-heading);font-size:14.5px">Topic 19 · PCA</span>
         <span style="font-size:11px;opacity:.85">§20.1.1, 20.1.3, 20.1.4</span>
       </button>
+      <button sc-camel-on-click="{{ goT20 }}" style="text-align:left;border:0;cursor:pointer;font-family:var(--font-body);display:flex;flex-direction:column;gap:2px;padding:11px 14px;border-radius:999px;background:{{ t20Bg }};color:{{ t20Fg }}">
+        <span style="font-family:var(--font-heading);font-size:14.5px">Topic 20 · Manifolds</span>
+        <span style="font-size:11px;opacity:.85">§20.4.1 – 20.4.3</span>
+      </button>
     </nav>
 
     <sc-if value="{{ showT14 }}" hint-placeholder-val="{{ false }}">
@@ -247,6 +251,20 @@
           <p style="margin:8px 0 0">You can, if you have plenty of data. With 60 points, holding out 20 leaves only 40 to train on, and a score from 20 points is very noisy. Cross-validation uses every point for both training and testing, just never at the same time.</p>
         </details>
       </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>What C does, and why training error can't choose it</h3>
+        <p style="margin:0">Data on a line: <span class="m">x = 1 (−), 2 (+), 3 (+), 4 (+)</span>. The true boundary is 2.5, so the + at x = 2 is a flipped (noisy) label. Linear SVM <span class="m">f(x) = w x + w₀</span> minimises <span class="m">½w² + C Σ ξₙ</span>, with slack <span class="m">ξₙ = max(0, 1 − yₙ f(xₙ))</span>.</p>
+        <ol>
+          <li><strong>Read the objective.</strong> <span class="m">½w²</span> wants a flat rule (wide margin); <span class="m">C Σξ</span> charges C for each unit of margin violation. C sets the exchange rate.</li>
+          <li><strong>Big C = 10, exact optimum</strong> <span class="m">f = 2x − 3</span>: <span class="m">f = −1, 1, 3, 5</span>, every <span class="m">ξ = 0</span>, objective <span class="m">½·2² = 2</span>. Zero training mistakes: it bent to fit the noisy x = 2. (The true rule <span class="m">x − 2.5</span> would cost <span class="m">0.5 + 10·(1.5 + 0.5) = 20.5</span>.)</li>
+          <li><strong>Small C = 0.1, exact optimum</strong> <span class="m">f = 0.1x + 0.7</span>: <span class="m">f = 0.8, 0.9, 1.0, 1.1</span>, slacks <span class="m">1.8, 0.1, 0, 0</span>, objective <span class="m">0.005 + 0.1·1.9 = 0.195</span>. Almost flat: it calls everything + and makes 1 training mistake (the real − at x = 1). Mistakes are cheap, so it barely tries.</li>
+          <li><strong>Held-out points</strong> from the truth: <span class="m">x = 1.8 (−), 2.2 (−)</span>. C = 10: <span class="m">f = 0.6, 1.4</span> → both wrong (overfit). C = 0.1: <span class="m">f = 0.88, 0.92</span> → both wrong (underfit). The true rule: <span class="m">f = −0.7, −0.3</span> → both right.</li>
+          <li><strong>Lesson.</strong> Training error ranks C = 10 best (0 vs 1 mistake), yet it is no better on new points. Too big a C chases noise; too small a C ignores the data. With only 4 points (one noisy) no C lands on the truth; the point is the two failure modes.</li>
+          <li><strong>Cross-validation</strong> checks this without a separate test set: split into K folds, train on K − 1, count mistakes on the held-out fold, rotate so every point is held out once, average. Do it for each C on a ×3 grid <span class="m">0.03, 0.1, 0.3, 1, 3, 10, …</span> and keep the C with the lowest held-out error.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> C is the price of a training mistake: big C drives training error down by chasing noise, small C ignores the data, so choose C (and γ) by cross-validated error, never by training error.</p>
+      </div>
     </section>
 
     <!-- ================= ② ridge vs SVR ================= -->
@@ -387,6 +405,26 @@
           <summary style="cursor:pointer;font-weight:600;color:var(--color-accent-700)">Have I seen kernel ridge before?</summary>
           <p style="margin:8px 0 0">Yes: it is exactly the Gaussian process posterior mean from Topic 12, with λ in the role of the noise variance σ<sub>y</sub>². Ridge gives the same curve but no error bars.</p>
         </details>
+      </div>
+      <div class="notes">
+        <div class="card-kicker">Exam notes · 4-point version</div>
+        <h3>Kernel ridge vs SVR on the same 4 points</h3>
+        <p style="margin:0">Data: <span class="m">x = 0, 1, 2, 3</span>, <span class="m">y = 0, 1, 2, 6</span> (the last point is an outlier; the rest lie on y = x). Kernel <span class="m">K(x, x′) = 1 + x x′</span>, i.e. features <span class="m">φ(x) = (1, x)</span>, so every fit is a line <span class="m">f(x) = w₀ + w₁x</span>.</p>
+        <h4>Kernel ridge, λ = 1: squared loss, one linear solve</h4>
+        <ol>
+          <li><strong>Solve in feature form</strong> <span class="m">w = (ΦᵀΦ + λI)⁻¹ Φᵀy</span>: <span class="m">ΦᵀΦ = [4 6 ; 6 14]</span>, <span class="m">+ I = [5 6 ; 6 15]</span>, <span class="m">det = 75 − 36 = 39</span>, <span class="m">Φᵀy = (Σy, Σxy) = (9, 23)</span>.</li>
+          <li><span class="m">w = (1/39)·(15·9 − 6·23, −6·9 + 5·23) = (−3, 61)/39 = (−0.08, 1.56)</span>, so <span class="m">f(x) = −0.08 + 1.56x</span>: <span class="m">f = −0.08, 1.49, 3.05, 4.62</span>.</li>
+          <li><strong>Dual weights</strong> <span class="m">αₙ = (yₙ − f(xₙ)) / λ = 0.08, −0.49, −1.05, 1.38</span>. All four are non-zero: <strong>dense</strong>, so predicting needs every training point.</li>
+          <li><strong>Outlier pull.</strong> Without the outlier the slope would be 1. Plain least squares gives 1.9; ridge shrinks it to 1.56, but the squared loss on the outlier still drags the line up.</li>
+        </ol>
+        <h4>SVM regression, ε = 0.5, C = 0.5: ε-insensitive loss, sparse</h4>
+        <ol>
+          <li><strong>Loss.</strong> <span class="m">max(0, |y − f| − ε)</span>: misses smaller than ε = 0.5 are free (a tube of half-width 0.5 around the line).</li>
+          <li><strong>Solution.</strong> <span class="m">β = (0, 0, −0.2, 0.5)</span>, so <span class="m">f(x) = Σ βₙ(1 + xₙx) = (−0.2 + 0.5) + (−0.2·2 + 0.5·3)x = 0.3 + 1.1x</span>.</li>
+          <li><strong>Who is a support vector?</strong> Errors <span class="m">y − f = −0.3, −0.4, −0.5, 2.4</span>. x = 0 and 1 are inside the tube → <span class="m">β = 0</span>. x = 2 is exactly on the edge (|−0.5| = ε) → <span class="m">β = −0.2</span>. The outlier is outside → <span class="m">β = C = 0.5</span>, capped.</li>
+          <li><strong>Result.</strong> Only 2 of 4 weights are non-zero (sparse), and the slope is 1.1 vs ridge's 1.56: the outlier's pull is capped at C instead of growing with its squared error.</li>
+        </ol>
+        <p class="say"><strong>Say it in one sentence:</strong> kernel ridge and SVR fit the same kind of curve f(x) = Σ αₙK(xₙ, x), but ridge's squared loss makes every point (outliers included) pull, while SVR's ε-tube makes points inside it weightless and caps any one point's pull at C.</p>
       </div>
     </section>
 
