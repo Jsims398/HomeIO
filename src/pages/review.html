@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final review · CS 473 Reading Log</title>
+<link rel="stylesheet" href="../styles/organic.css">
+<style>
+  .rv-nav a { display:flex; flex-direction:column; gap:2px; padding:9px 14px; border-radius:999px; color:var(--color-text); text-decoration:none; }
+  .rv-nav a:hover { background:var(--color-accent-200); }
+  .rv-nav a.on { background:var(--color-accent); color:var(--color-bg); }
+  .rv-nav .t { font-family:var(--font-heading); font-size:14px; }
+  .rv-nav .s { font-size:11px; opacity:.85; }
+  .rv-toc { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:8px; margin:18px 0 0; padding:0; list-style:none; }
+  .rv-toc a { display:block; padding:9px 14px; border-radius:18px; background:var(--color-surface); color:var(--color-text); text-decoration:none; font-size:13.5px; }
+  .rv-toc a:hover { background:var(--color-accent-200); }
+  .rv-toc b { color:var(--color-accent-700); font-weight:700; margin-right:6px; }
+  .rv-topic { margin:0 0 44px; padding:clamp(18px,3vw,30px); border-radius:44px; background:var(--color-surface); box-shadow:var(--shadow-md); scroll-margin-top:16px; }
+  .rv-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 12px; margin-bottom:14px; }
+  .rv-head h2 { margin:0; font-size:clamp(22px,3vw,28px); }
+  .rv-num { font-family:var(--font-heading); font-size:13px; color:var(--color-accent); letter-spacing:.06em; }
+  .rv-sec { font-size:12.5px; color:var(--color-neutral-700); }
+  .rv-link { margin-left:auto; font-size:13px; font-weight:600; }
+  .rv-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+  .rv-card { padding:14px 18px; border-radius:26px; background:var(--color-neutral-100); min-width:0; }
+  .rv-topic > .rv-card { margin-top:14px; }
+  .rv-card h3 { margin:0 0 8px; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--color-accent-700); font-family:var(--font-body); }
+  .rv-card p, .rv-card li, .rv-card dd { font-size:14.5px; line-height:1.6; }
+  .rv-card ul { margin:0; padding-left:20px; }
+  .rv-card li { margin-bottom:5px; }
+  .rv-card p { margin:0; }
+  .rv-eq dl { margin:0; }
+  .rv-eq dt { margin:10px 0 2px; }
+  .rv-eq dt:first-child { margin-top:0; }
+  .rv-eq dd { margin:0 0 0 4px; color:var(--color-neutral-800); }
+  .rv-topic .m { font-variant-numeric:tabular-nums; box-decoration-break:clone; -webkit-box-decoration-break:clone; background:var(--color-accent-200); color:var(--color-accent-900); padding:1px 7px; border-radius:7px; font-weight:600; line-height:1.9; }
+  .rv-trap { border:2px dashed var(--color-accent-300); background:transparent; }
+  .rv-mini { background:var(--color-accent-2-100); }
+  .rv-say { margin:14px 0 0; padding:12px 16px; border-radius:20px; background:var(--color-accent-100); font-size:14.5px; line-height:1.6; }
+  .rv-block { margin:0 0 44px; }
+  .rv-block h2 { margin:0 0 12px; }
+  .rv-conn { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+  .rv-conn > div { padding:14px 18px; border-radius:26px; background:var(--color-surface); }
+  .rv-conn h3 { margin:0 0 6px; font-size:16px; }
+  .rv-conn p { margin:0; font-size:14px; line-height:1.6; }
+  @media (max-width: 640px) {
+    aside { position:static !important; height:auto !important; max-width:none !important; flex-basis:100% !important; border-radius:0 0 32px 32px !important; padding:20px 18px !important; }
+    .rv-nav { display:none !important; }
+    main { flex:1 1 100% !important; padding:24px 16px 64px !important; }
+    .rv-topic { padding:16px; }
+    .rv-card { padding:12px 14px; }
+    .rv-link { margin-left:0; }
+    .rv-grid { grid-template-columns:1fr; }
+    .rv-topic { border-radius:30px; }
+  }
+  @media print {
+    aside { display:none !important; }
+    .rv-topic { box-shadow:none; break-inside:avoid-page; border:1px solid var(--color-divider); }
+    main { max-width:none !important; padding:0 !important; }
+  }
+</style>
+</head>
+<body>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:0;min-height:100vh;background:var(--color-bg)">
+
+  <aside style="position:sticky;top:0;flex:1 1 210px;max-width:252px;min-width:0;align-self:flex-start;height:100vh;overflow:auto;background:var(--color-surface);border-radius:0 44px 44px 0;padding:32px 22px 40px;display:flex;flex-direction:column;gap:28px">
+    <div>
+      <div style="font-family:var(--font-heading);font-size:23px;line-height:1.1">CS 473</div>
+      <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-top:6px">Reading log</div>
+      <p style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin:12px 0 0">One visualization per week, from <em>Probabilistic Machine Learning</em> (Murphy).</p>
+    </div>
+    <nav class="rv-nav" style="display:flex;flex-direction:column;gap:4px">
+      <a class="on" href="review.html"><span class="t">Final review</span><span class="s">All 20 topics on one page</span></a>
+      <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);padding:14px 0 2px 14px">Topics</div>
+      <a href="probability.html"><span class="t">Topic 1 · Probability</span><span class="s">§2.1 – 2.3</span></a>
+      <a href="distributions.html"><span class="t">Topic 2 · Distributions</span><span class="s">§2.4, 2.5, 2.6.4, 2.7.6</span></a>
+      <a href="mahalanobis.html"><span class="t">Topic 3 · Mahalanobis</span><span class="s">§3.2.2 (+ covariance)</span></a>
+      <a href="bias-variance.html"><span class="t">Topic 4 · Bias &amp; variance</span><span class="s">§3.5, 4.7.6</span></a>
+      <a href="roc.html"><span class="t">Topic 5 · ROC curves</span><span class="s">§5.1.3</span></a>
+      <a href="kl.html"><span class="t">Topic 6 · KL direction</span><span class="s">§6.2.6</span></a>
+      <a href="mutual-info.html"><span class="t">Topic 7 · Mutual information</span><span class="s">§6.3</span></a>
+      <a href="em.html"><span class="t">Topic 8 · EM algorithm</span><span class="s">§8.7</span></a>
+      <a href="naive-bayes.html"><span class="t">Topic 9 · Naive Bayes</span><span class="s">§9.3 – 9.4</span></a>
+      <a href="metric-learning.html"><span class="t">Topic 10 · Metric learning</span><span class="s">§16.2.2 – 16.2.4</span></a>
+      <a href="kde.html"><span class="t">Topic 11 · Kernel density</span><span class="s">§16.3</span></a>
+      <a href="gp.html"><span class="t">Topic 12 · Gaussian processes</span><span class="s">§17.2.1 – 17.2.2</span></a>
+      <a href="kernel-trick.html"><span class="t">Topic 13 · Kernel trick</span><span class="s">§17.3.4</span></a>
+      <a href="kernel-machines.html"><span class="t">Topic 14 · Tuning &amp; regression</span><span class="s">§17.3.6 – 17.3.8</span></a>
+      <a href="cart.html"><span class="t">Topic 15 · Decision trees</span><span class="s">§18.1</span></a>
+      <a href="boosting.html"><span class="t">Topic 16 · Boosting</span><span class="s">§18.5.1 – 18.5.4</span></a>
+      <a href="gradient-boosting.html"><span class="t">Topic 17 · Gradient boosting</span><span class="s">§18.5.5, 18.6</span></a>
+      <a href="co-training.html"><span class="t">Topic 18 · Co-training</span><span class="s">§19.3.3</span></a>
+      <a href="pca.html"><span class="t">Topic 19 · PCA</span><span class="s">§20.1.1, 20.1.3, 20.1.4</span></a>
+      <a href="manifold.html"><span class="t">Topic 20 · Manifolds</span><span class="s">§20.4.1 – 20.4.3</span></a>
+    </nav>
+  </aside>
+
+  <main style="flex:1 1 420px;min-width:0;padding:44px clamp(18px,3vw,56px) 96px;max-width:1000px">
+    <header style="margin-bottom:40px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span class="tag tag-accent">Final review</span>
+        <span class="tag tag-accent-2">Murphy, PML — Topics 1 – 20</span>
+        <span class="tag tag-outline">Equations · ideas · traps</span>
+      </div>
+      <h1 style="font-size:clamp(34px,5vw,50px);margin:0 0 14px;max-width:22ch;text-wrap:pretty">Everything, on one page</h1>
+      <p style="font-size:17px;line-height:1.6;max-width:62ch;color:var(--color-neutral-800)">For each topic: the <strong>key equations</strong> and what every symbol means, the <strong>core ideas</strong> in plain words, the <strong>mistakes</strong> people make, one <strong>tiny example</strong> to redo by hand, and a <strong>one-sentence</strong> summary. The first two blocks show how the topics connect. Each topic links back to its full walkthrough.</p>
+      <ul class="rv-toc">
+        <li><a href="#rv-t1"><b>1</b>Probability</a></li>
+        <li><a href="#rv-t2"><b>2</b>Distributions</a></li>
+        <li><a href="#rv-t3"><b>3</b>Mahalanobis</a></li>
+        <li><a href="#rv-t4"><b>4</b>Bias &amp; variance</a></li>
+        <li><a href="#rv-t5"><b>5</b>ROC curves</a></li>
+        <li><a href="#rv-t6"><b>6</b>KL direction</a></li>
+        <li><a href="#rv-t7"><b>7</b>Mutual information</a></li>
+        <li><a href="#rv-t8"><b>8</b>EM algorithm</a></li>
+        <li><a href="#rv-t9"><b>9</b>Naive Bayes</a></li>
+        <li><a href="#rv-t10"><b>10</b>Metric learning</a></li>
+        <li><a href="#rv-t11"><b>11</b>Kernel density</a></li>
+        <li><a href="#rv-t12"><b>12</b>Gaussian processes</a></li>
+        <li><a href="#rv-t13"><b>13</b>Kernel trick</a></li>
+        <li><a href="#rv-t14"><b>14</b>Tuning &amp; regression</a></li>
+        <li><a href="#rv-t15"><b>15</b>Decision trees</a></li>
+        <li><a href="#rv-t16"><b>16</b>Boosting</a></li>
+        <li><a href="#rv-t17"><b>17</b>Gradient boosting</a></li>
+        <li><a href="#rv-t18"><b>18</b>Co-training</a></li>
+        <li><a href="#rv-t19"><b>19</b>PCA</a></li>
+        <li><a href="#rv-t20"><b>20</b>Manifolds</a></li>
+      </ul>
+    </header>
+
+    <section class="rv-block" id="rv-connect">
+      <h2>How the topics connect</h2>
+      <div class="rv-conn">
+        <div><h3>Gaussians everywhere</h3><p>The multivariate Gaussian (T2) has Mahalanobis distance (T3) in its exponent. A GP (T12) is a Gaussian over function values. EM (T8) fits mixtures of them, and PCA (T19) is the eigen-decomposition of a Gaussian's covariance Σ.</p></div>
+        <div><h3>Kernels everywhere</h3><p>A kernel scores similarity. KDE (T11) smooths a density with one. A GP (T12) uses one as its covariance. The kernel trick (T13) and kernel machines (T14) use one in place of dot products in a feature space.</p></div>
+        <div><h3>Information and KL</h3><p>KL(p‖q) (T6) measures the cost of using q in place of p, and it is not symmetric. Mutual information (T7) is the KL between the joint and the product of marginals. EM (T8) climbs a lower bound whose gap is a KL.</p></div>
+        <div><h3>Eigenvectors everywhere</h3><p>The eigenvectors of Σ give the axes of Mahalanobis ellipses (T3) and the PCA directions (T19). Classical MDS and Isomap (T20) take the top eigenvectors of a double-centred distance matrix.</p></div>
+        <div><h3>Greedy, one piece at a time</h3><p>CART (T15) picks the locally best split. Boosting (T16) adds one weak learner per round to fix what is still wrong. Gradient boosting (T17) fits each new tree to the negative gradient of the loss.</p></div>
+        <div><h3>Generative vs discriminative</h3><p>Naive Bayes (T9) models p(x | y) and p(y), then uses Bayes' rule (T1). Discriminative models fit p(y | x) or a decision rule directly. ROC curves (T5) judge any scorer at every threshold.</p></div>
+        <div><h3>Using unlabelled data</h3><p>Co-training (T18) lets two views label confident examples for each other. Manifold learning (T20) assumes the data lie on a low-dimensional surface, the same assumption semi-supervised methods rely on.</p></div>
+        <div><h3>Bias vs variance</h3><p>Every method has a complexity knob (table below). Turned too far one way it underfits (high bias); too far the other it overfits (high variance). T4 makes this precise: expected error = bias² + variance + noise.</p></div>
+      </div>
+    </section>
+
+    <section class="rv-block" id="rv-knobs">
+      <h2>Complexity knobs at a glance</h2>
+      <div style="overflow-x:auto">
+        <table class="table" style="font-size:14px">
+          <thead><tr><th>Method</th><th>Knob</th><th>Too small →</th><th>Too big →</th></tr></thead>
+          <tbody>
+            <tr><td>Naive Bayes (T9)</td><td>smoothing pseudo-count α</td><td>α = 0: a word never seen with a class gets probability 0 and vetoes that class</td><td>pulls every estimate toward uniform</td></tr>
+            <tr><td>KDE (T11)</td><td>bandwidth h</td><td>spiky, one bump per point (overfit)</td><td>over-smoothed, hides real bumps (underfit)</td></tr>
+            <tr><td>GP (T12)</td><td>length scale ℓ</td><td>wiggly, chases noise</td><td>nearly flat, misses the signal</td></tr>
+            <tr><td>RBF kernel (T13–14)</td><td>γ (kernel width ∝ 1/√γ)</td><td>wide kernel, nearly linear boundary (underfit)</td><td>narrow kernel, an island round each point (overfit)</td></tr>
+            <tr><td>SVM / SVR (T14)</td><td>C</td><td>soft: wide margin, many violations allowed (underfit)</td><td>hard: chases every point (overfit)</td></tr>
+            <tr><td>Kernel ridge (T14)</td><td>λ</td><td>barely regularized, fits noise (overfit)</td><td>shrinks the fit toward 0 (underfit)</td></tr>
+            <tr><td>Decision tree (T15)</td><td>max depth / min leaf size</td><td>shallow: too few splits (underfit)</td><td>deep: one leaf per point (overfit)</td></tr>
+            <tr><td>Boosting (T16–17)</td><td>rounds M, learning rate</td><td>few rounds: underfit</td><td>many rounds: overfits, slowly; a smaller learning rate needs more rounds</td></tr>
+            <tr><td>PCA (T19)</td><td>kept dimensions L</td><td>throws away real signal</td><td>keeps noise directions</td></tr>
+            <tr><td>Manifold graph (T20)</td><td>neighbours k (or radius ε)</td><td>graph falls apart into pieces</td><td>short-circuits across gaps in the manifold</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="rv-t1" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 1</span>
+        <h2>Probability</h2>
+        <span class="rv-sec">§2.1 – 2.3</span>
+        <a class="rv-link" href="probability.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">P(A ∨ B) = P(A) + P(B) − P(A ∧ B)</span></dt>
+            <dd>Union: add the two, then subtract the overlap you counted twice. If A and B are mutually exclusive the overlap is 0.</dd>
+            <dt><span class="m">P(A ∧ B) = P(A | B) P(B)</span></dt>
+            <dd>Product rule: first B happens, then A given B.</dd>
+            <dt><span class="m">P(A | B) = P(A ∧ B) / P(B)</span></dt>
+            <dd>Conditional probability: restrict to the outcomes where B is true, then renormalize.</dd>
+            <dt><span class="m">∑ₓ p(x) = 1,  0 ≤ p(x) ≤ 1</span></dt>
+            <dd>A pmf p(x) = P(X = x) gives every discrete value real probability mass, and the masses sum to 1.</dd>
+            <dt><span class="m">p(x) = d/dx P(X ≤ x)</span></dt>
+            <dd>A pdf is the derivative of the cdf. Probabilities are areas, P(a ≤ X ≤ b) = ∫ₐᵇ p(x) dx, so the height p(x) may exceed 1.</dd>
+            <dt><span class="m">p(x) = ∑_y p(x, y),  p(y | x) = p(x, y) / p(x)</span></dt>
+            <dd>Marginal: sum the other variable out of the joint. Conditional: fix a row of the joint table and renormalize it.</dd>
+            <dt><span class="m">X ⊥ Y ⇔ p(x, y) = p(x) p(y);  X ⊥ Y | Z ⇔ p(x, y | z) = p(x | z) p(y | z)</span></dt>
+            <dd>Independence: every joint cell equals the product of its marginals. Conditional independence: the same factorization holds once Z is known.</dd>
+            <dt><span class="m">p(H | E) = p(H) p(E | H) / p(E),  p(E) = ∑_h p(h) p(E | h)</span></dt>
+            <dd>Bayes' rule: posterior = prior × likelihood / evidence. The evidence p(E) is the numerator summed over every hypothesis h, which makes the posterior sum to 1.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Frequentist view: a probability is a long-run frequency. Bayesian view: it is a degree of belief, even for one-off events. The book mostly uses the Bayesian reading.</li>
+            <li>Conditioning shrinks the world: P(A | B) is an ordinary probability measured inside the smaller sample space where B is true.</li>
+            <li>A random variable is a function from outcomes to numbers. Discrete variables have a pmf; continuous ones have a cdf and its derivative, the pdf.</li>
+            <li>The joint p(x, y) holds everything. Marginals and conditionals are both computed from it.</li>
+            <li>Bayes' rule turns a conditional you know, p(E | H), into the one you want, p(H | E). Monty Hall: the host's constrained reveal is evidence, so switching wins 2/3 of the time.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>A density is not a probability: p(x) = 4 is legal for a pdf (e.g. Uniform(0, ¼)), and any single point has P(X = x) = 0.</li>
+          <li>P(A | B) ≠ P(B | A). Turning one into the other needs Bayes' rule and the prior.</li>
+          <li>Do not skip the evidence p(E). Without dividing by it, the "posterior" will not sum to 1.</li>
+          <li>Independence and conditional independence do not imply each other. Variables can be independent given Z yet dependent overall, and the reverse can also happen.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>4 coins with heads-probability θ = 0, 1/3, 2/3, 1. Pick one uniformly at random (prior ¼ each) and flip it: heads. Likelihood p(heads | θ) = θ. Evidence = ¼(0 + 1/3 + 2/3 + 1) = 1/2. Posterior = (¼ · θ) / ½ = θ/2 = 0, 1/6, 1/3, 1/2, which sums to 1 ✓.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> Every probability question comes from the joint: marginalize by summing, condition by shrinking to the observed world and renormalizing, and use Bayes' rule (prior × likelihood / evidence) to reverse a conditional.</p>
+    </section>
+
+    <section id="rv-t2" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 2</span>
+        <h2>Distributions</h2>
+        <span class="rv-sec">§2.4, 2.5, 2.6.4, 2.7.6</span>
+        <a class="rv-link" href="distributions.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">Ber(y | θ) = θ^y (1 − θ)^(1−y)</span></dt>
+            <dd>Bernoulli: one coin with P(y = 1) = θ. The exponents just select θ when y = 1 and 1 − θ when y = 0.</dd>
+            <dt><span class="m">E[y] = θ,  Var[y] = θ(1 − θ)</span></dt>
+            <dd>The Bernoulli mean is θ. The variance is largest at θ = 0.5 and zero at θ = 0 or 1.</dd>
+            <dt><span class="m">Bin(s | N, θ) = (N choose s) θ^s (1 − θ)^(N−s)</span></dt>
+            <dd>Binomial: probability of s ones in N independent flips. (N choose s) counts the orderings that give the same count.</dd>
+            <dt><span class="m">Cat(y | θ) = ∏_c θ_c^𝕀(y = c),  θ_c ≥ 0, ∑_c θ_c = 1</span></dt>
+            <dd>Categorical: the Bernoulli generalized to C outcomes. 𝕀(·) is the indicator, so the product picks out θ_y.</dd>
+            <dt><span class="m">p_c = e^(z_c / T) / ∑_c′ e^(z_c′ / T)</span></dt>
+            <dd>Softmax: turns real-valued logits z into a categorical distribution. T is the temperature: T → 0 gives argmax, T → ∞ gives uniform 1/C.</dd>
+            <dt><span class="m">softmax(z + c) = softmax(z)</span></dt>
+            <dd>Shift invariance: the constant cancels top and bottom, which is why code subtracts max(z) first to avoid overflow.</dd>
+            <dt><span class="m">N(x | μ, σ²) = (1 / √(2πσ²)) exp(−(x − μ)² / (2σ²))</span></dt>
+            <dd>Gaussian pdf with mean μ and variance σ². About 68% of the mass is within μ ± σ.</dd>
+            <dt><span class="m">p_D(x) = (1/N) ∑_n δ(x − x_n),  F̂(t) = (1/N) ∑_n 𝕀(x_n ≤ t)</span></dt>
+            <dd>Empirical distribution: a spike of mass 1/N on each observed sample x_n (δ is a point mass). Its cdf is a staircase that jumps 1/N at every sample.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Bernoulli models a coin, binomial counts heads in N flips, and the categorical models a C-sided die. Each has probabilities that are non-negative and sum to 1.</li>
+            <li>Softmax works in two steps: exponentiate (everything becomes positive), then divide by the total (it sums to 1). It is the output layer of every classifier.</li>
+            <li>Temperature never changes the ranking of the classes. It only changes how strongly the top class is favoured.</li>
+            <li>The Gaussian is the default because it has two interpretable parameters, the central limit theorem pushes sums toward it, it has maximum entropy for a given mean and variance, and it is mathematically convenient. It is not the default because nature is Gaussian.</li>
+            <li>The empirical distribution has no parameters or assumptions. As N grows its staircase cdf converges to the true cdf, which is the reason bootstrapping works.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Binomial vs one sequence: P(this exact sequence) = θ^s(1 − θ)^(N−s). The binomial multiplies that by (N choose s).</li>
+          <li>Softmax with T &lt; 1 sharpens the distribution and T &gt; 1 flattens it, because the logits are divided by T.</li>
+          <li>The Gaussian's second parameter is the variance σ², not σ. N(x | 4, 2) means σ² = 2, so σ = √2.</li>
+          <li>Tied samples in the empirical distribution stack up: k samples at one value give mass k/N there and a jump of k/N in the cdf.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Logits z = (ln 4, ln 2, 0, 0). Exponentiate: e^z = (4, 2, 1, 1). Divide by the total 8: p = (0.5, 0.25, 0.125, 0.125). With T = ½ use e^(2z) = (16, 4, 1, 1), total 22, so p ≈ (0.73, 0.18, 0.05, 0.05): sharper, same ranking.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> Bernoulli, binomial and categorical cover coins and dice, softmax turns any scores into a categorical, the Gaussian is the cheap and defensible default fixed by μ and σ², and the empirical distribution simply puts 1/N on each data point.</p>
+    </section>
+
+    <section id="rv-t3" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 3</span>
+        <h2>Mahalanobis</h2>
+        <span class="rv-sec">§3.2.2 (+ covariance)</span>
+        <a class="rv-link" href="mahalanobis.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">Σ = E[(x − μ)(x − μ)ᵀ]</span></dt>
+            <dd>Covariance matrix: variances σ₁², σ₂² on the diagonal, covariances Σ₁₂ = Σ₂₁ off it. Always symmetric and positive semi-definite.</dd>
+            <dt><span class="m">Σ̂₁₂ = (1/N) ∑_n (x_n1 − μ₁)(x_n2 − μ₂)</span></dt>
+            <dd>Sample covariance: the average product of centered values. Positive means the two variables rise together.</dd>
+            <dt><span class="m">ρ = Σ₁₂ / (σ₁σ₂)</span></dt>
+            <dd>Correlation: the covariance rescaled into [−1, 1] so it has no units.</dd>
+            <dt><span class="m">d_M(x, μ)² = (x − μ)ᵀ Σ⁻¹ (x − μ)</span></dt>
+            <dd>Mahalanobis distance: distance measured in units of the data's own spread. Setting it to a constant gives an ellipse.</dd>
+            <dt><span class="m">[a b ; c d]⁻¹ = (1 / (ad − bc)) [d −b ; −c a]</span></dt>
+            <dd>2×2 inverse: swap the diagonal, negate the off-diagonal, divide by the determinant.</dd>
+            <dt><span class="m">Σ diagonal ⇒ d_M² = ∑_i (x_i − μ_i)² / σ_i²</span></dt>
+            <dd>With no correlation it is standardized Euclidean distance. With Σ = I it is plain Euclidean distance.</dd>
+            <dt><span class="m">N(x | μ, Σ) ∝ exp(−½ d_M²)</span></dt>
+            <dd>The Gaussian density depends on x only through d_M, so equal Mahalanobis distance means equal density.</dd>
+            <dt><span class="m">2-D: P(d_M &gt; r) = e^(−r²/2)</span></dt>
+            <dd>d_M² follows a χ² distribution with D degrees of freedom (D = dimension). In 2-D the tail has this closed form: d = 1 → 61%, d = 2 → 13.5%, d = 3 → 1.1%.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Euclidean distance treats every direction as equally surprising. Mahalanobis distance divides by the spread in whichever direction you move.</li>
+            <li>Moving along the correlation (with the grain) is cheap. Moving against it is expensive, because the off-diagonal of Σ⁻¹ adds a cross term.</li>
+            <li>Points on the same Mahalanobis ellipse have the same Gaussian density and the same tail probability, however far apart they look in Euclidean distance.</li>
+            <li>Mahalanobis distance does not depend on units: rescale a feature and Σ⁻¹ absorbs the change.</li>
+            <li>It appears in the Gaussian exponent, in outlier scores, and in Gaussian discriminant analysis.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Use Σ⁻¹, not Σ, in the quadratic form, and do not forget the 2× on the cross term: d_M² = a u² + 2b uv + c v² for Σ⁻¹ = [a b ; b c].</li>
+          <li>Only a diagonal Σ inverts entrywise. A full 2×2 Σ needs the determinant formula.</li>
+          <li>Dividing by N vs N − 1 scales every covariance entry by the same factor, so ρ does not change, but d_M does.</li>
+          <li>d_M vs d_M²: the tail formula e^(−r²/2) uses the distance r, so square it first.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>μ = (3, 3), Σ = [2 2 ; 2 4]. det = 8 − 4 = 4, so Σ⁻¹ = ¼[4 −2 ; −2 2] = [1 −0.5 ; −0.5 0.5] and d_M² = u² − uv + 0.5v² for (u, v) = x − μ. With the grain, (u, v) = (2, 2): 4 − 4 + 2 = 2. Against the grain, (2, −2): 4 + 4 + 2 = 10. Both are √8 away in Euclidean distance, but the 2-D tails are e^(−1) ≈ 37% vs e^(−5) ≈ 0.7%.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> Mahalanobis distance (x − μ)ᵀ Σ⁻¹ (x − μ) measures distance in units of the data's own spread, so equal distance means equal Gaussian density, moving along the correlation is cheap, and moving against it is expensive.</p>
+    </section>
+
+    <section id="rv-t4" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 4</span>
+        <h2>Bias &amp; variance</h2>
+        <span class="rv-sec">§3.5, 4.7.6</span>
+        <a class="rv-link" href="bias-variance.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">p(x | θ) = ∑_{k=1}^K π_k p_k(x | θ_k)</span></dt>
+            <dd>Mixture model: a weighted sum of K simple densities. The weights π_k ≥ 0 with ∑_k π_k = 1 are a categorical over the hidden label z.</dd>
+            <dt><span class="m">GMM: p_k = N(x | μ_k, Σ_k)</span></dt>
+            <dd>Gaussian mixture: K Gaussian blobs, each with its own centre μ_k and covariance Σ_k.</dd>
+            <dt><span class="m">r_nk = π_k p_k(x_n) / ∑_j π_j p_j(x_n)</span></dt>
+            <dd>Responsibility: Bayes' rule for the hidden label, i.e. the posterior probability that component k generated x_n. For each point the responsibilities sum to 1 (soft clustering).</dd>
+            <dt><span class="m">bias² = (f̄(x) − f(x))²</span></dt>
+            <dd>f̄(x) = E[f̂(x)] is the fit averaged over many training sets and f(x) is the truth. Bias² measures how wrong the model is on average.</dd>
+            <dt><span class="m">variance = E[(f̂(x) − f̄(x))²]</span></dt>
+            <dd>How much the individual fits f̂ scatter around their average from one training set to the next.</dd>
+            <dt><span class="m">E[(y − f̂(x))²] = bias² + variance + σ²</span></dt>
+            <dd>Expected test error splits exactly into three terms. σ² is the noise variance: irreducible, since even the true function pays it.</dd>
+            <dt><span class="m">E[(f̂ − f)²] = bias² + variance</span></dt>
+            <dd>Error against the noise-free truth: the same decomposition without the noise term.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>The number of components K in a mixture and the degree of a polynomial are the same kind of knob: model complexity.</li>
+            <li>Low complexity (K = 1, degree 0) gives high bias and low variance: wrong in the same way for every sample. High complexity (K = N, degree 9) gives low bias and high variance: it fits the noise in each sample.</li>
+            <li>As complexity rises, bias² falls and variance rises, so test error is U-shaped. The best model sits at the bottom of the U.</li>
+            <li>More data shrinks variance (roughly like 1/N) but not bias, so the best complexity moves higher as N grows.</li>
+            <li>Bias and variance are expectations over training sets you never see, so in practice you estimate total error with a validation set or cross-validation.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Bias is squared in the decomposition: (average − truth)², not |average − truth|.</li>
+          <li>Variance is measured around the average fit f̄, not around the truth f. Spread around the truth is the MSE, which equals bias² + variance.</li>
+          <li>Do not forget the noise floor σ² when asked for expected error on a fresh noisy y. No model can remove it.</li>
+          <li>Responsibilities are normalized per data point (over k), not per component (over n).</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Truth f(x₀) = 2, noise σ² = 0.5, and 4 training sets predict ŷ = 1, 3, 4, 4. Average = 3, so bias² = (3 − 2)² = 1. Variance = (4 + 0 + 1 + 1)/4 = 1.5. Check: MSE vs truth = (1 + 1 + 4 + 4)/4 = 2.5 = 1 + 1.5 ✓. Expected test error = 1 + 1.5 + 0.5 = 3.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> Expected squared error = bias² (how far the average fit is from the truth) + variance (how much the fits scatter around their average) + noise, and turning up complexity, such as mixture size K or polynomial degree, trades the first for the second.</p>
+    </section>
+
+    <section id="rv-t5" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 5</span>
+        <h2>ROC curves</h2>
+        <span class="rv-sec">§5.1.3</span>
+        <a class="rv-link" href="roc.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">TPR = TP / (TP + FN)</span></dt>
+            <dd>True positive rate (sensitivity, recall): share of real positives we catch. The y-axis of the ROC curve.</dd>
+            <dt><span class="m">FPR = FP / (FP + TN)</span></dt>
+            <dd>False positive rate (false-alarm rate): share of real negatives we wrongly flag. The x-axis of the ROC curve.</dd>
+            <dt><span class="m">FNR = 1 − TPR,  TNR = 1 − FPR</span></dt>
+            <dd>Miss rate and specificity. Every rate divides by a true-label row total, so the rates pair up and TPR, FPR carry everything.</dd>
+            <dt><span class="m">precision = TP / (TP + FP)</span></dt>
+            <dd>Not a row rate: divides by the predicted-positive column. Accuracy = (TP + TN) / (P + N).</dd>
+            <dt><span class="m">AUC = P(score of random positive &gt; score of random negative)</span></dt>
+            <dd>Area under the ROC curve. Count winning (positive, negative) pairs; 0.5 is chance, 1 is perfect.</dd>
+            <dt><span class="m">d′ = Φ⁻¹(TPR) − Φ⁻¹(FPR)</span></dt>
+            <dd>Binormal model: negatives' scores ~ N(0, 1), positives' ~ N(d′, 1). Φ is the standard normal CDF; one table fixes d′ and so the whole curve.</dd>
+            <dt><span class="m">AUC = Φ(d′/√2),  EER = 1 − Φ(d′/2)</span></dt>
+            <dd>Binormal AUC and equal error rate (the point where FPR = FNR).</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>A scoring classifier needs a threshold τ; each τ gives one confusion matrix and so one (FPR, TPR) point.</li>
+            <li>Sweeping τ from high to low traces the ROC curve from (0, 0) to (1, 1); lowering τ can only raise both TPR and FPR.</li>
+            <li>The diagonal TPR = FPR is a random guesser; a curve hugging the top-left corner is a good classifier.</li>
+            <li>AUC summarizes the whole curve with one threshold-free number: the chance a random positive outranks a random negative.</li>
+            <li>The equal error rate is where the curve crosses the line FNR = FPR (i.e. TPR = 1 − FPR); lower is better.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Rates divide by the <em>true-label row</em> (P or N), not by what was predicted. Precision divides by the column and is not on the ROC plot.</li>
+          <li>Axes: FPR is x, TPR is y. Swapping them mirrors the curve.</li>
+          <li>One (FPR, TPR) point is not a curve. Joining it straight to (0, 0) and (1, 1) gives AUC = (1 + TPR − FPR)/2, which understates a smooth binormal curve.</li>
+          <li>Ties and the "≥ τ" convention matter when counting: state which side of the threshold a tie falls on.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Scores: A (+, 0.9), B (+, 0.6), C (−, 0.7), D (−, 0.2). At τ = 0.5: TP = 2, FN = 0, FP = 1, TN = 1, so TPR = 2/2 = 1, FPR = 1/2 = 0.5.</p>
+        <p>Sweep τ down: (0, 0) → A (0, 0.5) → C (0.5, 0.5) → B (0.5, 1) → D (1, 1). AUC = 0.5·0.5 + 0.5·1 = 0.75.</p>
+        <p>Check by pairs: A&gt;C ✓, A&gt;D ✓, B&gt;C ✗, B&gt;D ✓ → 3/4 = 0.75.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> each threshold gives one (FPR, TPR) point, sweeping it traces the ROC curve, and the area under it is the probability that a random positive outscores a random negative.</p>
+    </section>
+
+    <section id="rv-t6" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 6</span>
+        <h2>KL direction</h2>
+        <span class="rv-sec">§6.2.6</span>
+        <a class="rv-link" href="kl.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">KL(p‖q) = ∑_x p(x) log (p(x) / q(x))</span></dt>
+            <dd>KL divergence (∫ for densities). Always ≥ 0, equal to 0 only when p = q. Not symmetric: KL(p‖q) ≠ KL(q‖p) in general.</dd>
+            <dt><span class="m">Forward: min_q KL(p‖q) = ∫ p log (p / q)</span></dt>
+            <dd>Inclusive, mean-seeking, zero-avoiding. Weighted by the target p: if p &gt; 0 where q ≈ 0 the cost blows up, so q covers every mode.</dd>
+            <dt><span class="m">Reverse: min_q KL(q‖p) = ∫ q log (q / p)</span></dt>
+            <dd>Exclusive, mode-seeking, zero-forcing. Weighted by the approximation q: q must avoid regions where p ≈ 0, so it may lock onto one mode.</dd>
+            <dt><span class="m">KL(p‖q) = −H(p) − ∑_x p(x) log q(x)</span></dt>
+            <dd>Entropy of p is fixed, so minimizing forward KL over q is maximizing expected log q under p: forward KL = maximum likelihood.</dd>
+            <dt><span class="m">Gaussian forward fit: μ = E_p[x],  σ² = E_p[x²] − μ²</span></dt>
+            <dd>Moment matching: the best single Gaussian under KL(p‖q) copies p's mean and variance. Reverse KL has no closed form.</dd>
+            <dt><span class="m">0 · log(0 / q) = 0,  p · log(p / 0) = ∞ (p &gt; 0)</span></dt>
+            <dd>Conventions for zero terms: zero weight contributes nothing; positive weight over a zero denominator is infinite.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Both directions integrate a log ratio; the only difference is which distribution weights it, and so where a mismatch is punished.</li>
+            <li>Fitting one Gaussian to two bumps: forward KL gives a wide blur centred in the gap; reverse KL gives a tight fit to one bump.</li>
+            <li>Maximum likelihood minimizes forward KL from the data distribution; variational inference minimizes reverse KL (q‖p).</li>
+            <li>Reverse KL can have several local minima (one per mode), so where gradient descent starts decides which mode you get.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Direction naming: the first argument is the weighting distribution. KL(p‖q) with p the target is <em>forward</em>; KL(q‖p) is <em>reverse</em>.</li>
+          <li>Do not mix up the slogans: forward = mean-seeking / zero-avoiding / covers all modes; reverse = mode-seeking / zero-forcing / drops modes.</li>
+          <li>A zero in q where p &gt; 0 makes forward KL infinite; a zero in q is harmless for reverse KL (that term is 0).</li>
+          <li>KL is not a distance: it is asymmetric and fails the triangle inequality.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>p = (0.4, 0.1, 0.1, 0.4). q_A = (0.1, 0.4, 0.4, 0.1) (wide), q_B = (0.8, 0.2, 0, 0) (one bump). Natural logs.</p>
+        <p>Forward: KL(p‖q_A) = 0.8 ln 4 − 0.2 ln 4 = 0.6 ln 4 = 0.83; KL(p‖q_B) = ∞ (p &gt; 0 where q_B = 0) → forward picks q_A.</p>
+        <p>Reverse: KL(q_A‖p) = 0.83; KL(q_B‖p) = 0.8 ln 2 + 0.2 ln 2 = ln 2 = 0.69 → reverse picks q_B.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> KL(p‖q) is weighted by p, so q is punished for missing any of p's mass and spreads to cover all modes, while KL(q‖p) is weighted by q, so q is punished for putting mass where p has none and locks onto one mode.</p>
+    </section>
+
+    <section id="rv-t7" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 7</span>
+        <h2>Mutual information</h2>
+        <span class="rv-sec">§6.3</span>
+        <a class="rv-link" href="mutual-info.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">I(X;Y) = KL(p(x,y) ‖ p(x)p(y))</span></dt>
+            <dd>Definition: how far the real joint is from the table independence would predict (product of marginals).</dd>
+            <dt><span class="m">I(X;Y) = ∑_x ∑_y p(x,y) log₂ [p(x,y) / (p(x)p(y))]</span></dt>
+            <dd>The same thing written as a sum over the joint table. With log₂ the answer is in bits.</dd>
+            <dt><span class="m">I(X;Y) = H(X) − H(X|Y) = H(Y) − H(Y|X)</span></dt>
+            <dd>Uncertainty about X before seeing Y minus what is left after. Symmetric in X and Y.</dd>
+            <dt><span class="m">H(X|Y) = ∑_y p(y) H(X | Y = y)</span></dt>
+            <dd>Conditional entropy: the entropy of X within each value of y, averaged with weights p(y).</dd>
+            <dt><span class="m">H(X) = −∑_x p(x) log₂ p(x)</span></dt>
+            <dd>Entropy in bits. A fair coin has 1 bit; a variable with K equally likely values has log₂ K bits.</dd>
+            <dt><span class="m">I(X;Y) ≥ 0, = 0 ⇔ X ⫫ Y</span></dt>
+            <dd>MI is never negative and is zero exactly when X and Y are independent.</dd>
+            <dt><span class="m">R = √(1 − 2^(−2I))</span></dt>
+            <dd>Puts MI (in bits) on a 0–1 scale; equals |ρ| when X and Y are jointly Gaussian.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Mutual information is the number of bits you learn about X by seeing Y (and, by symmetry, about Y by seeing X).</li>
+            <li>To compute it, build the independence table p(x)p(y) from the marginals and compare it cell by cell with the real joint.</li>
+            <li>Same marginals can give very different MI: an independent joint gives 0 bits, a perfectly matched one gives H(X).</li>
+            <li>Correlation only sees straight-line relationships; MI catches any dependence, so ρ = 0 can still hide large MI.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>ρ = 0 does not mean independent (y = x² on symmetric x has ρ = 0 but I = 1 bit). I = 0 does mean independent.</li>
+          <li>H(X|Y) is an average over y weighted by p(y), not the entropy of a single conditional.</li>
+          <li>Cells with p(x,y) = 0 contribute 0 to the sum; individual terms can be negative even though the total is ≥ 0.</li>
+          <li>State the log base: log₂ gives bits, ln gives nats.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Data (x, y): (0,0) (0,0) (1,0) (1,1). Joint: p(0,0) = 0.5, p(1,0) = 0.25, p(1,1) = 0.25, p(0,1) = 0. Marginals p(x) = (0.5, 0.5), p(y) = (0.75, 0.25).</p>
+        <p>H(X) = 1. Given y = 0 (prob 0.75), x is 0 two times in 3: H(2/3, 1/3) = 0.918; given y = 1, x = 1 for sure: 0. H(X|Y) = 0.75·0.918 = 0.689.</p>
+        <p>I = 1 − 0.689 = 0.311 bits. Check: H(Y) − H(Y|X) = 0.811 − 0.5 = 0.311 ✓</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> mutual information is the KL divergence between the real joint and the product of the marginals, which equals how many bits of uncertainty about X you lose by seeing Y (and vice versa), and it is 0 only when the variables are independent.</p>
+    </section>
+
+    <section id="rv-t8" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 8</span>
+        <h2>EM algorithm</h2>
+        <span class="rv-sec">§8.7</span>
+        <a class="rv-link" href="em.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">ℓ(θ) = ∑_n log ∑_z p(x_n, z | θ)</span></dt>
+            <dd>Log-likelihood with a hidden variable z. The sum inside the log blocks a closed-form MLE.</dd>
+            <dt><span class="m">ℓ(θ) ≥ Ł(θ, q) = ∑_n ∑_z q_n(z) log [p(x_n, z | θ) / q_n(z)]</span></dt>
+            <dd>Jensen lower bound (log is concave) for any distribution q_n over each point's hidden label.</dd>
+            <dt><span class="m">ℓ(θ) − Ł(θ, q) = ∑_n KL(q_n ‖ p(z | x_n, θ))</span></dt>
+            <dd>The gap is a KL divergence, so it is ≥ 0 and is 0 exactly when q_n is the posterior.</dd>
+            <dt><span class="m">E step: q_n(z) = p(z | x_n, θ_t)</span></dt>
+            <dd>Set q to the posterior so the bound touches ℓ at θ_t. For a GMM: r_nk = π_k N(x_n | μ_k, σ_k²) / ∑_j π_j N(x_n | μ_j, σ_j²).</dd>
+            <dt><span class="m">M step: θ_(t+1) = argmax_θ Q(θ, θ_t),  Q = ∑_n E_(q_n)[log p(x_n, z_n | θ)]</span></dt>
+            <dd>Maximize the expected complete-data log-likelihood; the entropy part of Ł has no θ in it.</dd>
+            <dt><span class="m">N_k = ∑_n r_nk,  π_k = N_k / N</span></dt>
+            <dd>GMM M step: soft count of points owned by component k, and its new mixing weight.</dd>
+            <dt><span class="m">μ_k = ∑_n r_nk x_n / N_k,  σ_k² = ∑_n r_nk (x_n − μ_k)² / N_k</span></dt>
+            <dd>The ordinary mean and variance, with each point counted r_nk times (use the new μ_k inside σ_k²).</dd>
+            <dt><span class="m">ℓ(θ_(t+1)) ≥ Ł(θ_(t+1), q_t) ≥ Ł(θ_t, q_t) = ℓ(θ_t)</span></dt>
+            <dd>Why EM never decreases the log-likelihood (monotonicity).</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>If the labels z were observed, the MLE would be easy (each group's own average); hidden z puts a sum inside the log and couples the parameters.</li>
+            <li>EM is bound optimization (MM): build a surrogate that sits below ℓ and touches it at θ_t, maximize the surrogate, repeat.</li>
+            <li>E step = fill in the hidden labels softly with Bayes' rule; M step = refit with the fully observed formulas, weighting each point by its responsibilities.</li>
+            <li>ℓ never goes down, and steps typically shrink near the top; EM converges to a local maximum, so the starting point matters.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Responsibilities must be normalized: each point's row r_n1, …, r_nK sums to 1 (divide by the sum over components, including π_k).</li>
+          <li>Divide by N_k (the soft count), not by N, for μ_k and σ_k²; only π_k divides by N.</li>
+          <li>EM guarantees ℓ does not decrease, not that it reaches the global maximum.</li>
+          <li>The bound is ≤ ℓ for any q; it only equals ℓ at θ_t when q is the exact posterior.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>x = 0, 2, 3, 5; start π = (½, ½), μ = (1, 4), σ = (1, 1). Equal π, σ: r_n2 = 1/(1 + e^(−3(x_n − 2.5))) → r_·2 = (0.00, 0.18, 0.82, 1.00), r_·1 = 1 − r_·2.</p>
+        <p>N₁ = N₂ = 2, so π = (0.5, 0.5). μ₁ = (0.82·2 + 0.18·3)/2 = 1.09, μ₂ = (0.18·2 + 0.82·3 + 5)/2 = 3.91.</p>
+        <p>σ₁² = σ₂² = 1.27. Check: ℓ goes −8.04 → −7.94, up as guaranteed.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> hidden variables put a sum inside the log so the MLE has no closed form, and EM alternates an E step that computes each point's responsibilities by Bayes' rule (making a lower bound that touches ℓ) with an M step that refits by responsibility-weighted MLE, which never decreases the likelihood.</p>
+    </section>
+
+    <section id="rv-t9" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 9</span>
+        <h2>Naive Bayes</h2>
+        <span class="rv-sec">§9.3 – 9.4</span>
+        <a class="rv-link" href="naive-bayes.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">p(y = c | x) ∝ π_c ∏_d p(x_d | y = c)</span></dt>
+            <dd>Class posterior under the naive (conditional independence) assumption. π_c = p(y = c) is the class prior; normalize by dividing by the sum over all classes.</dd>
+            <dt><span class="m">p(x | y = c) = ∏_d θ_dc^(x_d) (1 − θ_dc)^(1 − x_d)</span></dt>
+            <dd>Binary (Bernoulli) features: θ_dc = p(x_d = 1 | y = c). A word that is present uses θ, a word that is absent uses 1 − θ, an unknown word is skipped.</dd>
+            <dt><span class="m">π̂_c = N_c / N &nbsp; θ̂_dc = N_dc / N_c</span></dt>
+            <dd>MLE = counting. N_c = number of class-c examples, N_dc = number of those with feature d on.</dd>
+            <dt><span class="m">θ̂_dc = (N_dc + 1) / (N_c + 2)</span></dt>
+            <dd>Add-one (Laplace) smoothing: add 1 to each count and 2 to each total, so no probability is ever exactly 0 or 1.</dd>
+            <dt><span class="m">log [p(y=1 | x) / p(y=0 | x)] = log(π_1/π_0) + ∑_d log [p(x_d | y=1) / p(x_d | y=0)]</span></dt>
+            <dd>In log space the posterior odds are a bias plus one "push" per feature: a linear function of x, the same form as logistic regression (§9.3.4).</dd>
+            <dt><span class="m">p(y = 1 | x) = σ(wᵀx + w₀)</span></dt>
+            <dd>Logistic regression, the discriminative counterpart. σ(a) = 1/(1 + e^(−a)). NB gets the weights by counting; LR gets them by optimizing the conditional likelihood.</dd>
+            <dt><span class="m">generative: p(y | x) = p(x | y) p(y) / ∑_c′ p(x | c′) p(c′)</span></dt>
+            <dd>Generative models learn p(x | y) and p(y) and flip with Bayes' rule; discriminative models learn p(y | x) directly (§9.4).</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Bayes' rule flips "is this spam?" into "how well does spam explain these words?", scored for each class and then normalized.</li>
+            <li>The naive assumption (features independent given the class) turns a 2^D-sized table into D numbers per class, so fitting is one pass of counting.</li>
+            <li>Smoothing matters: an unsmoothed zero count makes one feature veto everything (an infinite log-odds push).</li>
+            <li>Taking logs makes NB a linear classifier, like logistic regression; only the way the weights are found differs.</li>
+            <li>Generative (NB) wins with little data, handles missing features (drop the factor) and new classes (fit only that class). Discriminative (LR) usually wins with lots of data and is better calibrated.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>An absent feature (x_d = 0) is still evidence: use 1 − θ_dc, do not skip it. Only an unknown/missing feature is skipped.</li>
+          <li>Smoothing is (count + 1)/(N_c + 2) for binary features, not (count + 1)/(N_c + 1).</li>
+          <li>Correlated features get counted twice, so NB is overconfident (e.g. duplicating "free" moves 2/3 to 0.8); more data does not fix this.</li>
+          <li>"Naive" is about the likelihood p(x | y), not the prior, and it does not mean the features are independent overall, only given the class.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Spam: {free}, {free, meeting}; normal: {meeting}, {free, meeting}. Smoothed θ: spam free 3/4, meeting 2/4; normal free 2/4, meeting 3/4; priors 0.5 each.</p>
+        <p>New email: free ✓, meeting ✗. Spam score = 0.5 · 3/4 · (1 − 2/4) = 0.1875; normal score = 0.5 · 2/4 · (1 − 3/4) = 0.0625.</p>
+        <p>p(spam | email) = 0.1875 / 0.25 = 0.75. Check in log-odds: 0 + ln 1.5 + ln 2 = ln 3 → odds 3 : 1 → 0.75.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> Naive Bayes flips the question with Bayes' rule, assumes features are independent given the class so the likelihood is a product fitted by (smoothed) counting, which makes it a linear, generative classifier that wins with little data while discriminative logistic regression wins with lots.</p>
+    </section>
+
+    <section id="rv-t10" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 10</span>
+        <h2>Metric learning</h2>
+        <span class="rv-sec">§16.2.2 – 16.2.4</span>
+        <a class="rv-link" href="metric-learning.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">d(x, x′) = ‖f(x) − f(x′)‖₂</span></dt>
+            <dd>Deep metric learning: a network f maps inputs to embeddings e = f(x); the distance stays plain Euclidean and all the learning goes into f.</dd>
+            <dt><span class="m">‖e‖ = 1 ⇒ ‖e − e′‖² = 2 − 2eᵀe′</span></dt>
+            <dd>On the unit sphere, squared distance and cosine similarity eᵀe′ carry the same information, and a big norm can't fake "far away".</dd>
+            <dt><span class="m">logit_c = s · eᵀw_c, &nbsp;‖w_c‖ = 1</span></dt>
+            <dd>Classification loss view: each normalized class weight w_c is a proxy point on the sphere; s is the scale (softmax sharpness). Softmax pulls e toward its own proxy.</dd>
+            <dt><span class="m">logit_y = s (cos θ_y − m)</span></dt>
+            <dd>Cosine margin on the true class y only (CosFace/ArcFace family): θ_y is the angle between e and w_y; the margin m forces tighter class clusters.</dd>
+            <dt><span class="m">L = 𝟙[y_i = y_j] d² + 𝟙[y_i ≠ y_j] [m − d]₊²</span></dt>
+            <dd>Contrastive (Siamese) loss on a pair: pull same-class pairs together, push different-class pairs apart until they are m apart. [z]₊ = max(z, 0).</dd>
+            <dt><span class="m">L = [d(a, p)² − d(a, n)² + m]₊</span></dt>
+            <dd>Triplet loss: anchor a, positive p (same class), negative n (different). Zero once p is closer than n by at least the margin m.</dd>
+            <dt><span class="m">L = log(1 + ∑_k exp(eᵀe_k − eᵀe⁺))</span></dt>
+            <dd>N-pairs loss: one positive e⁺ against N − 1 negatives e_k at once; it equals softmax cross-entropy with the positive as the right answer.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Nearest-neighbour methods are only as good as their distance; metric learning trains an embedding where "close" means "same kind".</li>
+            <li>A learned distance works on classes never seen in training (new faces, new products), which a fixed C-way classifier cannot.</li>
+            <li>Classification losses (§16.2.3): train a softmax classifier with normalized features and weights, then drop the head and use the penultimate layer. Cost O(N·C), no pair sampling.</li>
+            <li>Ranking losses (§16.2.4) learn from comparisons: pairs (contrastive), triplets, or one-vs-many (N-pairs).</li>
+            <li>There are O(N²) pairs and O(N³) triplets, and most give zero loss, so mining hard / semi-hard examples matters a lot.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>The network f is learned, not the distance function: the ruler stays Euclidean (on normalized embeddings).</li>
+          <li>Contrastive loss uses the unsquared distance inside [m − d]₊ and then squares; triplet loss compares squared distances and adds m before the hinge.</li>
+          <li>A satisfied triplet or a far-enough negative pair has zero loss and zero gradient: easy examples teach nothing.</li>
+          <li>Hard negative: closer than the positive. Semi-hard: farther than the positive but still inside the margin (loss between 0 and m).</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>a = (0, 0), p = (2, 0), n₁ = (1, 1), n₂ = (0, 3), m = 2. Squared distances from a: p 4, n₁ 2, n₂ 9.</p>
+        <p>Triplet: with n₁, [4 − 2 + 2]₊ = 4 (hard negative); with n₂, [4 − 9 + 2]₊ = 0 (easy, ignored).</p>
+        <p>Contrastive: (a, p) → 4; (a, n₁) → [2 − √2]₊² = 0.34; (a, n₂) → [2 − 3]₊² = 0.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> metric learning trains a network so that plain Euclidean distance between normalized embeddings means "same kind", either by a normalized softmax classifier with class proxies and margins or by ranking losses (contrastive, triplet, N-pairs) that only care about the ordering of distances and need hard examples to learn.</p>
+    </section>
+
+    <section id="rv-t11" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 11</span>
+        <h2>Kernel density</h2>
+        <span class="rv-sec">§16.3</span>
+        <a class="rv-link" href="kde.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">K_h(x) = (1/h) K(x/h); &nbsp;∫K = 1, K(−x) = K(x), K ≥ 0</span></dt>
+            <dd>A density kernel is a symmetric, non-negative bump of area 1; bandwidth h stretches it sideways by h and squashes it by 1/h so the area stays 1.</dd>
+            <dt><span class="m">Gaussian: K(u) = (1/√(2π)) e^(−u²/2) &nbsp; Boxcar: K(u) = ½ for |u| ≤ 1</span></dt>
+            <dd>Two common kernel shapes; the choice of h matters much more than the shape.</dd>
+            <dt><span class="m">p̂(x) = (1/N) ∑_n K_h(x − x_n)</span></dt>
+            <dd>Parzen window / KDE: one kernel on every data point x_n, averaged. Non-parametric: the data is the model. Sample by picking an x_n uniformly, then adding kernel noise.</dd>
+            <dt><span class="m">h = σ̂ (4 / (3N))^(1/5)</span></dt>
+            <dd>Rule-of-thumb bandwidth (assumes one Gaussian hump). σ̂ is a robust spread, 1.4826 × MAD (median absolute distance from the median).</dd>
+            <dt><span class="m">LOO(h) = (1/N) ∑_n log p̂₋ₙ(x_n)</span></dt>
+            <dd>Leave-one-out score: p̂₋ₙ is the KDE built without x_n. Pick the h with the highest score.</dd>
+            <dt><span class="m">p(y = c | x) = N_c(x) / K</span></dt>
+            <dd>KDE → KNN: grow a "balloon" until it holds K points; N_c(x) is how many are class c. The balloon volume V cancels in Bayes' rule.</dd>
+            <dt><span class="m">ŷ(x) = ∑_n w_n(x) y_n, &nbsp;w_n(x) = K_h(x − x_n) / ∑_n′ K_h(x − x_n′)</span></dt>
+            <dd>Nadaraya–Watson kernel regression: a weighted average of nearby y's with weights that sum to 1.</dd>
+            <dt><span class="m">𝕍[y | x] = σ² + ∑_n w_n y_n² − ŷ²</span></dt>
+            <dd>Predictive variance: σ² is each bump's width in the y direction; the rest is the weighted spread of the neighbours' y values.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>KDE puts a small bump on every data point and averages them; the curve is tall where points crowd together.</li>
+            <li>Bandwidth h is the one knob: too small is spiky (memorizes the data), too big is blurry (smears away humps). More data allows a smaller h.</li>
+            <li>Choose h by the rule of thumb (fast, oversmooths multi-hump data) or by leave-one-out cross-validation.</li>
+            <li>Fixing K instead of the window size turns density estimation into K-nearest-neighbour classification.</li>
+            <li>Kernel regression predicts y as a kernel-weighted average; locally weighted (linear) regression fits a tiny line instead, fixing bias at the data's edges.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Forgetting the 1/h (or the 1/N) means the estimate no longer integrates to 1.</li>
+          <li>Cross-validation must hide the point: without leave-one-out, h → 0 gives a score of +∞ (a spike on every point).</li>
+          <li>A boxcar KDE or fixed window can be exactly 0 / empty in sparse regions; the KNN balloon always holds K points.</li>
+          <li>All these methods keep every training point (slow prediction) and suffer in high dimensions (curse of dimensionality).</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Data 1, 2, 3, 7, boxcar h = 1 (each bump ½ tall on [x_n − 1, x_n + 1]): p̂(2) = (½ + ½ + ½ + 0)/4 = 0.375; p̂(7) = ½/4 = 0.125; p̂(5) = 0.</p>
+        <p>Nadaraya–Watson, data (0, 1), (1, 3), (2, 2), (3, 5), Gaussian h = 1, query x = 1.5: kernel heights 0.130, 0.352, 0.352, 0.130 → weights 0.134, 0.366, 0.366, 0.134 → ŷ = 2.63.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> KDE estimates a density by averaging one area-1 bump per data point, with the bandwidth h (rule of thumb or leave-one-out CV) as its only knob, and the same idea gives KNN classification (fix K, not the window) and kernel regression (a kernel-weighted average of nearby y's).</p>
+    </section>
+
+    <section id="rv-t12" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 12</span>
+        <h2>Gaussian processes</h2>
+        <span class="rv-sec">§17.2.1 – 17.2.2</span>
+        <a class="rv-link" href="gp.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">K(x, x′) = σ_f² exp(−‖x − x′‖² / (2ℓ²))</span></dt>
+            <dd>RBF kernel used on the page: ℓ is the length scale (how far similarity reaches), σ_f² the prior variance of f.</dd>
+            <dt><span class="m">(f_X, f_*) ~ 𝒩(0, [K_X,X K_X,* ; K_*,X K_*,*])</span></dt>
+            <dd>GP prior (zero mean): function values at training inputs X and test inputs * are jointly Gaussian, with covariances given by the kernel.</dd>
+            <dt><span class="m">μ = (K₁₂ / K₁₁) a, &nbsp;σ² = K₂₂ − K₁₂² / K₁₁</span></dt>
+            <dd>One observation f(x₁) = a, predicting f(x₂): Gaussian conditioning ("slicing the oval"). The variance does not depend on a.</dd>
+            <dt><span class="m">μ* = K_*,X K_X,X⁻¹ f_X</span></dt>
+            <dd>Noise-free posterior mean (§17.2.1): a blend of the observed values f_X. Passes exactly through the data (an interpolator).</dd>
+            <dt><span class="m">Σ* = K_*,* − K_*,X K_X,X⁻¹ K_X,*</span></dt>
+            <dd>Noise-free posterior covariance: prior minus what the data explains. Zero at the data points, back to the prior far away.</dd>
+            <dt><span class="m">y = f(x) + ε, ε ~ 𝒩(0, σ_y²); &nbsp;K_σ = K_X,X + σ_y² I</span></dt>
+            <dd>Noisy observations (§17.2.2): the only change is adding σ_y² to the diagonal, since noise is independent per reading.</dd>
+            <dt><span class="m">μ* = K_*,X K_σ⁻¹ y, &nbsp;Σ* = K_*,* − K_*,X K_σ⁻¹ K_X,*</span></dt>
+            <dd>Noisy posterior. For one test point μ(x*) = ∑_n w_n y_n with w = K_σ⁻¹ k*; weights can be negative (unlike Nadaraya–Watson).</dd>
+            <dt><span class="m">𝕍[y*] = Σ* + σ_y²</span></dt>
+            <dd>Predicting a new noisy measurement y* (not the true f(x*)): add the noise back, so this band never shrinks below σ_y.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>A GP is a Gaussian distribution over whole functions: any finite set of function values is jointly Gaussian, with covariance from the kernel.</li>
+            <li>Learning is conditioning, not fitting: observing data keeps only the curves consistent with it.</li>
+            <li>Noise-free GP regression interpolates: mean through every point, zero variance there, and back to the prior (mean 0, ± σ_f) far from data.</li>
+            <li>With noise the curve goes between the dots instead of through them, and the band never pinches to zero.</li>
+            <li>Error bars depend on where the data is, never on the observed values. Cost is an N × N inverse, about O(N³).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Σ* is uncertainty about f(x*); a new measurement y* needs + σ_y² on top.</li>
+          <li>σ_y² goes only on the diagonal of K_X,X, not on K_*,X or K_*,*.</li>
+          <li>Setting σ_y = 0 recovers the noise-free case, but near-duplicate inputs make K_X,X nearly singular; in practice a tiny jitter is added.</li>
+          <li>The posterior variance formula has no y or f in it: seeing surprising values does not widen the band.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>RBF ℓ = 1, σ_f = 1; observe f(0) = 1, f(2) = 2 (noise-free). K(0, 2) = e^(−2) = 0.135, so K_X,X = [1 0.135 ; 0.135 1], det = 0.982.</p>
+        <p>α = K⁻¹f = (1/0.982)(1 − 0.27, 2 − 0.135) = (0.743, 1.900). At x* = 1: k* = (e^(−0.5), e^(−0.5)) = (0.607, 0.607).</p>
+        <p>μ* = 0.607 · (0.743 + 1.900) = 1.60; Σ* = 1 − k*ᵀK⁻¹k* = 1 − 0.648 = 0.35 (sd 0.59). At x* = 0: μ* = 1, sd 0.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> a Gaussian process puts a joint Gaussian on function values with covariance from a kernel, so regression is just Gaussian conditioning: μ* = K_*,X (K_X,X + σ_y² I)⁻¹ y and Σ* = K_*,* − K_*,X (K_X,X + σ_y² I)⁻¹ K_X,*, which interpolates the data when σ_y = 0 and goes between noisy dots otherwise.</p>
+    </section>
+
+    <section id="rv-t13" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 13</span>
+        <h2>Kernel trick</h2>
+        <span class="rv-sec">§17.3.4</span>
+        <a class="rv-link" href="kernel-trick.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">x ↦ φ(x), e.g. φ(x) = (x, x²)</span></dt>
+            <dd>The feature map φ lifts each input into more dimensions. A flat cut in φ-space (x² &gt; t) is a curved boundary back in the input space (two cuts at x = ±√t).</dd>
+            <dt><span class="m">K(a, b) = φ(a)·φ(b)</span></dt>
+            <dd>A kernel hands you the dot product in feature space straight from a and b, without ever building φ.</dd>
+            <dt><span class="m">K(a, b) = (a·b)², φ(x) = (x₁², √2 x₁x₂, x₂²)</span></dt>
+            <dd>Degree-2 polynomial kernel in 2-D: one ordinary dot product and a square equals the 3-feature lift-then-dot.</dd>
+            <dt><span class="m">K(a, b) = exp(−γ‖a − b‖²)</span></dt>
+            <dd>RBF kernel: 1 when a = b, fades to 0 as they move apart; γ sets the width (bigger γ = narrower bumps). Its φ is infinite-dimensional.</dd>
+            <dt><span class="m">Gram matrix Kᵢⱼ = K(xᵢ, xⱼ), no negative eigenvalues</span></dt>
+            <dd>Mercer (positive definite) condition: K is a valid kernel only if it equals φ(a)·φ(b) for some φ, so every N × N Gram matrix is positive semidefinite.</dd>
+            <dt><span class="m">max Σαₙ − ½ ΣΣ αᵢαⱼ yᵢyⱼ K(xᵢ, xⱼ), 0 ≤ αₙ ≤ C, Σαₙyₙ = 0</span></dt>
+            <dd>The SVM dual: the data enter only through the Gram matrix, which is why swapping xᵢ·xⱼ for K(xᵢ, xⱼ) works.</dd>
+            <dt><span class="m">f(x) = Σₙ αₙ yₙ K(xₙ, x) + w₀, ŷ = sign f(x)</span></dt>
+            <dd>Kernel SVM prediction: compare x with each training point via K, weight by αₙ (learned) and label yₙ = ±1, add bias w₀.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Data that no straight line separates can become linearly separable after adding features; linear in φ-space means curved in the original space.</li>
+            <li>Building φ explicitly explodes: with D = 1,000 inputs, all pairwise products is about 500,000 features, all triples about 167 million.</li>
+            <li>The SVM dual uses the inputs only through dot products, so replacing each dot product with K(a, b) gives the lifted SVM at the cost of an ordinary dot product.</li>
+            <li>A kernel is a similarity score: large for points that agree, 0 for perpendicular inputs (polynomial) or far-apart inputs (RBF).</li>
+            <li>Most αₙ come out exactly 0; the points with αₙ &gt; 0 are the support vectors (on or inside the margin), and only they enter the prediction.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Not every similarity function is a kernel: it must be positive definite (Mercer), i.e. equal φ(a)·φ(b) for some φ, even one you never write down.</li>
+          <li>The trick does not change the classifier, only how cheaply you compute it; the SVM code is identical for every kernel, only K changes.</li>
+          <li>Picking the kernel matters: (a·b)² forces boundaries symmetric through the origin and can do worse than linear on simple blobs; large γ in RBF wraps tightly around single points and overfits.</li>
+          <li>In f(x), the sum effectively runs over support vectors only: points with αₙ = 0 never affect a prediction.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>a = (1, 1), b = (1, 2), K(a, b) = (a·b)². Long way: φ(a) = (1, √2, 1), φ(b) = (1, 2√2, 4), φ(a)·φ(b) = 1 + 4 + 4 = 9. Short way: a·b = 1 + 2 = 3, 3² = 9. Same number, φ never built. RBF with γ = 0.5: ‖a − b‖² = 1, K = exp(−0.5) = 0.61; for (1, 0) vs (1, 2), ‖·‖² = 4, K = exp(−2) = 0.14 (farther apart → closer to 0).</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> the SVM only needs dot products φ(a)·φ(b), and a kernel K(a, b) computes that number straight from a and b, so you get curved boundaries from huge (even infinite) feature spaces for the price of an ordinary dot product, predicting with f(x) = Σₙ αₙyₙK(xₙ, x) + w₀ over the support vectors.</p>
+    </section>
+
+    <section id="rv-t14" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 14</span>
+        <h2>Tuning &amp; regression (kernel machines)</h2>
+        <span class="rv-sec">§17.3.6 – 17.3.8</span>
+        <a class="rv-link" href="kernel-machines.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">min ½‖w‖² + C Σₙ ξₙ, ξₙ = max(0, 1 − yₙ f(xₙ))</span></dt>
+            <dd>Soft-margin SVM objective: ½‖w‖² wants a wide margin, C is the price per unit of slack ξₙ (margin violation). Big C chases every training point; small C barely tries.</dd>
+            <dt><span class="m">CV(C) = (1/K) Σₖ err on fold k (trained on the other K − 1)</span></dt>
+            <dd>K-fold cross-validation (the book uses 5 folds): every point is held out once. Pick the C (and γ, jointly) with the lowest held-out error on a log grid 0.03, 0.1, 0.3, 1, 3, 10, …</dd>
+            <dt><span class="m">α = (K + λI)⁻¹ y</span></dt>
+            <dd>Kernel ridge regression: squared loss plus a λ penalty, solved by one linear system. K is the N × N Gram matrix; every αₙ is nonzero (dense).</dd>
+            <dt><span class="m">f(x) = Σₙ αₙ K(xₙ, x)</span></dt>
+            <dd>Prediction for both kernel regressors: a weighted sum of kernel similarities to the training points (β in place of α for SVR).</dd>
+            <dt><span class="m">ℓ_ε(y, f) = max(0, |y − f| − ε)</span></dt>
+            <dd>ε-insensitive loss of SVM regression: misses smaller than ε are free (a tube of half-width ε around the curve).</dd>
+            <dt><span class="m">min ½ βᵀKβ − yᵀβ + ε Σₙ|βₙ|, −C ≤ βₙ ≤ C</span></dt>
+            <dd>SVR dual (as solved on the page): the ε Σ|βₙ| term is an L1 penalty that sets βₙ = 0 for points inside the tube; C caps any one point's pull.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Training error always prefers bigger C, because bigger C bends the boundary to fix more training mistakes, including noisy labels. It says nothing about new points.</li>
+            <li>Choose C, γ, λ and ε the same way: make a grid, cross-validate, keep the lowest held-out error. C and γ interact (narrow γ overfits at smaller C), so search them together.</li>
+            <li>Kernel ridge and SVR fit the same kind of curve; the loss decides which points the model must remember.</li>
+            <li>Kernel ridge: squared loss, one linear solve, dense weights, outliers pull hard. It equals the GP posterior mean, with λ in the role of the noise variance σ_y².</li>
+            <li>SVR: ε-tube loss, a constrained optimisation (QP), sparse weights (only points on or outside the tube are support vectors), each point's pull capped at C.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Never choose C (or any knob) by training error; too big a C chases noise, too small a C ignores the data.</li>
+          <li>C is the price of a mistake, not a regularisation strength like λ: bigger C means <em>less</em> regularisation.</li>
+          <li>Sparsity is not free: a wider ε gives fewer support vectors, but past some width the fit stops following the data. ε = 0 makes every point a support vector.</li>
+          <li>Grids for C and γ are spaced by factors (log scale), not evenly, because what matters is the ratio.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>x = 0, 1, 2, 3, y = 0, 1, 2, 6 (last is an outlier), K(x, x′) = 1 + x x′ so f(x) = w₀ + w₁x. Ridge, λ = 1: ΦᵀΦ + I = [5 6 ; 6 15], det 39, Φᵀy = (9, 23) → w = (−3, 61)/39 = (−0.08, 1.56); residuals 0.08, −0.49, −1.05, 1.38 so all four αₙ = residual/λ are nonzero (dense). SVR, ε = 0.5, C = 0.5: f = 0.3 + 1.1x, errors −0.3, −0.4, −0.5, 2.4 → β = (0, 0, −0.2, 0.5): two points inside the tube get 0, the edge point −0.2, the outlier is capped at C. Slope 1.1 vs 1.56: SVR resists the outlier.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> pick C (and γ, λ, ε) by cross-validated error, never training error, and remember that kernel ridge and SVR fit the same f(x) = Σₙ αₙK(xₙ, x) but ridge's squared loss makes every point pull while SVR's ε-tube makes points inside it weightless and caps any one point's pull at C.</p>
+    </section>
+
+    <section id="rv-t15" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 15</span>
+        <h2>Decision trees</h2>
+        <span class="rv-sec">§18.1</span>
+        <a class="rv-link" href="cart.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">D_L = {n : x_nj ≤ t}, D_R = {n : x_nj &gt; t}</span></dt>
+            <dd>A split on feature j at threshold t. Candidate thresholds T_j are the midpoints between sorted unique values of x_j.</dd>
+            <dt><span class="m">π̂_c = N_c / |D|</span></dt>
+            <dd>Fraction of the node's points that are in class c.</dd>
+            <dt><span class="m">G = Σ_c π̂_c(1 − π̂_c) = 1 − Σ_c π̂_c²</span></dt>
+            <dd>Gini index: chance two points drawn at random (with replacement) have different labels. 0 = pure; two even classes 0.5; three even classes 2/3.</dd>
+            <dt><span class="m">H = −Σ_c π̂_c log π̂_c</span></dt>
+            <dd>Entropy: the other common impurity; ranks splits much like Gini.</dd>
+            <dt><span class="m">cost = |D_L|/|D| · c(D_L) + |D_R|/|D| · c(D_R)</span></dt>
+            <dd>Size-weighted impurity after the split (the average impurity per point). Try every j and t ∈ T_j; keep the lowest cost.</dd>
+            <dt><span class="m">c(D) = (1/|D|) Σ_{n∈D} (y_n − ȳ)²</span></dt>
+            <dd>Regression-tree impurity: mean squared error around the node mean ȳ. A leaf predicts ȳ.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>A tree is a stack of "is x_j ≤ t?" questions; each leaf holds a prediction (majority class or mean), and the regions are axis-aligned rectangles.</li>
+            <li>Building it is one step repeated: pick the (j, t) that splits D into the purest D_L and D_R, then treat each child as a new D.</li>
+            <li>Growth is greedy: finding the optimal tree is NP-complete, so CART takes the locally best split and never goes back.</li>
+            <li>Stop splitting when a node is pure, reaches the maximum depth, or any split would leave a child below the minimum leaf size. Deep trees with tiny leaves overfit.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Forgetting the |D_L|/|D| weights: unweighted, peeling off one point gives a pure child (G = 0) and looks great.</li>
+          <li>Greedy can get stuck: on XOR every single split leaves cost = root impurity (0.5), so CART stops even though a depth-2 tree is perfect.</li>
+          <li>Gini is 1 − Σπ̂², not Σπ̂²; and the cost only changes when a point crosses t, so only the midpoints T_j need checking.</li>
+          <li>Misclassification (error) rate has long flat stretches where Gini and entropy still slope toward good splits; Gini/entropy are the usual choices.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Points (x₁, x₂, class): (1, 4, A) (2, 1, A) (3, 3, B) (4, 2, B). Root G = 1 − (0.5² + 0.5²) = 0.5. On x₁: t = 1.5 → L {A} (0), R {A, B, B} (G = 1 − 1/9 − 4/9 = 0.444) → cost ¾·0.444 = 0.333; t = 2.5 → {A, A} | {B, B} → cost 0. On x₂ (classes read A, B, B, A when sorted) t = 2.5 → ½·0.5 + ½·0.5 = 0.5, no gain. Best: x₁ ≤ 2.5 → A, else B.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> for every feature j and midpoint threshold t, split the node into D_L and D_R, score it by the size-weighted impurity of the two sides (Gini or entropy for classes, MSE for numbers), keep the best (j, t), and recurse greedily until nodes are pure, too deep or too small.</p>
+    </section>
+
+    <section id="rv-t16" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 16</span>
+        <h2>Boosting</h2>
+        <span class="rv-sec">§18.5.1 – 18.5.4</span>
+        <a class="rv-link" href="boosting.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">f₀(x) = argmin_γ Σᵢ ℓ(yᵢ, γ)</span></dt>
+            <dd>Start from the best constant: ȳ for squared loss, 0 for exponential/log loss with balanced classes.</dd>
+            <dt><span class="m">(β_m, θ_m) = argmin_{β,θ} Σᵢ ℓ(yᵢ, f_{m−1}(xᵢ) + β F(xᵢ; θ))</span></dt>
+            <dd>Forward stagewise step: fit only the new weak learner F (parameters θ, e.g. a stump's split) and its size β, with all old terms frozen.</dd>
+            <dt><span class="m">f_m(x) = f_{m−1}(x) + ν β_m F(x; θ_m), 0 &lt; ν ≤ 1</span></dt>
+            <dd>Add the new term; ν is optional shrinkage (smaller steps, more rounds, usually better test error).</dd>
+            <dt><span class="m">rᵢ = yᵢ − f_{m−1}(xᵢ)</span></dt>
+            <dd>Least squares boosting, ℓ = (y − f)²: each round fits a stump to the current residuals (β folds into the leaf means).</dd>
+            <dt><span class="m">ωᵢ ∝ exp(−ỹᵢ f_{m−1}(xᵢ)), err_m = Σᵢ ωᵢ I(ỹᵢ ≠ F_m(xᵢ)) / Σᵢ ωᵢ</span></dt>
+            <dd>AdaBoost, ℓ = exp(−ỹf) with ỹ ∈ {−1, +1}: fit F to minimise weighted error; ỹf is the margin.</dd>
+            <dt><span class="m">β_m = ½ log((1 − err_m)/err_m), ωᵢ ← ωᵢ exp(−β_m ỹᵢ F_m(xᵢ))</span></dt>
+            <dd>The stump's vote, then mistakes get multiplied up by e^β and hits shrink by e^−β. (AdaBoost.M1 uses α_m = 2β_m; same classifier.)</dd>
+            <dt><span class="m">π = 1/(1 + e^{−2f}), wᵢ = πᵢ(1 − πᵢ), zᵢ = (y*ᵢ − πᵢ)/wᵢ</span></dt>
+            <dd>LogitBoost, ℓ = log(1 + e^{−2ỹf}), y* = (ỹ + 1)/2 ∈ {0, 1}: a Newton step = weighted least-squares fit of F to working responses z with weights w.</dd>
+            <dt><span class="m">f_m = f_{m−1} + ½ F_m</span></dt>
+            <dd>LogitBoost update; the ½ undoes the 2 in π = σ(2f).</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Boosting builds a strong model f(x) = Σ_m β_m F_m(x) from weak learners (here stumps), adding one term per round aimed at what the current sum still gets wrong.</li>
+            <li>"Stagewise" means old terms are never refit: each round solves one small problem instead of one huge joint problem over all M learners.</li>
+            <li>Only the loss changes between methods: squared → fit residuals; exponential → reweight the data (AdaBoost); log loss → Newton step via weighted least squares (LogitBoost).</li>
+            <li>In AdaBoost, a low-error stump gets a big β; a stump near err = 0.5 adds almost nothing. After reweighting, the old stump's weighted error is exactly ½.</li>
+            <li>Exponential loss grows like e^{−margin} for badly wrong points, so outliers can dominate AdaBoost; log loss grows only linearly, and a point's pull w·z = y* − π never exceeds 1.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Murphy's β = ½ log((1 − err)/err) is half of the classic α = log((1 − err)/err); both give the same sign(f) and the same normalised weights.</li>
+          <li>Reweight with exp(−β ỹ F): ỹF = +1 for a hit (weight shrinks), −1 for a miss (weight grows). Remember to normalise.</li>
+          <li>LogitBoost adds ½F, not F, and uses π = 1/(1 + e^{−2f}) (note the 2). Clip z when π is near 0 or 1.</li>
+          <li>Training error keeps falling with more rounds; late learners chase single noisy points, so use shrinkage ν and pick the number of rounds by validation.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>AdaBoost: x = 1, 2, 3, 4, ỹ = +1, +1, −1, +1, f₀ = 0 so ω = ¼ each. Stump F₁ = +1 if x ≤ 2.5 else −1 misses only point 4 → err₁ = ¼, β₁ = ½ ln 3 = 0.549. Reweight: hits × e^{−0.549} = 0.577 → 0.144; miss × e^{0.549} = 1.732 → 0.433; Z = 0.866 → ω = 1/6, 1/6, 1/6, 1/2. Least squares version: y = 2, 4, 8, 10, f₀ = 6, r = −4, −2, 2, 4, best stump x ≤ 2.5 → −3 | +3, f₁ = 3, 3, 9, 9 (MSE 10 → 1).</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> boosting starts from the best constant and each round adds one weak learner chosen with everything before it frozen, where the loss decides what "best" means: residuals for squared loss, reweighted mistakes for AdaBoost, Newton-step working responses for LogitBoost.</p>
+    </section>
+
+    <section id="rv-t17" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 17</span>
+        <h2>Gradient boosting</h2>
+        <span class="rv-sec">§18.5.5, 18.6</span>
+        <a class="rv-link" href="gradient-boosting.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">r_im = −∂ℓ(y_i, f)/∂f, evaluated at f = f_{m−1}(x_i)</span></dt>
+            <dd>Pseudo-residual: the negative gradient of the loss at the current prediction. Each round fits a regression tree to these r_im.</dd>
+            <dt><span class="m">squared: y − f · absolute: sign(y − f) · log loss: y − π · exponential: ỹ exp(−ỹ f)</span></dt>
+            <dd>The pseudo-residual for common losses. Only this step depends on the loss (π = σ(f), y ∈ {0, 1}; ỹ ∈ {−1, +1}).</dd>
+            <dt><span class="m">γ_jm = argmin_γ ∑_{x_i ∈ R_jm} ℓ(y_i, f_{m−1}(x_i) + γ)</span></dt>
+            <dd>Gradient tree boosting: keep the tree's regions R_jm but reset each leaf value to what is best for the real loss (mean residual for squared, median residual for absolute).</dd>
+            <dt><span class="m">∑_i ℓ(y_i, f(x_i)) + γJ + ½λ ∑_j w_j²</span></dt>
+            <dd>XGBoost objective: J = number of leaves, w_j = leaf values; γ is a price per leaf, λ shrinks leaf values.</dd>
+            <dt><span class="m">w* = −G/(H + λ)</span></dt>
+            <dd>XGBoost leaf value, a regularized Newton step. G = ∑ g_i and H = ∑ h_i over the leaf, with g, h the first and second derivatives of the loss.</dd>
+            <dt><span class="m">gain = ½[G_L²/(H_L+λ) + G_R²/(H_R+λ) − G²/(H+λ)]</span></dt>
+            <dd>Improvement from splitting a leaf into left/right. Keep the split only if gain &gt; γ.</dd>
+            <dt><span class="m">R_k(T) = ∑_j G_j I(v_j = k), R_k = (1/M) ∑_m R_k(T_m)</span></dt>
+            <dd>Feature importance: total loss reduction G_j from split nodes j that split on feature k (v_j), averaged over the M trees, then scaled so the top feature is 100.</dd>
+            <dt><span class="m">f̄_k(x_k) = (1/N) ∑_n f(x_k, x_{n,−k})</span></dt>
+            <dd>Partial dependence: set feature k to x_k in every training row (keeping the other features x_{n,−k}), predict, and average.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Gradient boosting is gradient descent in function space: each tree is a step in the direction −∂ℓ/∂f, so one recipe works for any differentiable loss.</li>
+            <li>Two stages per round: fit the tree's shape to the pseudo-residuals (with squared error), then re-solve each leaf value for the actual loss. With squared loss both stages agree and you get least-squares boosting.</li>
+            <li>Absolute loss gives pseudo-residuals of only ±1, so an outlier counts no more than any other point; this makes it robust.</li>
+            <li>XGBoost uses a second-order Taylor expansion of the loss (g and h) and regularizes trees with γ (per leaf) and λ (leaf size).</li>
+            <li>Importance says <em>which</em> features matter; partial dependence shows <em>how</em> the prediction changes with one feature, averaged over the others.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>The tree is fit to the <em>negative</em> gradient. For log loss the pseudo-residual is y − π, while XGBoost's g = π − y has the opposite sign, which is why w* = −G/(H + λ) has a minus.</li>
+          <li>For absolute loss the best constant and the leaf values are medians, not means.</li>
+          <li>γ and λ do different jobs: γ prunes whole splits (gain must beat γ); λ shrinks every leaf weight toward 0. With λ = 0 the leaf is the raw Newton step −G/H.</li>
+          <li>Partial dependence is an average over the training rows, not the prediction at "typical" values of the other features, and it can hide interactions.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>x = 1, 2, 3, 4, y* = 0, 0, 1, 1, log loss, f₀ = 0, λ = 1, γ = 0.5. Then π = 0.5, g = π − y* = 0.5, 0.5, −0.5, −0.5, h = π(1 − π) = 0.25 each.</p>
+        <p>Split x ≤ 2.5: G_L = 1, H_L = 0.5, G_R = −1, H_R = 0.5, G = 0 → gain = ½[1/1.5 + 1/1.5 − 0] = 0.667 &gt; 0.5, so keep it (x ≤ 1.5 or 3.5 gives only 0.171, pruned).</p>
+        <p>Leaves w* = −G/(H + λ) = −1/1.5 = −0.667 and +0.667; with η = 0.5, f₁ = −0.333, −0.333, 0.333, 0.333.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> gradient boosting fits each new tree to the negative gradient of the loss and then resets its leaves to be optimal for that loss (XGBoost does this with a regularized Newton step −G/(H + λ) and a price γ per leaf), and feature importance and partial dependence tell you which features the finished ensemble uses and how.</p>
+    </section>
+
+    <section id="rv-t18" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 18</span>
+        <h2>Co-training</h2>
+        <span class="rv-sec">§19.3.3</span>
+        <a class="rv-link" href="co-training.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">x = (x₁, x₂)</span></dt>
+            <dd>Each example has two views (e.g. a web page's text and the anchor text of links to it; an image and its caption). Model A uses only x₁, model B only x₂.</dd>
+            <dt><span class="m">p(y | x₁) and p(y | x₂) each enough to classify</span></dt>
+            <dd>Assumption 1 (sufficiency): either view alone can predict the label.</dd>
+            <dt><span class="m">p(x₁, x₂ | y) = p(x₁ | y) p(x₂ | y)</span></dt>
+            <dd>Assumption 2: the views are conditionally independent given the class, so a point A is sure of is a fresh, typical example from B's point of view.</dd>
+            <dt><span class="m">t = (μ₀ + μ₁)/2, confidence = |x − t|</span></dt>
+            <dd>In the page's demo each model predicts the nearer class mean, so its boundary t is halfway between the means and confidence is distance from the line.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>Semi-supervised: a few labelled points and many unlabelled ones. Train one model per view on the labelled set.</li>
+            <li>Each round, each model labels the unlabelled points it is most confident about, and those pseudo-labels are added to the <em>other</em> model's training set; then both retrain.</li>
+            <li>It helps because a point that is easy in one view can be informative in the other view; with conditional independence, its other-view value is a random draw from that class.</li>
+            <li>It is a cousin of self-training, but the two views keep the models from just confirming their own mistakes.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>The labels go <em>across</em>: A's confident picks train B, and B's train A. It is not each model training on its own guesses.</li>
+          <li>If the views are strongly correlated given the class, A's confident points are also easy for B and teach it little; if a view is not sufficient, wrong pseudo-labels pile up.</li>
+          <li>Confidence is about the view the labelling model sees: A picks a point for its x₁, and the payoff is where that point lands on x₂.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>Labelled s₀ = (1, 6), y = 0 and s₁ = (6, 7), y = 1; unlabelled u₁ = (0, 2), u₂ = (6.5, 10). True boundary 5 in both views. Start: t_A = (1 + 6)/2 = 3.5, t_B = (6 + 7)/2 = 6.5.</p>
+        <p>A's confidence: |0 − 3.5| = 3.5 for u₁ vs |6.5 − 3.5| = 3 for u₂, so A labels u₁ as class 0 for B. B labels u₂ (x₂ = 10 &gt; 6.5) as class 1 for A.</p>
+        <p>Retrain: B's class-0 mean (6 + 2)/2 = 4 → t_B = (4 + 7)/2 = 5.5; A's class-1 mean (6 + 6.5)/2 = 6.25 → t_A = (1 + 6.25)/2 = 3.625. Both move toward 5.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> co-training trains one model per view on the few labels, and each model labels the unlabelled points it is most sure about for the other model, which helps because, when the views are conditionally independent given the class, those points look like fresh examples in the other view.</p>
+    </section>
+
+    <section id="rv-t19" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 19</span>
+        <h2>PCA</h2>
+        <span class="rv-sec">§20.1.1, 20.1.3, 20.1.4</span>
+        <a class="rv-link" href="pca.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">Σ = (1/N) X̃ᵀX̃</span></dt>
+            <dd>Covariance of the centred data X̃ = X − μ (rows are examples).</dd>
+            <dt><span class="m">Σ w_j = λ_j w_j, ‖w_j‖ = 1</span></dt>
+            <dd>The principal directions are the eigenvectors of Σ, sorted by eigenvalue; W = [w₁ … w_L] keeps the top L.</dd>
+            <dt><span class="m">z = Wᵀ(x − μ), x̂ = μ + Wz</span></dt>
+            <dd>Encode a point as its L coordinates along the w's, and decode back to ℝᴰ.</dd>
+            <dt><span class="m">(1/N) ∑_n ‖x_n − x̂_n‖² = ∑_{j=L+1}^{D} λ_j</span></dt>
+            <dd>Mean reconstruction error is the sum of the dropped eigenvalues; the variance kept is ∑_{j≤L} λ_j, and the two add to trace Σ.</dd>
+            <dt><span class="m">F_L = (λ₁ + … + λ_L) / (λ₁ + … + λ_D)</span></dt>
+            <dd>Fraction of variance explained; e.g. pick the smallest L with F_L ≥ 90%.</dd>
+            <dt><span class="m">K = X̃X̃ᵀ (N×N), v = X̃ᵀu / √λ</span></dt>
+            <dd>When N &lt; D, eigen-decompose the small Gram matrix of dot products; it has the same non-zero eigenvalues as X̃ᵀX̃, and v maps its eigenvector u back to a unit direction in ℝᴰ.</dd>
+            <dt><span class="m">X̃ = USVᵀ, λ_j = s_j²/N, Z = US</span></dt>
+            <dd>SVD route: columns of V are the w's, singular values s give the eigenvalues, US gives the scores, and Σ is never formed.</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>PCA finds the L orthonormal directions of greatest variance; equivalently, the linear subspace with the smallest squared reconstruction error.</li>
+            <li>Recipe: centre → covariance → top-L eigenvectors → z = Wᵀ(x − μ) → x̂ = μ + Wz.</li>
+            <li>PCA follows whichever feature has the biggest numbers, so standardize (use the correlation matrix) when features have different units.</li>
+            <li>To choose L: scree-plot elbow, a variance-explained threshold, or profile likelihood (split the sorted eigenvalues into two groups, each modelled as Gaussian with a shared σ², and pick the split that makes both groups tightest).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>Always centre first and normalize each w to length 1; otherwise z and the error are wrong.</li>
+          <li>Reconstruction error always decreases as L grows, on test data too, so it cannot pick L by itself.</li>
+          <li>From the SVD, the eigenvalues are s²/N, not s; and v = X̃ᵀu needs dividing by √λ to have unit length.</li>
+          <li>Changing units (cm → mm) changes the PCs of Σ, but not those of the correlation matrix.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>x = (2, 4), (4, 2), (6, 8), (8, 6). μ = (5, 5); centred (−3, −1), (−1, −3), (1, 3), (3, 1) → Σ = [5 3 ; 3 5].</p>
+        <p>(5 − λ)² = 9 → λ₁ = 8, λ₂ = 2; w₁ = (1, 1)/√2. Scores z = w₁ᵀx̃ = −2.83, −2.83, 2.83, 2.83; x̂ = μ + z w₁ = (3, 3), (3, 3), (7, 7), (7, 7).</p>
+        <p>Each ‖x − x̂‖² = 2 = λ₂ (lost); mean z² = 8 = λ₁ (kept); 8 + 2 = 10 = trace Σ.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> centre the data, take the eigenvectors of the covariance (or the SVD of X̃) and keep the L with the biggest eigenvalues, where each dropped direction costs exactly its eigenvalue in squared reconstruction error and L is chosen where the eigenvalues turn from signal into noise.</p>
+    </section>
+
+    <section id="rv-t20" class="rv-topic">
+      <div class="rv-head">
+        <span class="rv-num">Topic 20</span>
+        <h2>Manifolds</h2>
+        <span class="rv-sec">§20.4.1 – 20.4.3</span>
+        <a class="rv-link" href="manifold.html">Open topic →</a>
+      </div>
+      <div class="rv-grid">
+        <div class="rv-card rv-eq">
+          <h3>Key equations</h3>
+          <dl>
+            <dt><span class="m">d ≪ D</span></dt>
+            <dd>Intrinsic dimension d: how many numbers (knobs) pin down a point on the manifold, vs the D numbers used to write it down in ℝᴰ.</dd>
+            <dt><span class="m">t = arc length along the manifold</span></dt>
+            <dd>A chart gives intrinsic coordinates; for a curve, the distance travelled along it from a fixed start point.</dd>
+            <dt><span class="m">‖x_i − x_j‖ ≈ geodesic(i, j) only for close neighbours</span></dt>
+            <dd>Straight-line (Euclidean) distance matches distance along the manifold locally; for far points it can be much shorter (the U's ends: 2 vs 8).</dd>
+            <dt><span class="m">k-NN (or ε) graph → d_G(i, j) = shortest-path length</span></dt>
+            <dd>Connect each point to its k nearest neighbours (or all within ε), weight edges by Euclidean length; shortest paths approximate geodesic distances.</dd>
+            <dt><span class="m">B = −½ J D⁽²⁾ J, J = I − (1/N)11ᵀ</span></dt>
+            <dd>Classical MDS: double-centre the squared distances D⁽²⁾; entrywise B_ij = −½(D⁽²⁾_ij − row_i − row_j + grand mean).</dd>
+            <dt><span class="m">z = √λ₁ u₁</span></dt>
+            <dd>1-D embedding from the top eigenpair (λ₁, u₁) of B (for L dimensions, use the top L).</dd>
+          </dl>
+        </div>
+        <div class="rv-card">
+          <h3>Core ideas</h3>
+          <ul>
+            <li>A d-dimensional manifold looks like flat ℝᵈ in every small patch (its tangent space), even though it bends through ℝᴰ.</li>
+            <li>Manifold hypothesis: natural high-D data (images, sounds) lie on or near a low-dimensional manifold because a few factors (pose, position, lighting) generate them; random points in ℝᴰ look like noise.</li>
+            <li>PCA fits a flat subspace, so it cannot follow a bend: it can merge points far apart along the manifold and needs many directions.</li>
+            <li>Common nonparametric recipe: build a k-NN graph → compute a property of it (shortest paths, local weights, neighbour probabilities) → find low-D z that keep it.</li>
+            <li>Parametric methods learn a map z = f(x) that works on new points (PCA, autoencoder); nonparametric ones only embed the training set (Isomap, LLE, t-SNE). Eigenproblem methods are convex; t-SNE and autoencoders are not.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rv-card rv-trap">
+        <h3>Watch out</h3>
+        <ul>
+          <li>k (or ε) too big short-circuits the manifold: an edge jumps across a gap and shortest paths collapse. Too small and the graph falls into pieces (infinite distances).</li>
+          <li>Pixel distance saturates: once two images stop overlapping, they look about equally far apart, so only local distances mean anything.</li>
+          <li>d is the number of knobs, not the number of coordinates: a curve in ℝ² has d = 1.</li>
+          <li>MDS is only as good as the distances fed to it: shortcut distances give a folded embedding.</li>
+        </ul>
+      </div>
+      <div class="rv-card rv-mini">
+        <h3>Tiny example to redo</h3>
+        <p>U-shape A = (0, 3), B = (0, 0), C = (2, 0), D = (2, 3): arc lengths t = 0, 3, 5, 8, so ‖A − D‖ = 2 but along the U it is 8. With k = 2 the graph adds the shortcut edge A–D, giving 2 again.</p>
+        <p>Correct path distances squared: D⁽²⁾ = [0 9 25 64 ; 9 0 4 25 ; 25 4 0 9 ; 64 25 9 0]; row means 24.5, 9.5, 9.5, 24.5, grand mean 17.</p>
+        <p>B_AA = −½(0 − 49 + 17) = 16, B_AB = 4, B_AD = −16, …, so B = z zᵀ with z = (−4, −1, 1, 4), λ₁ = 34; z = √λ₁ u₁ = t − 4: the U is unrolled.</p>
+      </div>
+      <p class="rv-say"><strong>In one sentence:</strong> real high-dimensional data tend to lie near a low-dimensional curved manifold on which straight-line distance is only trustworthy between neighbours, so manifold learning builds a neighbour graph, measures distances or relations along it, and finds low-dimensional coordinates that keep them, which works only if the neighbourhood is small enough not to short-circuit the manifold.</p>
+    </section>
+  </main>
+</div>
+</body></html>
